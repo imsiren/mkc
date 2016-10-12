@@ -1,7 +1,6 @@
-
 version 0.1
 
-# MDP队列kafka消费队列服务
+# MDP队列kafka消费队列服务（hai'mei还没x还没想da还没想到hao还没想到好ming'z还没想到好名字）
 
 # 为什么存在？
 很简单，因为绝大多数队列消费服务都是用离线crontab脚本的形式

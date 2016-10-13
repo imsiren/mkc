@@ -65,9 +65,10 @@ void parse_server_conf(char *file_name){
         if(argc == 0){
             continue;
         }
-        if(!strcasecmp(vector[0],"port")){
+        if(!strcasecmp(vector[0],"brokers")){
 
-            server_config.port = zstrdup(vector[1]);
+            server_config.brokers = sdscat(server_config.brokers,vector[1]);
+            server_config.brokers = sdscat(server_config.brokers,",");
 
         }else if(!strcasecmp(vector[0],"logfile")){
             FILE *fp = fopen(server_config.logfile,"a"); 

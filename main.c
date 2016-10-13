@@ -27,6 +27,7 @@
 #include "cJSON.h"
 #include "http.h"
 #include "config.h"
+#include "sds.h"
 
 #define SERVER_COMMAND_NUM 200
 
@@ -62,7 +63,7 @@ static void sig_usr1 (int sig) {
 
 static void init_server_conf(){
 
-    server_config.brokers="localhost";
+    server_config.brokers = sdsnew("");
     server_config.daemonize = 1;
     server_config.pidfile = "./mmq.pid";
     server_config.loglevel = 1 ;//warning
@@ -315,6 +316,12 @@ int main(int argc, char **argv){
 
     parse_server_conf(server_config.conffile);
 
+    if(sdslen(server_config.brokers) == 0){
+
+        fprintf(stderr,"brokers is empty.");
+        exit(1);
+    }
+
     process_running(argc, argv);
 
     exit(0);
@@ -370,7 +377,7 @@ static int process_running(int argc, char **argv){
     char *conf_file = "";
 
 
-    if(server_config.debug && rd_kafka_conf_set(conf,"debug",debug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
+    if(server_config.debug > 0 && rd_kafka_conf_set(conf,"debug",debug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
         fprintf(stderr,"%%Debug configuration failed:%s :%s",errstr,debug);
     }
@@ -399,8 +406,6 @@ static int process_running(int argc, char **argv){
             fprintf(stderr,"%% %s\n",errstr);
             exit(1);
         }
-
-
         rd_kafka_conf_set_default_topic_conf(conf,topic_conf);
 
         rd_kafka_conf_set_rebalance_cb(conf,rebalance_cb);
@@ -491,6 +496,7 @@ static int process_running(int argc, char **argv){
         }
     }
 
+    fprintf(stderr,"goto recv consume data...\n");
     while(run){
 
         rd_kafka_message_t *rkmessage;
@@ -502,7 +508,8 @@ static int process_running(int argc, char **argv){
             rd_kafka_message_destroy(rkmessage);
             continue;
         }
-        //fprintf(stderr,"no message\n");
+        err = rd_kafka_last_error();
+        fprintf(stderr,"no message  %s\r",rd_kafka_err2str(err));
     }
 
 done:

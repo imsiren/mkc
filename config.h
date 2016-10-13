@@ -54,7 +54,7 @@ typedef struct server_conf_t {
 
     int verbose;
     char *url;
-    char *brokers;
+    sds brokers;
     char *group;
     char *log_path;
 

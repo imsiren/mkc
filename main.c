@@ -240,6 +240,7 @@ static void usage(){
             " Options:\n"
             "  -c <>      config file\n"
             "  -b <brokers>    Broker address \n"
+            "  topic "
 			"\n",
 			rd_kafka_version_str(), rd_kafka_version()
             );

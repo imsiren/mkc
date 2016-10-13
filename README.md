@@ -23,6 +23,18 @@ version 0.1
 拿到commandId后，会发起http请求,将commandId+元数据一同发给/commit接口
 commit接口根据不同的commandId进行处理
 # 怎么使用？
+## 部署
+### 安装librdkafka
+
+https://github.com/edenhill/librdkafka
+
+### 安装依赖库
+
+yum install zlib-devel -y
+
+### 安装consumer
+
+make
 
 # 配置相关
 

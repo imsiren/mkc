@@ -32,7 +32,7 @@ void module_conf_free(void *module_conf);
 /* *
  * @desc 解析服务配置
  * */
-void parse_server_conf(char *file_name){
+int parse_server_conf(char *file_name){
 
     char line[1024] = {0};
     int totalline = 0, i = 0 ,j = 0;
@@ -41,7 +41,7 @@ void parse_server_conf(char *file_name){
     if(!fp){
         //mmqLog(LOG_VERBOSE,"file of %s open failed.",file_name);
         fprintf(stderr, "file of %s open failed.",file_name);
-        exit(1);
+        return -1;
     }
     sds config   =   sdsnew("");
 
@@ -155,10 +155,11 @@ void parse_server_conf(char *file_name){
 
         fprintf(stderr,"there is no filters num in conf.");
 
-        exit(1);
+        return -1;
     }
     sdsfree(config);
     sdsfreesplitres(lines,totalline);
+    return 0;
 }
 
 /* *

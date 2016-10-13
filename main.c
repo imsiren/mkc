@@ -297,12 +297,10 @@ int main(int argc, char **argv){
     signal(SIGKILL,stop);
     signal(SIGUSR1,sig_usr1);
 
-    if(!server_config.conffile){
-
+    if(parse_server_conf(server_config.conffile) == -1){
         usage();
         exit(1);
     }
-    parse_server_conf(server_config.conffile);
 
     if(sdslen(server_config.brokers) == 0){
 

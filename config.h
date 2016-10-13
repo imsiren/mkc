@@ -92,7 +92,7 @@ typedef struct server_conf_t {
 
 }server_conf_t ;
 
-void parse_server_conf(char *filename);
+int parse_server_conf(char *filename);
 
 module_conf_t *parse_module_conf(const char *file);
 

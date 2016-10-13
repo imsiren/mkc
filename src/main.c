@@ -203,7 +203,8 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
 
         current = module_conf->head;
 
-        while(current){
+
+        while(current != NULL){
 
             http_response_t *response  = NULL;
 
@@ -228,12 +229,16 @@ http_client_post:{
                          zfree(response);
                          //如果指定了了重试次数或者为0，则一直重试
                          //如果一直失败会造成队列阻塞
-                         if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ > conf->retrynum)){
+                         if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ < conf->retrynum)){
                              goto http_client_post;
                          }
                      }
                  }
-                 current = current->next;
+		if(current->next != 0){
+			current = current->next;
+
+		}
+		break;
         }
 	return 0;
 }

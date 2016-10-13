@@ -47,6 +47,8 @@ void list_release(list *list){
 }
 list *list_add_node_head(list *list,char *key,void *value){
     list_node *node = zmalloc(sizeof(list_node));
+    node->prev = NULL;
+    node->next = NULL;
 
     node->value = value;
     node->key   = key;
@@ -65,7 +67,8 @@ list *list_add_node_head(list *list,char *key,void *value){
 }
 list *list_add_node_tail(list *list,char *key,void *value){
     list_node *node = zmalloc(sizeof(list_node));
-
+    node->prev = NULL;
+    node->next = NULL;
     node->value = value;
     node->key   = key;
     if(list ->len == 0){

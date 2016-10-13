@@ -1,6 +1,6 @@
 
 main : main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o
-	cc -g -o main main.o http.o config.o cjson.o sds.o hash.o list.o zmalloc.o -lrdkafka -lz -lpthread
+	cc -g -o main main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o -lrdkafka -lz -lpthread -lm
 
 main.o: main.c consumer.h
 	cc  -c -g  main.c

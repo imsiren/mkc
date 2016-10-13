@@ -22,8 +22,9 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <syslog.h>
+#include <signal.h>
 #include <ctype.h>
-#include "../librdkafka/src/rdkafka.h"
+#include "librdkafka/rdkafka.h"
 #include "cJSON.h"
 #include "http.h"
 #include "config.h"

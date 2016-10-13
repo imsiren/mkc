@@ -20,4 +20,4 @@ zmalloc.o: zmalloc.c zmalloc.h
 	cc  -c -g  zmalloc.c
 
 clean:
-	rm -rf main main.o http.o config.o cjson.o sds.o hash.o list.o zmalloc.o
+	rm -rf main main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o

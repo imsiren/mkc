@@ -16,12 +16,10 @@
  * =====================================================================================
  */
 #include <stdlib.h>
-
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
-
 #include "sds.h"
-
 #include "consumer.h"
 #include "config.h"
 #include "hash.h"
@@ -39,8 +37,7 @@ int parse_server_conf(char *file_name){
     FILE *fp    =   fopen(file_name,"r");
 
     if(!fp){
-        //mmqLog(LOG_VERBOSE,"file of %s open failed.",file_name);
-        fprintf(stderr, "file of %s open failed.",file_name);
+	fprintf(stderr,"fopen file [%s] %s\n",file_name,strerror(errno));
         return -1;
     }
     sds config   =   sdsnew("");
@@ -73,7 +70,9 @@ int parse_server_conf(char *file_name){
         }else if(!strcasecmp(vector[0],"logfile")){
             FILE *fp = fopen(server_config.logfile,"a"); 
             if(!fp){
-                //todo
+                //todo 待完善
+                fprintf(stderr,"open logfile[%s] error :%s\n",server_config.logfile,strerror(errno));
+                continue;
             }
             fclose(fp);
             server_config.logfile = zstrdup(vector[1]);

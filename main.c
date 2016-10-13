@@ -253,7 +253,7 @@ int main(int argc, char **argv){
 
     int opt;
 
-    while((opt = getopt(argc, argv,"c::u:b:g:v:d:DO")) != -1){
+    while((opt = getopt(argc, argv,"c:u:b:g:v:d:DO")) != -1){
 
         switch(opt){
             case 'c':
@@ -297,6 +297,7 @@ int main(int argc, char **argv){
     signal(SIGKILL,stop);
     signal(SIGUSR1,sig_usr1);
 
+    fprintf(stderr,"conf file:%s\n",server_config.conffile);
     if(parse_server_conf(server_config.conffile) == -1){
         usage();
         exit(1);

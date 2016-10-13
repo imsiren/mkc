@@ -238,27 +238,8 @@ static void usage(){
             "librdkafka version %s (0x%08x)\n"
             "\n"
             " Options:\n"
-            "  -g <>      Consumer group \n"
+            "  -c <>      config file\n"
             "  -b <brokers>    Broker address \n"
-            "  -e              Exit consumer when last message\n"
-            "                  in partition has been received.\n"
-            "  -D              Describe .\n"
-            "  -O              Get commmitted offset(s)\n"
-            "  -d [facs..]     Enable debugging contexts:\n"
-            //"                  %s\n"
-            "  -q              Be quiet\n"
-            "  -A              Raw payload output (consumer)\n"
-            "  -X <prop=name> Set arbitrary librdkafka "
-            "configuration property\n"
-            "               Properties prefixed with \"topic.\" "
-            "will be set on topic object.\n"
-            "               Use '-X list' to see the full list\n"
-			"               of supported properties.\n"
-			"\n"
-                        "For balanced consumer s use the 'topic1 topic2..'"
-                        " format\n"
-                        "and for static assignment use "
-                        "'topic1:part1 topic1:part2 topic2:part1..'\n"
 			"\n",
 			rd_kafka_version_str(), rd_kafka_version()
             );
@@ -315,6 +296,11 @@ int main(int argc, char **argv){
     signal(SIGKILL,stop);
     signal(SIGUSR1,sig_usr1);
 
+    if(!server_config.conffile){
+
+        usage();
+        exit(1);
+    }
     parse_server_conf(server_config.conffile);
 
     if(sdslen(server_config.brokers) == 0){

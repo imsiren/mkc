@@ -4,28 +4,32 @@ INSTALL_BIN=$(PREFIX)/bin
 INSTALL=install
 
 CONSUMER_NAME=consumer
+$(CC)=gcc;
 
-all : main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o
-	cc -g -o $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o -lrdkafka -lz -lpthread -lm
+all : main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o logger.o
+	$(CC) -g -o $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o -lrdkafka -lz -lpthread -lm
 main.o: main.c consumer.h
-	cc  -c -g  main.c
+	$(CC)  -c -g  main.c
 http.o: http.c http.c consumer.h
-	cc  -c -g  http.c
+	$(CC)  -c -g  http.c
 config.o: config.c config.h consumer.h
-	cc  -c -g  config.c
+	$(CC)  -c -g  config.c
 cjson.o: cJSON.c cJSON.h consumer.h
-	cc  -c -g  cJSON.c
+	$(CC)  -c -g  cJSON.c
 sds.o: sds.c sds.h consumer.h
-	cc  -c -g  sds.c
+	$(CC)  -c -g  sds.c
 hash.o: hash.c hash.h consumer.h
-	cc  -c -g  hash.c
+	$(CC)  -c -g  hash.c
 list.o: list.c list.h consumer.h
-	cc  -c -g  list.c
+	$(CC)  -c -g  list.c
 zmalloc.o: zmalloc.c zmalloc.h
-	cc  -c -g  zmalloc.c
+	$(CC)  -c -g  zmalloc.c
+logger.o: logger.c logger.h
+	$(CC) -c -g logger.c
 install:all
 	@mkdir -p $(INSTALL_BIN)
 
 	cp $(CONSUMER_NAME) $(INSTALL_BIN)/$(CONSUMER_NAME)
 clean:
-	rm -rf $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o
+	rm -rf $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o
+

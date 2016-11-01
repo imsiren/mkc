@@ -29,6 +29,7 @@
 #include "http.h"
 #include "config.h"
 #include "sds.h"
+#include "logger.h"
 
 #define SERVER_COMMAND_NUM 200
 
@@ -68,10 +69,8 @@ static void init_server_conf(){
     server_config.daemonize = 1;
     server_config.pidfile = "./mmq.pid";
     server_config.loglevel = 1 ;//warning
-    server_config.logfile = "./logs/mmq.log";
+    server_config.logfile = "./logs/mkc.log";
     server_config.confpath = "./conf";
-    server_config.appendqueuelog= 0;
-    server_config.queuelogfile= "./logs/queue.log";
 
     server_config.timeout = 100;
     //server_config.cmd_t = hash_init(SERVER_COMMAND_NUM);
@@ -86,43 +85,42 @@ static void logger(const rd_kafka_t *rk,int level, const char *fac, const char *
 
 }
 static void print_partition_list (FILE *fp,
-                                  const rd_kafka_topic_partition_list_t
-                                  *partitions) {
-        int i;
-        for (i = 0 ; i < partitions->cnt ; i++) {
-                fprintf(stderr, "%s %s [%"PRId32"] offset %"PRId64" ",
-                        i > 0 ? ",":"",
-                        partitions->elems[i].topic,
-                        partitions->elems[i].partition,
-			partitions->elems[i].offset
-            );
-        }
-        fprintf(stderr, "\n");
+        const rd_kafka_topic_partition_list_t
+        *partitions) {
+    int i;
+    for (i = 0 ; i < partitions->cnt ; i++) {
+        mkc_write_log(MKC_LOG_WARNING, "%s %s [%"PRId32"] offset %"PRId64" ",
+                i > 0 ? ",":"",
+                partitions->elems[i].topic,
+                partitions->elems[i].partition,
+                partitions->elems[i].offset
+               );
+    }
 
 }
 
 
 static void rebalance_cb(rd_kafka_t *rk,rd_kafka_resp_err_t err,rd_kafka_topic_partition_list_t *partitions,void *opaque){
 
-	fprintf(stderr, "%% Consumer  rebalanced: ");
+    mkc_write_log(MKC_LOG_NOTICE, "%% Consumer  rebalanced: ");
 
     switch (err){
         case RD_KAFKA_RESP_ERR__ASSIGN_PARTITIONS:
-            fprintf(stderr, "assigned:\n");
+            mkc_write_log(MKC_LOG_NOTICE, "assigned:\n");
             print_partition_list(stderr, partitions);
             rd_kafka_assign(rk, partitions);
             wait_eof += partitions->cnt;
             break;
 
         case RD_KAFKA_RESP_ERR__REVOKE_PARTITIONS:
-            fprintf(stderr, "revoked:\n");
+            mkc_write_log(MKC_LOG_NOTICE, "revoked:\n");
             print_partition_list(stderr, partitions);
             rd_kafka_assign(rk, NULL);
             wait_eof = 0;
             break;
 
         default:
-            fprintf(stderr, "failed: %s\n",
+            mkc_write_log(MKC_LOG_NOTICE, "failed: %s\n",
                     rd_kafka_err2str(err));
             rd_kafka_assign(rk, NULL);
             break;
@@ -132,7 +130,7 @@ static void rebalance_cb(rd_kafka_t *rk,rd_kafka_resp_err_t err,rd_kafka_topic_p
 
 static int stats_cb(rd_kafka_t *rk, char *json,size_t json_len ,void *opaque){
 
-    fprintf(stderr,"%s\n",json);
+    mkc_write_log(MKC_LOG_NOTICE,"%s\n",json);
     return 0;
 }
 
@@ -145,7 +143,7 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
     if(rkmessage->err ){
         if(rkmessage->err == RD_KAFKA_RESP_ERR__PARTITION_EOF){
 
-            fprintf(stderr,
+            mkc_write_log(MKC_LOG_NOTICE,
                     "Consumer reached end of %s [%"PRId32"]"
                     "message queue at offset %"PRId64" %s\n",
                     rd_kafka_topic_name(rkmessage->rkt),
@@ -153,10 +151,10 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
                     rkmessage->offset,
                     rkmessage->payload
                    );
-            return;
+            return -1;
         }
         if (rkmessage->rkt){
-            fprintf(stderr, "%% Consume error for "
+            mkc_write_log(MKC_LOG_NOTICE, "%% Consume error for "
                     "topic \"%s\" [%"PRId32"] "
                     "offset %"PRId64": %s\n",
                     rd_kafka_topic_name(rkmessage->rkt),
@@ -164,7 +162,7 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
                     rkmessage->offset,
                     rd_kafka_message_errstr(rkmessage));
         }else{
-            fprintf(stderr, "%% Consumer error: %s: %s\n",
+            mkc_write_log(MKC_LOG_ERROR, "%% Consumer error: %s: %s\n",
                     rd_kafka_err2str(rkmessage->err),
                     rd_kafka_message_errstr(rkmessage));
         }
@@ -173,54 +171,59 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
                 rkmessage->err == RD_KAFKA_RESP_ERR__UNKNOWN_TOPIC)
             run = 0;
 
-        return;
+        return -1;
     }
 
     //if(rkmessage->key_len){
 
-        fprintf(stderr,"payload len[%ld]: %s \n",rkmessage->len,rkmessage->payload);
+    mkc_write_log(MKC_LOG_NOTICE,"payload len[%ld]: %s \n",rkmessage->len,rkmessage->payload);
     //}
 
-        cjson *root = cjson_parse(rkmessage->payload);
+    cjson *root = cjson_parse(rkmessage->payload);
 
-	//判断是否为json格式.
-	
-	if(root->type == cJSON_False || root->type == cJSON_NULL){
-	
-		fprintf(stderr,"invalid json data :[%s]\n",rkmessage->payload);
-		return -1;
-	}	
+    //判断是否为json格式.
 
-        int command = cjson_get_item(root,"commandId")->valueint;
+    if(root->type == cJSON_False || root->type == cJSON_NULL){
 
-        printf("commandId:%d\n",command);
+        mkc_write_log(MKC_LOG_WARNING,"invalid json data :[%s]\n",rkmessage->payload);
+        return -1;
+    }	
 
-        char command_id[128];
-        sprintf(command_id,"%d",command);
+    int command = cjson_get_item(root,"commandId")->valueint;
 
-        list *module_conf = hash_find(server_config.modules, command_id,strlen(command_id));
-        list_node *current = NULL;
+    printf("commandId:%d\n",command);
 
-        current = module_conf->head;
+    char command_id[128];
+    sprintf(command_id,"%d",command);
+
+    list *module_conf = hash_find(server_config.modules, command_id,strlen(command_id));
+    list_node *current = NULL;
+
+    if(!module_conf){
+
+        mkc_write_log(MKC_LOG_NOTICE,"can not found module with commandId [%d] \n",command_id);
+        return -1;
+    }
+    current = module_conf->head;
 
 
-        while(current != NULL){
+    while(current != NULL){
 
-            http_response_t *response  = NULL;
+        http_response_t *response  = NULL;
 
-            char *header = HTTP_POST;
+        char *header = HTTP_POST;
 
-            module_conf_t * conf = (module_conf_t*)current->value;
+        module_conf_t * conf = (module_conf_t*)current->value;
 
-            char *url = conf->uri;
+        char *url = conf->uri;
 
-            //如果指定了延迟
-            if(conf->delay > 0){
+        //如果指定了延迟
+        if(conf->delay > 0){
 
-                usleep(conf->delay);
-            }
+            usleep(conf->delay);
+        }
 
-            int retry_num = 0;
+        int retry_num = 0;
 http_client_post:{
                      response = http_client_post(url,header, rkmessage->payload,rkmessage->len);
 
@@ -234,13 +237,13 @@ http_client_post:{
                          }
                      }
                  }
-		if(current->next != 0){
-			current = current->next;
+                 if(current->next != 0){
+                     current = current->next;
 
-		}
-		break;
-        }
-	return 0;
+                 }
+                 break;
+    }
+    return 0;
 }
 
 static void usage(){
@@ -253,9 +256,9 @@ static void usage(){
             "  -c <>      config file\n"
             "  -b <brokers>    Broker address \n"
             "  topic "
-			"\n",
-			rd_kafka_version_str(), rd_kafka_version()
-            );
+            "\n",
+            rd_kafka_version_str(), rd_kafka_version()
+           );
 
 }
 
@@ -309,7 +312,13 @@ int main(int argc, char **argv){
     signal(SIGKILL,stop);
     signal(SIGUSR1,sig_usr1);
 
-    fprintf(stderr,"conf file:%s\n",server_config.conffile);
+    if(!server_config.conffile ){
+
+        usage();
+        exit(1);
+    }else{
+        fprintf(stderr,"load conf file:%s\n",server_config.conffile);
+    }
     if(parse_server_conf(server_config.conffile) == -1){
         usage();
         exit(1);
@@ -317,7 +326,7 @@ int main(int argc, char **argv){
 
     if(sdslen(server_config.brokers) == 0){
 
-        fprintf(stderr,"brokers is empty.");
+        mkc_write_log(MKC_LOG_ERROR,"brokers is empty.");
         exit(1);
     }
 
@@ -325,24 +334,24 @@ int main(int argc, char **argv){
 
     exit(0);
     /*   后续加入守护进程。
-    int i ;
-    int process_num =1;// server_config.commands->len;
-    pid_t pid;
-    for(i = 0;i < process_num ;i ++){
+         int i ;
+         int process_num =1;// server_config.commands->len;
+         pid_t pid;
+         for(i = 0;i < process_num ;i ++){
 
-        if((pid = fork()) < 0){
+         if((pid = fork()) < 0){
 
-            fprintf(stderr,"fork child process error %d %s.", errno ,strerror(errno));
-            exit(-1);
-        }else if(pid > 0){ //parent process
+         mkc_write_log(MKC_LOG_NOTICE,"fork child process error %d %s.", errno ,strerror(errno));
+         exit(-1);
+         }else if(pid > 0){ //parent process
 
-            process_running(argc, argv);
-        }else if(pid == 0){ //child process
+         process_running(argc, argv);
+         }else if(pid == 0){ //child process
 
-            while(1);
-        }
-    }
-    */
+         while(1);
+         }
+         }
+         */
 }
 static int process_running(int argc, char **argv){
 
@@ -378,7 +387,7 @@ static int process_running(int argc, char **argv){
 
     if(server_config.debug > 0 && rd_kafka_conf_set(conf,"debug",debug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
-        fprintf(stderr,"%%Debug configuration failed:%s :%s",errstr,debug);
+        mkc_write_log(MKC_LOG_NOTICE,"%%Debug configuration failed:%s :%s",errstr,debug);
     }
 
     //rd_kafka_conf_set_stats_cb(conf,stats_cb);
@@ -389,7 +398,7 @@ static int process_running(int argc, char **argv){
         }
         if(rd_kafka_conf_set(conf,"group.id",server_config.group,errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
-            fprintf(stderr,"%% %s\n",errstr);
+            mkc_write_log(MKC_LOG_ERROR,"%% %s\n",errstr);
             exit(1);
         }
         if(rd_kafka_topic_conf_set(topic_conf,"offset.store.path",server_config.log_path,errstr,sizeof(err) != RD_KAFKA_CONF_OK)){
@@ -402,7 +411,7 @@ static int process_running(int argc, char **argv){
         }
         if(rd_kafka_topic_conf_set(topic_conf,"offset.store.method","broker",errstr,sizeof(err)) != RD_KAFKA_CONF_OK){
 
-            fprintf(stderr,"%% %s\n",errstr);
+            mkc_write_log(MKC_LOG_ERROR,"%% %s\n",errstr);
             exit(1);
         }
         rd_kafka_conf_set_default_topic_conf(conf,topic_conf);
@@ -412,7 +421,7 @@ static int process_running(int argc, char **argv){
 
     if(!(rk = rd_kafka_new(RD_KAFKA_CONSUMER,conf,errstr, sizeof(errstr)))){
 
-        fprintf(stderr," Failed to create new consumer:%s\n",errstr);
+        mkc_write_log(MKC_LOG_ERROR," Failed to create new consumer:%s\n",errstr);
         exit(1);
     }
 
@@ -423,17 +432,17 @@ static int process_running(int argc, char **argv){
 
     if(rd_kafka_brokers_add(rk, server_config.brokers) == 0){
 
-        fprintf(stderr,"No valid brokers.\n");
+        mkc_write_log(MKC_LOG_ERROR,"No valid brokers.\n");
         exit(1);
     }
 
     if(mode == 'D'){
         int r;
         /*  
-        r = describe_s(rk,group);
-        rd_kafka_destroy(rk);
-        exit(r == -1 ? 1 : 0);
-        */
+            r = describe_s(rk,group);
+            rd_kafka_destroy(rk);
+            exit(r == -1 ? 1 : 0);
+            */
     }
 
     rd_kafka_poll_set_consumer(rk);
@@ -443,7 +452,7 @@ static int process_running(int argc, char **argv){
     int partition = -1;
     int i = 0;
     int is_subscription = 1;
-    
+
     list_node *node;
     node = server_config.topics->head;
 
@@ -461,41 +470,41 @@ static int process_running(int argc, char **argv){
     }
     /* 
 
-    for(i = optind; i < argc; i++){
-        char *topic = argv[i];
+       for(i = optind; i < argc; i++){
+       char *topic = argv[i];
 
-        char *t;
-        int32_t partition = -1;
-        if((t = strstr(topic,":"))){
+       char *t;
+       int32_t partition = -1;
+       if((t = strstr(topic,":"))){
 
-            *t = '\0';
-            partition = atoi(t+1);
-            is_subscription = 0;
-        }
-            printf("partition:%d\n",partition);
+     *t = '\0';
+     partition = atoi(t+1);
+     is_subscription = 0;
+     }
+     printf("partition:%d\n",partition);
 
-        fprintf(stderr,"topic:%s\n",topic);
-        rd_kafka_topic_partition_list_add(topics, topic,partition);
-    }
-    */
+     mkc_write_log(MKC_LOG_NOTICE,"topic:%s\n",topic);
+     rd_kafka_topic_partition_list_add(topics, topic,partition);
+     }
+     */
 
     if(is_subscription){
 
         //订购topic
-        fprintf(stderr,"Subscribing to %d topics\n",topics->cnt);
+        mkc_write_log(MKC_LOG_NOTICE,"Subscribing to %d topics\n",topics->cnt);
         if((err = rd_kafka_subscribe(rk,topics))){
 
-            fprintf(stderr,"Failed to assign consuming topics:%s\n",rd_kafka_err2str(err));
+            mkc_write_log(MKC_LOG_NOTICE,"Failed to assign consuming topics:%s\n",rd_kafka_err2str(err));
             exit(1);
         }
     }else{
         if((err = rd_kafka_assign(rk,topics))){
 
-            fprintf(stderr,"Failed to assign partitions:%s\n",rd_kafka_err2str(err));
+            mkc_write_log(MKC_LOG_NOTICE,"Failed to assign partitions:%s\n",rd_kafka_err2str(err));
         }
     }
 
-    fprintf(stderr,"goto recv consume data...\n");
+    mkc_write_log(MKC_LOG_NOTICE,"goto recv consume data...\n");
     while(run){
 
         rd_kafka_message_t *rkmessage;
@@ -508,17 +517,17 @@ static int process_running(int argc, char **argv){
             continue;
         }
         err = rd_kafka_last_error();
-        fprintf(stderr,"no message  %s\r",rd_kafka_err2str(err));
+        mkc_write_log(MKC_LOG_DEBUG,"no message with error : %s \n",rd_kafka_err2str(err));
     }
 
 done:
     err = rd_kafka_consumer_close(rk);
     if(err){
-        fprintf(stderr, "%% Failed to close consumer: %s\n",
+        mkc_write_log(MKC_LOG_NOTICE, "%% Failed to close consumer: %s\n",
                 rd_kafka_err2str(err));
     }else{
 
-        fprintf(stderr,"Consumer closed\n");
+        mkc_write_log(MKC_LOG_NOTICE,"Consumer closed\n");
     }
     rd_kafka_topic_partition_list_destroy(topics);
 

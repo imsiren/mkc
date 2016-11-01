@@ -25,6 +25,7 @@
 #include <errno.h>
 #include "http.h"
 #include "zmalloc.h"
+#include "logger.h"
 
 int http_client_create(const char *host,int port){
 
@@ -74,7 +75,7 @@ static int http_client_send(int socket_fd, char *data, int size){
         ret_num = send(socket_fd, data + send_num, size - send_num,0);
         if(ret_num == -1){
 
-            fprintf(stderr,"send error %d %s\n",errno,strerror(errno));
+            mkc_write_log(MKC_LOG_ERROR,"send error %d %s\n",errno,strerror(errno));
             return -1;
         }
         send_num += ret_num;
@@ -86,7 +87,7 @@ static int http_client_recv(int socket_fd, char *buff){
 
     int recv_num = 0;
 
-    fprintf(stderr,"recving...\n");
+    mkc_write_log(MKC_LOG_NOTICE,"recving...\n");
 
 
 recv:{
@@ -102,7 +103,7 @@ recv:{
      }
      if(recv_num < 0){
 
-        fprintf(stderr,"recv %d %d %s.\n",recv_num,errno,strerror(errno));
+        mkc_write_log(MKC_LOG_ERROR,"recv %d %d %s.\n",recv_num,errno,strerror(errno));
      }
      return recv_num;
 }
@@ -178,10 +179,10 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
 
     sprintf(post_buf,HTTP_POST,file,host,(int)strlen(post_data),post_data);
 
-    fprintf(stderr,"post data %s\n",post_buf);
+    mkc_write_log(MKC_LOG_NOTICE,"post data %s\n",post_buf);
     if((http_client_send(socket_fd, post_buf,strlen(post_buf)) <= 0)){
 
-        fprintf(stderr,"http_client_send error");
+        mkc_write_log(MKC_LOG_ERROR,"http_client_send error");
     }
     zfree(post_buf);
     post_buf = 0;
@@ -190,7 +191,7 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
 
     if(http_client_recv(socket_fd,recv_buffer)){
 
-        printf("recv data :%s\n",recv_buffer);
+        mkc_write_log(MKC_LOG_NOTICE,"recv data :%s\n",recv_buffer);
     }
 
     response = http_client_parse_result(recv_buffer);

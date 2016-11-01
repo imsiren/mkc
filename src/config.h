@@ -56,7 +56,6 @@ typedef struct server_conf_t {
     char *url;
     sds brokers;
     char *group;
-    char *log_path;
 
     char mode;
 
@@ -70,14 +69,14 @@ typedef struct server_conf_t {
 
     char *port;
 
+    char *log_path;
+
     char *logfile;
 
-    char *pidfile;
-    //队列数据记录文件
-    char *queuelogfile;
+    //日志句柄
+    FILE *logfp;
 
-    //记录队列数据的频率 0：每次，N ：每N次后写入
-    int appendqueuelog;
+    char *pidfile;
 
     int sockfd;
 

@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  consumer.h
+ *       Filename:  logger.h
  *
  *    Description:  
  *
  *        Version:  1.0
- *        Created:  2016/10/10 16时30分29秒
+ *        Created:  2016/10/26 10时39分44秒
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -15,23 +15,20 @@
  *
  * =====================================================================================
  */
-#ifndef __CONSUMER_H_
-#define __CONSUMER_H_
-#include <unistd.h>
-#include <time.h>
-#include <stdarg.h>
-#include <sys/time.h>
-#include "config.h"
 
-#define MAX_LOGMSG_LEN 1024
-#define LOG_VERBOSE 3
-#define LOG_ERROR 2
-//#define LOG_WARNING 1
+#ifndef __LOGGER_H_
+#define __LOGGER_H_
+
+#define MKC_LOG_NOTICE  1
+#define MKC_LOG_WARNING 2
+#define MKC_LOG_ERROR   3
+#define MKC_LOG_DEBUG   4
+
+#include "config.h"
 
 extern server_conf_t server_config;
 
-// 废弃
-void mmqLogRaw(int level,const char *msg);
+int mkc_write_log(int log_level,const char *format,...);
 
-void mmqLog(int level,const char *fmt,...);
+
 #endif

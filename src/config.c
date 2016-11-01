@@ -25,6 +25,7 @@
 #include "hash.h"
 #include "list.h"
 #include "zmalloc.h"
+#include "logger.h"
 
 void module_conf_free(void *module_conf);
 /* *
@@ -37,7 +38,7 @@ int parse_server_conf(char *file_name){
     FILE *fp    =   fopen(file_name,"r");
 
     if(!fp){
-	fprintf(stderr,"fopen file [%s] %s\n",file_name,strerror(errno));
+	    mkc_write_log(MKC_LOG_ERROR,"fopen file [%s] %s\n",file_name,strerror(errno));
         return -1;
     }
     sds config   =   sdsnew("");
@@ -68,14 +69,17 @@ int parse_server_conf(char *file_name){
             server_config.brokers = sdscat(server_config.brokers,",");
 
         }else if(!strcasecmp(vector[0],"logfile")){
-            FILE *fp = fopen(server_config.logfile,"a"); 
+
+            FILE *fp = fopen(server_config.logfile,"a+"); 
+
             if(!fp){
                 //todo 待完善
-                fprintf(stderr,"open logfile[%s] error :%s\n",server_config.logfile,strerror(errno));
+                mkc_write_log(MKC_LOG_ERROR,"open logfile[%s] error :%s\n",server_config.logfile,strerror(errno));
                 continue;
             }
-            fclose(fp);
             server_config.logfile = zstrdup(vector[1]);
+            fclose(fp);
+
         }else if(!strcasecmp(vector[0],"daemonize")){
             server_config.daemonize = 0;
             if(!strcasecmp(vector[1],"on")){
@@ -90,19 +94,15 @@ int parse_server_conf(char *file_name){
             server_config.timeout = atoi(vector[1]);
         }else if(!strcasecmp(vector[0],"loglevel")){
 
-            /* 
             if(!strcasecmp(vector[1],"warning")){
-                server_config.loglevel    =   LOG_WARNING;
+                server_config.loglevel    =   MKC_LOG_WARNING;
             }else if(!strcasecmp(vector[1],"notice")){
-                server_config.loglevel    =   LOG_NOTICE;
-            }else if(!strcasecmp(vector[1],"verbose")){
-                server_config.loglevel    =   LOG_VERBOSE;
-            }else if(!strcasecmp(vector[1],"debug")){
-                server_config.loglevel    =   LOG_DEBUG;
+                server_config.loglevel    =   MKC_LOG_NOTICE;
+            }else if(!strcasecmp(vector[1],"erro")){
+                server_config.loglevel    =   MKC_LOG_ERROR;
             }else {
-                server_config.loglevel    =   LOG_WARNING;
+                server_config.loglevel    =   MKC_LOG_WARNING;
             }
-            */
         }else if(!strcasecmp(vector[0],"debug")){
 
             server_config.debug = 0;
@@ -112,6 +112,7 @@ int parse_server_conf(char *file_name){
                 server_config.debug = 1;
             }
 
+            /*  
         }else if(!strcasecmp(vector[0],"queuelogfile")){
 
             server_config.queuelogfile =   zstrdup(vector[1]);
@@ -119,6 +120,7 @@ int parse_server_conf(char *file_name){
         }else if(!strcasecmp(vector[0],"append-queue-file")){
 
             server_config.appendqueuelog   =   atoi(vector[1]);
+            */
 
         }else if(!strcasecmp(vector[0],"topic")){
 
@@ -131,7 +133,7 @@ int parse_server_conf(char *file_name){
             list_add_node_tail(server_config.commands,zstrdup(vector[1]),(void*)zstrdup(vector[1]));
 
             if(!hash_find(server_config.modules,vector[1],strlen(vector[1]))){
-                printf("add filters [%s]\n",vector[1]);
+                mkc_write_log(MKC_LOG_NOTICE, "add filters [%s]",vector[1]);
             }
         }else if(!strcasecmp(vector[0],"module")){
 
@@ -147,12 +149,12 @@ int parse_server_conf(char *file_name){
     }
     if(!server_config.confpath){
 
-        fprintf(stderr,"there is no confpath in server conf.");
+        mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.");
         exit(1);
     }
     if(server_config.commands->len == 0){
 
-        fprintf(stderr,"there is no filters num in conf.");
+        mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.");
 
         return -1;
     }
@@ -170,13 +172,13 @@ module_conf_t *parse_module_conf(const char *filename){
 
     sprintf(module_conf_file,"%s/%s",server_config.confpath,filename);
 
+    mkc_write_log(MKC_LOG_NOTICE,"load module conf[%s]",module_conf_file);
     FILE *fp     =  fopen(module_conf_file,"r");
 
     if(!fp){
         //    mmqLog(LOG_WARNING,"module conf file [%s] open failed.",module_conf_file);
-        fprintf(stderr,"module conf file [%s] open failed.",module_conf_file);
+        mkc_write_log(MKC_LOG_ERROR,"module conf file [%s] open failed.",module_conf_file);
         exit(1);
-        return NULL;
     }
 
     char buf[1024]  =   {0};
@@ -240,7 +242,7 @@ module_conf_t *parse_module_conf(const char *filename){
             int command = atoi(vector[1]);
             if(list_find_node(server_config.commands,vector[1])){
 
-                printf("parse moduelconf %s\n",vector[1]);
+                mkc_write_log(MKC_LOG_NOTICE, "parse moduelconf %s\n",vector[1]);
 
                 /*
                 list *node = hash_find(server_config.modules,vector[1],strlen(vector[1]));
@@ -263,13 +265,13 @@ module_conf_t *parse_module_conf(const char *filename){
 
     if(!module_conf->name){
 
-        fprintf(stderr,"there is no name in conf file [%s]\n",module_conf_file);
+        mkc_write_log(MKC_LOG_ERROR,"there is no name in conf file [%s]\n",module_conf_file);
 
         exit(1);
     }
     if(server_config.modules->element_num == 0){
 
-        fprintf(stderr,"there is no filters in conf file [%s]\n",module_conf_file);
+        mkc_write_log(MKC_LOG_ERROR,"there is no filters in conf file [%s]\n",module_conf_file);
 
         exit(1);
     }

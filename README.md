@@ -28,22 +28,39 @@ commit接口根据不同的commandId进行处理
 
 https://github.com/edenhill/librdkafka
 
-### 安装依赖库
+### 安装 zookeeper
 
-yum install zlib-devel -y
+wget http://apache.org/dist/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
+
+tar zxvf ./zookeeper-3.4.9.tar.gz
+
+cd ./zookeeper-3.4.9/src/c
+
+./configure && make && make install
 
 ### 安装consumer
 
+git clone https://gitlab.meitu.com/mdp/mkc
+
+cd mkc/
+
 make
+
+make install
 
 # 配置相关
 
 配置分为两层，server.conf和module.conf
+
 ## server.conf
 ```
 
 #守护模式
 daemonize on
+
+#zookeeper 主机名称和端口名
+
+zookeeper 172.18.6.10:2181
 
 #配置路径
 confpath /web/kafka-consumer/consumer/conf
@@ -58,7 +75,7 @@ debug yes
 loglevel verbose 
 
 #日志路径
-logfile /web/nmq/logs/nmq.log
+logfile /web/kafka-consumer/consumer/logs/mkc.log
 
 #监听的topic
 
@@ -128,6 +145,8 @@ uri  http://delivery.meitu.com/commit/commit
     在强一致情况下，某个命令因为数据错误（比如上游验证不严密）一直消费失败，那
     就会堵住后面队列消费的情况，而这种情况我们是已知的，该消息是可以忽略的，
     因此我们需要人工干预跳过这条消费继续执行后面的数据消费
+
+5、增加zookeeper支持[done]
 
 # bug fix.
 ...

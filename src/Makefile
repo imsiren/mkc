@@ -7,7 +7,7 @@ CONSUMER_NAME=consumer
 $(CC)=gcc;
 
 all : main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o logger.o
-	$(CC) -g -o $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o -lrdkafka -lz -lpthread -lm
+	$(CC) -g -o $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o -lrdkafka -lz -lpthread -lm -lzookeeper_mt -ljansson
 main.o: main.c consumer.h
 	$(CC)  -c -g  main.c
 http.o: http.c http.c consumer.h

@@ -27,6 +27,8 @@
 #include "zmalloc.h"
 #include "logger.h"
 
+#include "librdkafka/rdkafka.h"
+
 void module_conf_free(void *module_conf);
 /* *
  * @desc 解析服务配置
@@ -67,6 +69,10 @@ int parse_server_conf(char *file_name){
 
             server_config.brokers = sdscat(server_config.brokers,vector[1]);
             server_config.brokers = sdscat(server_config.brokers,",");
+
+        }else if(!strcasecmp(vector[0],"zookeeper")){
+
+            server_config.zookeeper = sdscat(server_config.zookeeper,vector[1]);
 
         }else if(!strcasecmp(vector[0],"logfile")){
 
@@ -124,8 +130,22 @@ int parse_server_conf(char *file_name){
 
         }else if(!strcasecmp(vector[0],"topic")){
 
-            //server_config.topics = zstrdup(vector[1]);
-            list_add_node_tail(server_config.topics,zstrdup(vector[1]),zstrdup(vector[1]));
+
+            mkc_topic *topic = zmalloc(sizeof(mkc_topic));
+
+            topic->partition = RD_KAFKA_PARTITION_UA;
+            topic->offset = 0;
+
+            topic->name = sdsnew(vector[1]);
+            if(vector[2] == 0x0){
+                topic->partition = atoi(vector[2]);
+            }
+            if(vector[3] == '\0'){
+                topic->offset = atoll(vector[3]);
+            }
+
+            list_add_node_tail(server_config.topics,zstrdup(vector[1]),topic);
+
         }else if(!strcasecmp(vector[0],"filters")){
 
             int command = atoi(vector[1]);

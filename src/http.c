@@ -87,9 +87,7 @@ static int http_client_recv(int socket_fd, char *buff){
 
     int recv_num = 0;
 
-    mkc_write_log(MKC_LOG_NOTICE,"recving...\n");
-
-
+    //mkc_write_log(MKC_LOG_NOTICE,"recving...\n");
 recv:{
          //这里只接收一个BUFFER_SIZE长度的数据，因为只需要解析header信息
          recv_num = recv(socket_fd,buff, BUFFER_SIZE ,0);
@@ -104,6 +102,7 @@ recv:{
      if(recv_num < 0){
 
         mkc_write_log(MKC_LOG_ERROR,"recv %d %d %s.\n",recv_num,errno,strerror(errno));
+        return -1;
      }
      return recv_num;
 }
@@ -169,7 +168,7 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
     int socket_fd = http_client_create(host, _port);
     if(socket_fd < 0){
 
-        printf("client create error %d %s\n",errno,strerror(errno));
+        mkc_write_log(MKC_LOG_ERROR,"client create error %d %s\n",errno,strerror(errno));
         return NULL;
     }
 
@@ -179,7 +178,7 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
 
     sprintf(post_buf,HTTP_POST,file,host,(int)strlen(post_data),post_data);
 
-    mkc_write_log(MKC_LOG_NOTICE,"post data %s\n",post_buf);
+    //mkc_write_log(MKC_LOG_NOTICE,"post data %s\n",post_buf);
     if((http_client_send(socket_fd, post_buf,strlen(post_buf)) <= 0)){
 
         mkc_write_log(MKC_LOG_ERROR,"http_client_send error");
@@ -189,15 +188,20 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
 
     char recv_buffer[1024] = {0};
 
-    if(http_client_recv(socket_fd,recv_buffer)){
+    if(http_client_recv(socket_fd,recv_buffer) < 0){
 
-        mkc_write_log(MKC_LOG_NOTICE,"recv data :%s\n",recv_buffer);
+        
+        mkc_write_log(MKC_LOG_NOTICE,"recv failed:url[%s]\n",url);
+        goto done;
     }
 
     response = http_client_parse_result(recv_buffer);
+
+    mkc_write_log(MKC_LOG_NOTICE,"recv success:url[%s]\n",url);
+
 done:
     http_client_closed(socket_fd);
-    printf("done\n");
+    //printf("done\n");
     return response;
 }
 

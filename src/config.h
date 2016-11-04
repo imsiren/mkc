@@ -40,6 +40,13 @@ typedef struct {
     module_conf_t **module_conf;
 }module_cmd_t ;
 
+typedef struct mkc_topic {
+
+    sds name;
+    int partition;
+    int64_t offset;
+}mkc_topic;
+
 typedef struct server_conf_t {
 
     int daemonize;
@@ -54,12 +61,17 @@ typedef struct server_conf_t {
 
     int verbose;
     char *url;
+
     sds brokers;
+
+    sds zookeeper;
+
     char *group;
 
     char mode;
 
     list *topics;
+
     char *domain;
 
 

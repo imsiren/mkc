@@ -31,7 +31,15 @@
 #include "sds.h"
 #include "logger.h"
 
+//#include <librdkafka/rdkafka.h>  /* for Kafka driver */
+
+#include <zookeeper/zookeeper.h>
+#include <zookeeper/zookeeper.jute.h>
+#include <jansson.h>
+
 #define SERVER_COMMAND_NUM 200
+
+#define BROKER_PATH "/brokers/ids"
 
 static int run = 1;
 
@@ -40,9 +48,105 @@ static rd_kafka_t * rk;
 
 server_conf_t server_config;
 
+/**
+ * @brief 查找zookeeper节点
+ *
+ * @param zzh
+ * @param brokers
+ * */
+static void set_brokerlist_from_zookeeper(zhandle_t *zzh, char *brokers){
+
+    if(zzh){
+
+        struct String_vector brokerlist;
+        if(zoo_get_children(zzh, BROKER_PATH,1,&brokerlist) != ZOK){
+
+            mkc_write_log(MKC_LOG_ERROR,"No brokers found on path %s",BROKER_PATH);
+            return;
+        }
+
+        int i ;
+        char *brokerptr = brokers;
+        for(i = 0; i < brokerlist.count;i++){
+
+            char path[255], cfg[1024];
+            sprintf(path,"/brokers/ids/%s",brokerlist.data[i]);
+            int len = sizeof(cfg);
+            zoo_get(zzh, path,0,cfg,&len ,NULL);
+
+            if(len > 0){
+
+                cfg[len] = '\0';
+                json_error_t jerror;
+                json_t *jobj = json_loads(cfg, 0 , &jerror);
+
+                if(jobj){
+                    json_t *jhost = json_object_get(jobj,"host");
+                    json_t *jport = json_object_get(jobj,"port");
+
+                    if(jhost && jport){
+
+                        const char *host = json_string_value(jhost);
+                        const int port   = json_integer_value(jport);
+                        sprintf(brokerptr,"%s:%d",host,port);
+                        brokerptr += strlen(brokerptr);
+
+                        if(i < brokerlist.count - 1){
+
+                            *brokerptr++ = ',';
+                        }
+                    }
+                    json_decref(jobj);
+
+                }
+            }
+        }
+        deallocate_String_vector(&brokerlist);
+        mkc_write_log(MKC_LOG_NOTICE,"Found brokers %s\n",brokers);
+    }
+}
+
+static void watcher(zhandle_t *zh,int type,int state, const char *path, void *watcherCtx){
+
+    char brokers[1024];
+
+    if(type == ZOO_CHILD_EVENT && strncmp(path,BROKER_PATH, sizeof(BROKER_PATH) - 1) == 0){
+
+        brokers[0] = '\0';
+
+        set_brokerlist_from_zookeeper(zh,brokers);
+
+        if(brokers[0] != '\0' && rk != NULL){
+
+            rd_kafka_brokers_add(rk,brokers);
+            rd_kafka_poll(rk,10);
+        }
+    }
+
+}
+
+static zhandle_t* initialize_zookeeper(const char *zookeeper,const int debug){
+
+    zhandle_t *zh;
+
+    if(debug){
+        zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
+    }
+
+    zh = zookeeper_init(zookeeper,watcher, 10000,0,0,0);
+
+    if(zh == NULL){
+
+        mkc_write_log(MKC_LOG_ERROR,"%s","Zookeeper connection not established.");
+        exit(1);
+    }
+
+    return zh;
+}
+
 static int process_running(int argc, char **argv);
 
-static void shutdown(){
+static void shut_down(){
 
     list_release(server_config.commands);
 
@@ -54,7 +158,7 @@ static void stop(int sig){
         exit(1);
     }
     run = 0;
-    shutdown();
+    shut_down();
     fclose(stdin);
 }
 
@@ -66,6 +170,7 @@ static void sig_usr1 (int sig) {
 static void init_server_conf(){
 
     server_config.brokers = sdsnew("");
+    server_config.zookeeper = sdsnew("");
     server_config.daemonize = 1;
     server_config.pidfile = "./mmq.pid";
     server_config.loglevel = 1 ;//warning
@@ -102,7 +207,7 @@ static void print_partition_list (FILE *fp,
 
 static void rebalance_cb(rd_kafka_t *rk,rd_kafka_resp_err_t err,rd_kafka_topic_partition_list_t *partitions,void *opaque){
 
-    mkc_write_log(MKC_LOG_NOTICE, "%% Consumer  rebalanced: ");
+    mkc_write_log(MKC_LOG_NOTICE, "%% Consumer  rebalanced: \n");
 
     switch (err){
         case RD_KAFKA_RESP_ERR__ASSIGN_PARTITIONS:
@@ -233,15 +338,12 @@ http_client_post:{
                          //如果指定了了重试次数或者为0，则一直重试
                          //如果一直失败会造成队列阻塞
                          if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ < conf->retrynum)){
+                             mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s]\n",url,rkmessage->payload);
                              goto http_client_post;
                          }
                      }
                  }
-                 if(current->next != 0){
-                     current = current->next;
-
-                 }
-                 break;
+                 current = current->next;
     }
     return 0;
 }
@@ -267,6 +369,7 @@ int main(int argc, char **argv){
     init_server_conf();
 
     int opt;
+
 
     while((opt = getopt(argc, argv,"c:u:b:g:v:d:DO")) != -1){
 
@@ -355,6 +458,10 @@ int main(int argc, char **argv){
 }
 static int process_running(int argc, char **argv){
 
+    const char *debug = "debug";
+
+    zhandle_t *zh = NULL;
+
     rd_kafka_conf_t *conf;
 
     rd_kafka_topic_conf_t *topic_conf;
@@ -362,12 +469,25 @@ static int process_running(int argc, char **argv){
     rd_kafka_resp_err_t err;
     rd_kafka_topic_partition_list_t *topics;
 
+    //char brokers[1024];
+    //初始化zookeeper
+    zh = initialize_zookeeper(server_config.zookeeper,debug != NULL);
+
+    //添加节点
+    set_brokerlist_from_zookeeper(zh,server_config.brokers);
+
     char errstr[512];
     char tmp[16];
 
     snprintf(tmp,sizeof(tmp), "%i",SIGIO);
 
     conf = rd_kafka_conf_new();
+
+    if(rd_kafka_conf_set(conf, "metadata.broker.list",server_config.brokers,errstr,sizeof(errstr) != RD_KAFKA_CONF_OK)){
+
+        mkc_write_log(MKC_LOG_ERROR,"Failed to set brokers:%s\n",errstr);
+        exit(1);
+    }
 
     //设置日志记录callback
     rd_kafka_conf_set_log_cb(conf,logger);
@@ -379,15 +499,14 @@ static int process_running(int argc, char **argv){
     char mode = 'C';
     int daemon = 0,verbose = 0;
 
-    const char *debug = "debug";
 
-    char *topic = NULL;
+    mkc_topic *topic = NULL;
     char *conf_file = "";
 
 
     if(server_config.debug > 0 && rd_kafka_conf_set(conf,"debug",debug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
-        mkc_write_log(MKC_LOG_NOTICE,"%%Debug configuration failed:%s :%s",errstr,debug);
+        mkc_write_log(MKC_LOG_NOTICE,"%%Debug configuration failed:%s :%s\n",errstr,debug);
     }
 
     //rd_kafka_conf_set_stats_cb(conf,stats_cb);
@@ -462,11 +581,20 @@ static int process_running(int argc, char **argv){
     }
     for(i = 0 ; i < server_config.topics->len ;i ++){
 
-        topic = node->value;
-        printf("node value :%s partition:%d\n",topic,partition);
+        //mkc_topic *mtopic = 0;
+        topic = (mkc_topic*)node->value;
+        printf("node value :%s partition:%d\n",topic->name,topic->partition);
 
         node = node->next;
-        rd_kafka_topic_partition_list_add(topics, topic,partition);
+        rd_kafka_topic_partition_list_add(topics, topic->name,topic->partition);
+
+        if(topic->offset > 0){
+
+            if(rd_kafka_topic_partition_list_set_offset(topics,topic->name,topic->partition,topic->offset) != RD_KAFKA_RESP_ERR_NO_ERROR){
+
+                mkc_write_log(MKC_LOG_ERROR,"topic [%s] partition was not found [%s]",topic->name,topic->partition);
+            }
+        }
     }
     /* 
 
@@ -537,6 +665,7 @@ done:
     if (run <= 0)
         rd_kafka_dump(stdout, rk);
     rd_kafka_destroy(rk);
+    zookeeper_close(zh);
 
     return 0;
 }

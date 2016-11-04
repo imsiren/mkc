@@ -148,6 +148,8 @@ uri  http://delivery.meitu.com/commit/commit
 
 5、增加zookeeper支持[done]
 
+6、增加kafka消费的高级配置项
+
 # bug fix.
 ...
 

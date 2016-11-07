@@ -57,7 +57,7 @@ typedef struct server_conf_t {
 
     int daemon;
 
-    int debug;
+    int zookeeper_debug;
 
     int verbose;
     char *url;

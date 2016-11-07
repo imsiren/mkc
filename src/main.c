@@ -54,8 +54,9 @@ server_conf_t server_config;
  * @param zzh
  * @param brokers
  * */
-static void set_brokerlist_from_zookeeper(zhandle_t *zzh, char *brokers){
+static void set_brokerlist_from_zookeeper(zhandle_t *zzh){
 
+    char brokers[1024] = {0};
     if(zzh){
 
         struct String_vector brokerlist;
@@ -102,11 +103,15 @@ static void set_brokerlist_from_zookeeper(zhandle_t *zzh, char *brokers){
             }
         }
         deallocate_String_vector(&brokerlist);
+
+        server_config.brokers = sdsnew(brokers);
+
         mkc_write_log(MKC_LOG_NOTICE,"Found brokers %s\n",brokers);
+
     }
 }
 
-static void watcher(zhandle_t *zh,int type,int state, const char *path, void *watcherCtx){
+static void zookeeper_watcher(zhandle_t *zh,int type,int state, const char *path, void *watcherCtx){
 
     char brokers[1024];
 
@@ -114,10 +119,11 @@ static void watcher(zhandle_t *zh,int type,int state, const char *path, void *wa
 
         brokers[0] = '\0';
 
-        set_brokerlist_from_zookeeper(zh,brokers);
+        set_brokerlist_from_zookeeper(zh);
 
         if(brokers[0] != '\0' && rk != NULL){
 
+            //添加节点
             rd_kafka_brokers_add(rk,brokers);
             rd_kafka_poll(rk,10);
         }
@@ -133,7 +139,7 @@ static zhandle_t* initialize_zookeeper(const char *zookeeper,const int debug){
         zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
     }
 
-    zh = zookeeper_init(zookeeper,watcher, 10000,0,0,0);
+    zh = zookeeper_init(zookeeper,zookeeper_watcher, 10000,0,0,0);
 
     if(zh == NULL){
 
@@ -169,7 +175,7 @@ static void sig_usr1 (int sig) {
 
 static void init_server_conf(){
 
-    server_config.brokers = sdsnew("");
+    //server_config.brokers = sdsnew("");
     server_config.zookeeper = sdsnew("");
     server_config.daemonize = 1;
     server_config.pidfile = "./mmq.pid";
@@ -427,11 +433,13 @@ int main(int argc, char **argv){
         exit(1);
     }
 
+    /*   已经改成从zookeeper获取节点
     if(sdslen(server_config.brokers) == 0){
 
         mkc_write_log(MKC_LOG_ERROR,"brokers is empty.");
         exit(1);
     }
+    */
 
     process_running(argc, argv);
 
@@ -471,10 +479,11 @@ static int process_running(int argc, char **argv){
 
     //char brokers[1024];
     //初始化zookeeper
-    zh = initialize_zookeeper(server_config.zookeeper,debug != NULL);
+    zh = initialize_zookeeper(server_config.zookeeper,server_config.zookeeper_debug > 0);
 
-    //添加节点
-    set_brokerlist_from_zookeeper(zh,server_config.brokers);
+	/* Add brokers */
+
+	set_brokerlist_from_zookeeper(zh);
 
     char errstr[512];
     char tmp[16];
@@ -504,7 +513,7 @@ static int process_running(int argc, char **argv){
     char *conf_file = "";
 
 
-    if(server_config.debug > 0 && rd_kafka_conf_set(conf,"debug",debug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
+    if(server_config.zookeeper_debug> 0 && rd_kafka_conf_set(conf,"debug",debug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
         mkc_write_log(MKC_LOG_NOTICE,"%%Debug configuration failed:%s :%s\n",errstr,debug);
     }
@@ -520,12 +529,15 @@ static int process_running(int argc, char **argv){
             mkc_write_log(MKC_LOG_ERROR,"%% %s\n",errstr);
             exit(1);
         }
+        //支持断点续传
         if(rd_kafka_topic_conf_set(topic_conf,"offset.store.path",server_config.log_path,errstr,sizeof(err) != RD_KAFKA_CONF_OK)){
 
+            mkc_write_log(MKC_LOG_ERROR,"%% %s\n",errstr);
             exit(1);
         }
         if(rd_kafka_topic_conf_set(topic_conf,"offset.store.sync.interval.ms","100",errstr,sizeof(err)) != RD_KAFKA_CONF_OK){
 
+            mkc_write_log(MKC_LOG_ERROR,"%% %s\n",errstr);
             exit(1);
         }
         if(rd_kafka_topic_conf_set(topic_conf,"offset.store.method","broker",errstr,sizeof(err)) != RD_KAFKA_CONF_OK){
@@ -544,17 +556,10 @@ static int process_running(int argc, char **argv){
         exit(1);
     }
 
-    if(server_config.debug > 0){
+    if(server_config.zookeeper_debug > 0){
 
         rd_kafka_set_log_level(rk,LOG_DEBUG);
     }
-
-    if(rd_kafka_brokers_add(rk, server_config.brokers) == 0){
-
-        mkc_write_log(MKC_LOG_ERROR,"No valid brokers.\n");
-        exit(1);
-    }
-
     if(mode == 'D'){
         int r;
         /*  
@@ -645,7 +650,7 @@ static int process_running(int argc, char **argv){
             continue;
         }
         err = rd_kafka_last_error();
-        mkc_write_log(MKC_LOG_DEBUG,"no message with error : %s \n",rd_kafka_err2str(err));
+        mkc_write_log(MKC_LOG_NOTICE,"no message with error : %s \n",rd_kafka_err2str(err));
     }
 
 done:

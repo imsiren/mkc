@@ -74,13 +74,13 @@ int parse_server_conf(char *file_name){
 
             server_config.zookeeper = sdscat(server_config.zookeeper,vector[1]);
 
-        }else if(!strcasecmp(vector[0],"logfile")){
+        }else if(!strcasecmp(vector[0],"log-file")){
 
             FILE *fp = fopen(server_config.logfile,"a+"); 
 
             if(!fp){
                 //todo 待完善
-                mkc_write_log(MKC_LOG_ERROR,"open logfile[%s] error :%s\n",server_config.logfile,strerror(errno));
+                mkc_write_log(MKC_LOG_ERROR,"open log-file[%s] error :%s\n",server_config.logfile,strerror(errno));
                 continue;
             }
             server_config.logfile = zstrdup(vector[1]);
@@ -91,31 +91,35 @@ int parse_server_conf(char *file_name){
             if(!strcasecmp(vector[1],"on")){
                server_config.daemonize = 1; 
             }
-        }else if(!strcasecmp(vector[0],"confpath")){
+        }else if(!strcasecmp(vector[0],"conf-path")){
 
             server_config.confpath =   zstrdup(vector[1]);
 
         }else if(!strcasecmp(vector[0],"timeout")){
 
             server_config.timeout = atoi(vector[1]);
-        }else if(!strcasecmp(vector[0],"loglevel")){
+        }else if(!strcasecmp(vector[0],"log-level")){
 
             if(!strcasecmp(vector[1],"warning")){
+
                 server_config.loglevel    =   MKC_LOG_WARNING;
             }else if(!strcasecmp(vector[1],"notice")){
+
                 server_config.loglevel    =   MKC_LOG_NOTICE;
-            }else if(!strcasecmp(vector[1],"erro")){
+            }else if(!strcasecmp(vector[1],"error")){
+
                 server_config.loglevel    =   MKC_LOG_ERROR;
             }else {
+
                 server_config.loglevel    =   MKC_LOG_WARNING;
             }
-        }else if(!strcasecmp(vector[0],"debug")){
+        }else if(!strcasecmp(vector[0],"zookeeper-debug")){
 
-            server_config.debug = 0;
+            server_config.zookeeper_debug = 0;
 
             if(!strcasecmp(vector[1],"yes")){
 
-                server_config.debug = 1;
+                server_config.zookeeper_debug = 1;
             }
 
             /*  
@@ -137,14 +141,16 @@ int parse_server_conf(char *file_name){
             topic->offset = 0;
 
             topic->name = sdsnew(vector[1]);
-            if(vector[2] == 0x0){
+
+            if(argc == 3){
+
                 topic->partition = atoi(vector[2]);
             }
-            if(vector[3] == '\0'){
+            if(argc == 4){
                 topic->offset = atoll(vector[3]);
             }
 
-            list_add_node_tail(server_config.topics,zstrdup(vector[1]),topic);
+            list_add_node_tail(server_config.topics,vector[1],topic);
 
         }else if(!strcasecmp(vector[0],"filters")){
 
@@ -153,7 +159,7 @@ int parse_server_conf(char *file_name){
             list_add_node_tail(server_config.commands,zstrdup(vector[1]),(void*)zstrdup(vector[1]));
 
             if(!hash_find(server_config.modules,vector[1],strlen(vector[1]))){
-                mkc_write_log(MKC_LOG_NOTICE, "add filters [%s]",vector[1]);
+                mkc_write_log(MKC_LOG_NOTICE, "add filters [%s]\n",vector[1]);
             }
         }else if(!strcasecmp(vector[0],"module")){
 
@@ -169,12 +175,12 @@ int parse_server_conf(char *file_name){
     }
     if(!server_config.confpath){
 
-        mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.");
+        mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.\n");
         exit(1);
     }
     if(server_config.commands->len == 0){
 
-        mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.");
+        mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.\n");
 
         return -1;
     }
@@ -192,7 +198,7 @@ module_conf_t *parse_module_conf(const char *filename){
 
     sprintf(module_conf_file,"%s/%s",server_config.confpath,filename);
 
-    mkc_write_log(MKC_LOG_NOTICE,"load module conf[%s]",module_conf_file);
+    mkc_write_log(MKC_LOG_NOTICE,"load module conf[%s]\n",module_conf_file);
     FILE *fp     =  fopen(module_conf_file,"r");
 
     if(!fp){

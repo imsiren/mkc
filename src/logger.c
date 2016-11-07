@@ -57,10 +57,12 @@ int mkc_write_log(int log_level, const char *format,...){
 
             log = sdscatlen(log,("E_WARNING\t"), strlen("E_WARNING\t"));
             break;
+            /*  
         case MKC_LOG_DEBUG:
 
             log = sdscatlen(log,("E_DEBUG\t"), strlen("E_DEBUG\t"));
             break;
+            */
         default:
 
             log = sdscatlen(log,("E_WARNING\t"), strlen("E_WARNING\t"));

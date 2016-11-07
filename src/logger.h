@@ -19,10 +19,9 @@
 #ifndef __LOGGER_H_
 #define __LOGGER_H_
 
-#define MKC_LOG_NOTICE  1
-#define MKC_LOG_WARNING 2
-#define MKC_LOG_ERROR   3
-#define MKC_LOG_DEBUG   4
+#define MKC_LOG_ERROR   1  // 01
+#define MKC_LOG_NOTICE  2  // 10
+#define MKC_LOG_WARNING 3  // 11
 
 #include "config.h"
 

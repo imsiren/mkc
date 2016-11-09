@@ -38,6 +38,8 @@ cd ./zookeeper-3.4.9/src/c
 
 ./configure && make && make install
 
+### 按照an'zhuang按照安装jaa's'son
+
 ### 安装consumer
 
 git clone https://gitlab.meitu.com/mdp/mkc

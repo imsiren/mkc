@@ -83,7 +83,7 @@ int parse_server_conf(char *file_name){
                 mkc_write_log(MKC_LOG_ERROR,"open log-file[%s] error :%s\n",server_config.logfile,strerror(errno));
                 continue;
             }
-            server_config.logfile = zstrdup(vector[1]);
+            server_config.logfile = sdsdup(vector[1]);
             fclose(fp);
 
         }else if(!strcasecmp(vector[0],"daemonize")){
@@ -93,7 +93,11 @@ int parse_server_conf(char *file_name){
             }
         }else if(!strcasecmp(vector[0],"conf-path")){
 
-            server_config.confpath =   zstrdup(vector[1]);
+            server_config.confpath =  zstrdup(vector[1]);
+
+        }else if(!strcasecmp(vector[0],"pid-path")){
+
+            server_config.pidpath = zstrdup(vector[1]);
 
         }else if(!strcasecmp(vector[0],"timeout")){
 
@@ -286,7 +290,9 @@ module_conf_t *parse_module_conf(const char *filename){
 
             module_conf->method = zstrdup(vector[1]);
         }
-        sdsfreesplitres(vector,argc);
+        if(argc > 0){
+            sdsfreesplitres(vector,argc);
+        }
     }
 
     if(!module_conf->name){

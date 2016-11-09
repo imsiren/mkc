@@ -111,6 +111,15 @@ static void set_brokerlist_from_zookeeper(zhandle_t *zzh){
     }
 }
 
+/**
+ * @brief 用于监听zookeeper的节点
+ *
+ * @param zh
+ * @param type
+ * @param state
+ * @param path
+ * @param watcherCtx
+ * */
 static void zookeeper_watcher(zhandle_t *zh,int type,int state, const char *path, void *watcherCtx){
 
     char brokers[1024];
@@ -131,6 +140,14 @@ static void zookeeper_watcher(zhandle_t *zh,int type,int state, const char *path
 
 }
 
+/**
+ * @brief 初始化zookeeper
+ *
+ * @param zookeeper
+ * @param debug
+ *
+ * @return 
+ * */
 static zhandle_t* initialize_zookeeper(const char *zookeeper,const int debug){
 
     zhandle_t *zh;
@@ -160,6 +177,8 @@ static void shut_down(){
 }
 
 static void stop(int sig){
+
+    mkc_write_log(MKC_LOG_NOTICE,"Mkc will stopping...\n");
     if(!run){
         exit(1);
     }
@@ -194,6 +213,7 @@ static void init_server_conf(){
 
 static void logger(const rd_kafka_t *rk,int level, const char *fac, const char *buf){
 
+    fprintf(stderr,"%s\n",buf);
 }
 static void print_partition_list (FILE *fp,
         const rd_kafka_topic_partition_list_t
@@ -333,6 +353,10 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
 
             usleep(conf->delay);
         }
+        if(rkmessage->len == 0){
+
+            return 0;
+        }
 
         int retry_num = 0;
 http_client_post:{
@@ -362,12 +386,37 @@ static void usage(){
             "\n"
             " Options:\n"
             "  -c <>      config file\n"
-            "  -b <brokers>    Broker address \n"
-            "  topic "
             "\n",
             rd_kafka_version_str(), rd_kafka_version()
            );
 
+}
+
+static int write_pid(){
+
+    FILE *fp = NULL;
+
+    char pid_file[1024] = {0};
+
+    pid_t pid = getpid();
+
+    sprintf(pid_file,"%s/%d",server_config.pidpath,pid);
+
+    fp = fopen(pid_file ,"w+");
+
+    if(fp == NULL){
+
+        mkc_write_log(MKC_LOG_ERROR,"%s [%s]\n",strerror(errno),pid_file);
+        return -1;
+    }
+    char pidstr[128] = {0};
+
+    sprintf(pidstr,"%d",pid);
+
+    fputs(pidstr,fp);
+
+    fclose(fp);
+    return 0;
 }
 
 int main(int argc, char **argv){
@@ -384,30 +433,9 @@ int main(int argc, char **argv){
                 server_config.conffile = optarg;
                 break;
 
-            case 'u': //urls
-
-                server_config.url = optarg;
-                break;
-            case 'b': //brokers
-
-                server_config.brokers= optarg;
-                break;
-            case 'g': //
-
-                server_config.group = optarg;
-                break;
-            case 'v'://verbose
-
-                server_config.verbose = 1;
-                break;
             case 'd': //daemon
 
                 server_config.daemon = 1;
-                break;
-            case 'D':
-            case 'O':
-
-                server_config.mode = opt;
                 break;
             default:
                 usage();
@@ -415,11 +443,11 @@ int main(int argc, char **argv){
                 break;
         }
     }
-    signal(SIGTTOU, SIG_IGN);
 
-    signal(SIGINT,stop);
-    signal(SIGKILL,stop);
+    //signal(SIGINT,stop);
+    //signal(SIGKILL,stop);
     signal(SIGUSR1,sig_usr1);
+    signal(SIGTTOU, SIG_IGN);
 
     if(!server_config.conffile ){
 
@@ -433,36 +461,12 @@ int main(int argc, char **argv){
         exit(1);
     }
 
-    /*   已经改成从zookeeper获取节点
-    if(sdslen(server_config.brokers) == 0){
-
-        mkc_write_log(MKC_LOG_ERROR,"brokers is empty.");
-        exit(1);
-    }
-    */
+    write_pid();
 
     process_running(argc, argv);
 
     exit(0);
-    /*   后续加入守护进程。
-         int i ;
-         int process_num =1;// server_config.commands->len;
-         pid_t pid;
-         for(i = 0;i < process_num ;i ++){
-
-         if((pid = fork()) < 0){
-
-         mkc_write_log(MKC_LOG_NOTICE,"fork child process error %d %s.", errno ,strerror(errno));
-         exit(-1);
-         }else if(pid > 0){ //parent process
-
-         process_running(argc, argv);
-         }else if(pid == 0){ //child process
-
-         while(1);
-         }
-         }
-         */
+    /*   后续加入守护进程。 */
 }
 static int process_running(int argc, char **argv){
 
@@ -477,7 +481,6 @@ static int process_running(int argc, char **argv){
     rd_kafka_resp_err_t err;
     rd_kafka_topic_partition_list_t *topics;
 
-    //char brokers[1024];
     //初始化zookeeper
     zh = initialize_zookeeper(server_config.zookeeper,server_config.zookeeper_debug > 0);
 
@@ -601,25 +604,6 @@ static int process_running(int argc, char **argv){
             }
         }
     }
-    /* 
-
-       for(i = optind; i < argc; i++){
-       char *topic = argv[i];
-
-       char *t;
-       int32_t partition = -1;
-       if((t = strstr(topic,":"))){
-
-     *t = '\0';
-     partition = atoi(t+1);
-     is_subscription = 0;
-     }
-     printf("partition:%d\n",partition);
-
-     mkc_write_log(MKC_LOG_NOTICE,"topic:%s\n",topic);
-     rd_kafka_topic_partition_list_add(topics, topic,partition);
-     }
-     */
 
     if(is_subscription){
 

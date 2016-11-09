@@ -60,7 +60,6 @@ typedef struct server_conf_t {
     int zookeeper_debug;
 
     int verbose;
-    char *url;
 
     sds brokers;
 
@@ -68,16 +67,16 @@ typedef struct server_conf_t {
 
     char *group;
 
-    char mode;
-
     list *topics;
 
     char *domain;
 
 
-    char *confpath;
+    sds confpath;
 
     char *conffile;
+
+    sds pidpath;
 
     char *port;
 

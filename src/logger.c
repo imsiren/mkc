@@ -80,7 +80,7 @@ int mkc_write_log(int log_level, const char *format,...){
 
     va_end(ap);
 
-    sds output_log = sdscatlen(log,log_buffer,strlen(log_buffer));
+    sds output_log = sdscatlen(log,log_buffer,MKC_LOG_BUFFER_SIZE + sdslen(log));
 
 //    output_log = sdscatlen(output_log, "\n",1);
 
@@ -94,9 +94,9 @@ int mkc_write_log(int log_level, const char *format,...){
         fprintf(stderr,"%s\n", output_log);
     }
 
-    sdsfree(output_log);
     sdsfree(log_buffer);
-    //sdsfree(log);
+    sdsfree(output_log);
+    sdsfree(log);
     fclose(log_fp);
     return 0;
 }

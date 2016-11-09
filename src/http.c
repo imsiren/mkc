@@ -174,9 +174,10 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
 
     int size = post_len * 1024;
     char *post_buf = zmalloc(size);
+
     memset(post_buf,0,size);
 
-    sprintf(post_buf,HTTP_POST,file,host,(int)strlen(post_data),post_data);
+    sprintf(post_buf,HTTP_POST,file,host,post_len,post_data);
 
     //mkc_write_log(MKC_LOG_NOTICE,"post data %s\n",post_buf);
     if((http_client_send(socket_fd, post_buf,strlen(post_buf)) <= 0)){

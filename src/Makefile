@@ -3,7 +3,7 @@ PREFIX?=/usr/local/rdkafka-consumer
 INSTALL_BIN=$(PREFIX)/bin
 INSTALL=install
 
-CONSUMER_NAME=consumer
+CONSUMER_NAME=mkc
 $(CC)=gcc;
 
 all : main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o logger.o

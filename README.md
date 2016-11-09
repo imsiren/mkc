@@ -28,6 +28,19 @@ commit接口根据不同的commandId进行处理
 
 https://github.com/edenhill/librdkafka
 
+### 安装jansson
+
+git clone https://github.com/akheron/jansson
+
+autoreconf -i
+
+./configure
+
+make
+
+make install
+make && make install
+
 ### 安装 zookeeper
 
 wget http://apache.org/dist/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
@@ -37,8 +50,6 @@ tar zxvf ./zookeeper-3.4.9.tar.gz
 cd ./zookeeper-3.4.9/src/c
 
 ./configure && make && make install
-
-### 按照an'zhuang按照安装jaa's'son
 
 ### 安装consumer
 

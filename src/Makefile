@@ -1,5 +1,5 @@
 
-PREFIX?=/usr/local/rdkafka-consumer
+PREFIX?=/usr/local/mkc
 INSTALL_BIN=$(PREFIX)/bin
 INSTALL=install
 

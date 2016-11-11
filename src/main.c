@@ -285,9 +285,9 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
             return -1;
         }
         if (rkmessage->rkt){
-            mkc_write_log(MKC_LOG_NOTICE, "%% Consume error for "
+            mkc_write_log(MKC_LOG_NOTICE, "Consume error for "
                     "topic \"%s\" [%"PRId32"] "
-                    "offset %"PRId64": %s\n",
+                    "offset %"PRId64": %s \n",
                     rd_kafka_topic_name(rkmessage->rkt),
                     rkmessage->partition,
                     rkmessage->offset,
@@ -444,8 +444,8 @@ int main(int argc, char **argv){
         }
     }
 
-    //signal(SIGINT,stop);
-    //signal(SIGKILL,stop);
+    signal(SIGINT,stop);
+    signal(SIGKILL,stop);
     signal(SIGUSR1,sig_usr1);
     signal(SIGTTOU, SIG_IGN);
 

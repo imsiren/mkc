@@ -198,7 +198,7 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
 
     response = http_client_parse_result(recv_buffer);
 
-    mkc_write_log(MKC_LOG_NOTICE,"recv success:url[%s]\n",url);
+    mkc_write_log(MKC_LOG_NOTICE,"recv success:url[%s] code[%d]\n",url,response->http_code);
 
 done:
     http_client_closed(socket_fd);

@@ -44,18 +44,19 @@ int mkc_write_log(int log_level, const char *format,...){
 
     sds log = sdsnew(date_time);
 
+    int tm_len = sdslen(log);
     switch(log_level){
         case MKC_LOG_WARNING:
 
-            log = sdscatlen(log,("E_WARNING\t"), strlen("E_WARNING\t"));
+            log = sdscat(log,"E_WARNING\t");
             break;
         case MKC_LOG_NOTICE:
 
-            log = sdscatlen(log,("E_NOTICE\t"), strlen("E_NOTICE\t"));
+            log = sdscat(log,"E_NOTICE\t");
             break;
         case MKC_LOG_ERROR:
 
-            log = sdscatlen(log,("E_WARNING\t"), strlen("E_WARNING\t"));
+            log = sdscat(log,"E_WARNING\t");
             break;
             /*  
         case MKC_LOG_DEBUG:
@@ -65,7 +66,7 @@ int mkc_write_log(int log_level, const char *format,...){
             */
         default:
 
-            log = sdscatlen(log,("E_WARNING\t"), strlen("E_WARNING\t"));
+            log = sdscat(log,"E_WARNING\t");
             break;
     }
 
@@ -80,15 +81,14 @@ int mkc_write_log(int log_level, const char *format,...){
 
     va_end(ap);
 
-    sds output_log = sdscatlen(log,log_buffer,MKC_LOG_BUFFER_SIZE + sdslen(log));
-
-//    output_log = sdscatlen(output_log, "\n",1);
+    sds output_log = sdscat(log,log_buffer);
 
     FILE *log_fp = fopen(server_config.logfile,"a+");
 
     if(log_fp){// &&  (server_config.loglevel & log_level)){
 
         fputs(output_log,log_fp);
+	fclose(log_fp);
     }else{
 
         fprintf(stderr,"%s\n", output_log);
@@ -96,7 +96,5 @@ int mkc_write_log(int log_level, const char *format,...){
 
     sdsfree(log_buffer);
     sdsfree(output_log);
-    sdsfree(log);
-    fclose(log_fp);
     return 0;
 }

@@ -47,7 +47,7 @@ int parse_server_conf(char *file_name){
 
     while((fgets(line,1024,fp)) != NULL){
 
-        config  =   sdscatlen(config,line,strlen(line));   
+        config  =   sdscat(config,line);   
     }
     fclose(fp);
 
@@ -218,7 +218,7 @@ module_conf_t *parse_module_conf(const char *filename){
 
     while((fgets(buf,1024,fp))){
 
-        config  =   sdscatlen(config,buf,strlen(buf));
+        config  =   sdscat(config,buf);
     }
 
     fclose(fp);

@@ -24,7 +24,7 @@
 #define HTTP_POST "POST /%s HTTP/1.1\r\nHOST: %s\r\nAccept: */*\r\n"\
     "Accept-Encoding:gzip, deflate, sdch\r\n"\
     "User-Agent: kafka consumer\r\n"\
-    "Content-Type:text/html\r\nContent-Length: %d\r\n\r\n%s" 
+    "Content-Type:application/x-www-form-urlencoded\r\nContent-Length: %d\r\n\r\n%s" 
 
 typedef struct http_response_t {
 

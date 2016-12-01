@@ -14,6 +14,7 @@ version 0.1
 命名为命令号，然后携带其他传递数据，格式如下
 ```
 {
+    commitId:1239120498,
     commandId:1000042,
     data : {
         ...... 
@@ -164,5 +165,6 @@ uri  http://delivery.meitu.com/commit/commit
 6、增加kafka消费的高级配置项
 
 # bug fix.
+20161201 修复传输数据大的情况下，导致内存异常的bug.
 ...
 

@@ -24,7 +24,7 @@
 #include "logger.h"
 #include "sds.h"
 
-#define MKC_LOG_BUFFER_SIZE 1024
+#define MKC_LOG_BUFFER_SIZE 1024 * 1024
 
 int mkc_write_log(int log_level, const char *format,...){
 
@@ -38,7 +38,7 @@ int mkc_write_log(int log_level, const char *format,...){
 
     char date_time[128] = {0};
 
-    sds log_buffer = sdsnewlen("", MKC_LOG_BUFFER_SIZE);
+    //sds log_buffer = sdsnewlen("", MKC_LOG_BUFFER_SIZE);
 
     sprintf(date_time,"%d-%d-%d %d:%d:%d\t",tm_now->tm_year + 1900 ,tm_now->tm_mon + 1,tm_now->tm_mday,tm_now->tm_hour,tm_now->tm_min,tm_now->tm_sec);
 
@@ -73,28 +73,29 @@ int mkc_write_log(int log_level, const char *format,...){
     
     int ret = 0;
 
+    char *buffer = zmalloc(MKC_LOG_BUFFER_SIZE);
     va_list ap;
 
     va_start(ap, format);
 
-    vsprintf(log_buffer ,format,ap);
+    vsprintf(buffer,format,ap);
 
     va_end(ap);
 
-    sds output_log = sdscat(log,log_buffer);
+    log= sdscat(log,buffer);
 
     FILE *log_fp = fopen(server_config.logfile,"a+");
 
     if(log_fp){// &&  (server_config.loglevel & log_level)){
 
-        fputs(output_log,log_fp);
-	fclose(log_fp);
+        fputs(log,log_fp);
+        fclose(log_fp);
     }else{
 
-        fprintf(stderr,"%s\n", output_log);
+        fprintf(stderr,"%s\n", log);
     }
 
-    sdsfree(log_buffer);
-    sdsfree(output_log);
+    zfree(buffer);
+    sdsfree(log);
     return 0;
 }

@@ -238,7 +238,8 @@ module_conf_t *parse_module_conf(const char *filename){
     for(i = 0;i < totalline; i++){
 
         //注释跳过
-        if(lines[i][0] == '#' || lines[i][0] == '\n' || lines[i][0] == '\0'){
+        if(lines[i][0] == '#' || lines[i][0] == '\n' || lines[i][0] == '\0' || lines[i][0] == ' '){
+
             continue;
         }
         vector = sdssplitargs(lines[i],&argc);

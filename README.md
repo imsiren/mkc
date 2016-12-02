@@ -164,7 +164,15 @@ uri  http://delivery.meitu.com/commit/commit
 
 6、增加kafka消费的高级配置项
 
+#注意
+
+注意MKC使用的时候 要用 file_get_contents('php://input','r')方式获取输入流，因为 post请求传参不是key => val的，
+是一个独立的完整的json串，$_POST拿不到或者拿到的是错误的数据，建议这里封装一个基类专门处理这块逻辑，然后定义
+一个process使用
+
 # bug fix.
+
 20161201 修复传输数据大的情况下，导致内存异常的bug.
+
 ...
 

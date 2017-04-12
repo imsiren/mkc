@@ -19,6 +19,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <errno.h>
+#include <unistd.h>
 
 #include "zmalloc.h"
 #include "logger.h"
@@ -40,7 +42,7 @@ int mkc_write_log(int log_level, const char *format,...){
 
     //sds log_buffer = sdsnewlen("", MKC_LOG_BUFFER_SIZE);
 
-    sprintf(date_time,"%d-%d-%d %d:%d:%d\t",tm_now->tm_year + 1900 ,tm_now->tm_mon + 1,tm_now->tm_mday,tm_now->tm_hour,tm_now->tm_min,tm_now->tm_sec);
+    sprintf(date_time,"%d-%d-%d %d:%d:%d [%d]\t",tm_now->tm_year + 1900 ,tm_now->tm_mon + 1,tm_now->tm_mday,tm_now->tm_hour,tm_now->tm_min,tm_now->tm_sec,getpid());
 
     sds log = sdsnew(date_time);
 
@@ -82,16 +84,23 @@ int mkc_write_log(int log_level, const char *format,...){
 
     va_end(ap);
 
-    log= sdscat(log,buffer);
+    log = sdscat(log,buffer);
+    log = sdscat(log,"\n");
 
     FILE *log_fp = fopen(server_config.logfile,"a+");
 
     if(log_fp){// &&  (server_config.loglevel & log_level)){
 
-        fputs(log,log_fp);
+        int ret = fputs(log,log_fp);
+
+        if(ret == EOF){
+
+            fprintf(stderr,"mkc error:%s %s\n",server_config.logfile,strerror(errno));
+        }
         fclose(log_fp);
     }else{
 
+        fprintf(stderr,"open file [%s] error with [%s]\n", server_config.logfile,strerror(errno));
         fprintf(stderr,"%s\n", log);
     }
 

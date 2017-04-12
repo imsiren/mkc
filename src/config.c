@@ -40,7 +40,7 @@ int parse_server_conf(char *file_name){
     FILE *fp    =   fopen(file_name,"r");
 
     if(!fp){
-	    mkc_write_log(MKC_LOG_ERROR,"fopen file [%s] %s\n",file_name,strerror(errno));
+	    mkc_write_log(MKC_LOG_ERROR,"fopen file [%s] %s",file_name,strerror(errno));
         return -1;
     }
     sds config   =   sdsnew("");
@@ -80,7 +80,7 @@ int parse_server_conf(char *file_name){
 
             if(!fp){
                 //todo 待完善
-                mkc_write_log(MKC_LOG_ERROR,"open log-file[%s] error :%s\n",server_config.logfile,strerror(errno));
+                mkc_write_log(MKC_LOG_ERROR,"open log-file[%s] error :%s",server_config.logfile,strerror(errno));
                 continue;
             }
             server_config.logfile = sdsdup(vector[1]);
@@ -163,7 +163,7 @@ int parse_server_conf(char *file_name){
             list_add_node_tail(server_config.commands,zstrdup(vector[1]),(void*)zstrdup(vector[1]));
 
             if(!hash_find(server_config.modules,vector[1],strlen(vector[1]))){
-                mkc_write_log(MKC_LOG_NOTICE, "add filters [%s]\n",vector[1]);
+                mkc_write_log(MKC_LOG_NOTICE, "add filters [%s]",vector[1]);
             }
         }else if(!strcasecmp(vector[0],"module")){
 
@@ -179,12 +179,12 @@ int parse_server_conf(char *file_name){
     }
     if(!server_config.confpath){
 
-        mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.\n");
+        mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.");
         exit(1);
     }
     if(server_config.commands->len == 0){
 
-        mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.\n");
+        mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.");
 
         return -1;
     }
@@ -202,7 +202,7 @@ module_conf_t *parse_module_conf(const char *filename){
 
     sprintf(module_conf_file,"%s/%s",server_config.confpath,filename);
 
-    mkc_write_log(MKC_LOG_NOTICE,"load module conf[%s]\n",module_conf_file);
+    mkc_write_log(MKC_LOG_NOTICE,"load module conf[%s]",module_conf_file);
     FILE *fp     =  fopen(module_conf_file,"r");
 
     if(!fp){
@@ -273,7 +273,7 @@ module_conf_t *parse_module_conf(const char *filename){
             int command = atoi(vector[1]);
             if(list_find_node(server_config.commands,vector[1])){
 
-                mkc_write_log(MKC_LOG_NOTICE, "parse moduelconf %s\n",vector[1]);
+                mkc_write_log(MKC_LOG_NOTICE, "parse moduelconf %s",vector[1]);
 
                 /*
                 list *node = hash_find(server_config.modules,vector[1],strlen(vector[1]));
@@ -298,13 +298,13 @@ module_conf_t *parse_module_conf(const char *filename){
 
     if(!module_conf->name){
 
-        mkc_write_log(MKC_LOG_ERROR,"there is no name in conf file [%s]\n",module_conf_file);
+        mkc_write_log(MKC_LOG_ERROR,"there is no name in conf file [%s]",module_conf_file);
 
         exit(1);
     }
     if(server_config.modules->element_num == 0){
 
-        mkc_write_log(MKC_LOG_ERROR,"there is no filters in conf file [%s]\n",module_conf_file);
+        mkc_write_log(MKC_LOG_ERROR,"there is no filters in conf file [%s]",module_conf_file);
 
         exit(1);
     }

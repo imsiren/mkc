@@ -75,7 +75,7 @@ static int http_client_send(int socket_fd, char *data, int size){
         ret_num = send(socket_fd, data + send_num, size - send_num,0);
         if(ret_num == -1){
 
-            mkc_write_log(MKC_LOG_ERROR,"send error %d %s\n",errno,strerror(errno));
+            mkc_write_log(MKC_LOG_ERROR,"send error %d %s",errno,strerror(errno));
             return -1;
         }
         send_num += ret_num;
@@ -101,7 +101,7 @@ recv:{
      }
      if(recv_num < 0){
 
-        mkc_write_log(MKC_LOG_ERROR,"recv %d %d %s.\n",recv_num,errno,strerror(errno));
+        mkc_write_log(MKC_LOG_ERROR,"recv %d %d %s.",recv_num,errno,strerror(errno));
         return -1;
      }
      return recv_num;
@@ -112,6 +112,12 @@ static http_response_t *http_client_parse_result(const char *result){
     char *p = NULL;
 
     http_response_t *response = zmalloc(sizeof(http_response_t));
+
+    if(!response){
+
+        mkc_write_log(MKC_LOG_WARNING,"zmalloc() error");
+        return NULL;
+    }
 
     if((p = strstr(result,"HTTP/1.1"))){
 
@@ -168,12 +174,17 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
     int socket_fd = http_client_create(host, _port);
     if(socket_fd < 0){
 
-        mkc_write_log(MKC_LOG_ERROR,"client create error %d %s\n",errno,strerror(errno));
+        mkc_write_log(MKC_LOG_ERROR,"client create error %d %s",errno,strerror(errno));
         return NULL;
     }
 
     int size = post_len * 1024;
     char *post_buf = zmalloc(size);
+    if(!post_buf){
+
+        mkc_write_log(MKC_LOG_ERROR,"zmalloc() error.");
+        return NULL;
+    }
 
     memset(post_buf,0,size);
 
@@ -191,14 +202,13 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
 
     if(http_client_recv(socket_fd,recv_buffer) < 0){
 
-        
-        mkc_write_log(MKC_LOG_NOTICE,"recv failed:url[%s]\n",url);
+        mkc_write_log(MKC_LOG_NOTICE,"recv failed:url[%s]",url);
         goto done;
     }
 
     response = http_client_parse_result(recv_buffer);
 
-    mkc_write_log(MKC_LOG_NOTICE,"recv success:url[%s] code[%d]\n",url,response->http_code);
+    mkc_write_log(MKC_LOG_NOTICE,"recv success:url[%s] code[%d]",url,response->http_code);
 
 done:
     http_client_closed(socket_fd);
@@ -206,3 +216,4 @@ done:
     return response;
 }
 
+        

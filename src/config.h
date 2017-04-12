@@ -22,6 +22,7 @@
 
 #include "sds.h"
 #include "hash.h"
+#include "process.h"
 
 typedef struct {
 
@@ -54,6 +55,9 @@ typedef struct server_conf_t {
     int timeout;
 
     int loglevel;
+
+    int mkc_run;
+
 
     int daemon;
 
@@ -95,8 +99,15 @@ typedef struct server_conf_t {
 
     int pipe_fd[2];
 
+    //保存子进程信息
+    mkc_process_t **procs;
+
     list *commands;
+
     hash_table *modules;
+
+    int argc;
+    //char **argv;
     //hash_table *cmd_t;
     //module_conf_t **command_module_map;
 

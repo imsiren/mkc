@@ -32,12 +32,12 @@ typedef struct mkc_process_t{
 } mkc_process_t;
 
 
-sig_atomic_t mkc_sigalrm;
-sig_atomic_t mkc_sigterm;
-sig_atomic_t mkc_sigquit;
-sig_atomic_t mkc_sigreload;
-sig_atomic_t mkc_sigint;
-sig_atomic_t mkc_sigchld;
+int mkc_sigalrm;
+int mkc_sigterm;
+int mkc_sigquit;
+int mkc_sigreload;
+int mkc_sigint;
+int mkc_sigchld;
 
 static int run = 0;
 

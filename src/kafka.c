@@ -19,6 +19,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <sys/time.h>
+#include <signal.h>
 
 #include "mkc.h"
 #include "cJSON.h"

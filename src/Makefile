@@ -35,5 +35,5 @@ install:all
 
 	cp $(CONSUMER_NAME) $(INSTALL_BIN)/$(CONSUMER_NAME)
 clean:
-	rm -rf $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o
+	rm -rf $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o process.o kafka.o
 

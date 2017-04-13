@@ -19,8 +19,11 @@
 #ifndef _MKC_H
 
 
-static int mkc_argc;
+char **mkc_os_argv;
 char **mkc_argv;
+
 char **mkc_environ;
+
+static int mkc_argc;
 
 #endif

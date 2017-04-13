@@ -26,6 +26,7 @@
 #include "process.h"
 #include "logger.h"
 #include "kafka.h"
+#include "mkc.h"
 
 void mkc_set_worker_process_handler(){
 
@@ -86,6 +87,7 @@ int mkc_spawn_worker_process(){
         mkc_topic *topic = 0;
         switch(pid){
             case 0:
+                mkc_setproctitle("mkc: worker process");
                 kafka_init_server();
 
                 topic = (mkc_topic*)node->value;
@@ -229,6 +231,41 @@ void mkc_master_process(){
         }
     }
 }
-void mkc_setproctitle(const char *title){
+int mkc_init_setproctitle(char **envp){
 
+    int i;
+    for(i = 0;envp[i] != NULL;i++){
+
+        continue;
+    }
+    environ = zmalloc(sizeof(char*) + (i + 1));
+    if(!environ){
+
+        mkc_write_log(MKC_LOG_ERROR,"zmalloc() error");
+        return 1;
+    }
+
+    for(i = 0;envp[i] != NULL;i++){
+
+        environ[i] = zmalloc(sizeof(char) + strlen(envp[i]));
+
+        strcpy(environ[i], envp[i]);
+
+    }
+    environ[i] = NULL;
+    return 0;
+}
+
+void mkc_setproctitle(const char *title){
+    char *tmp = NULL;
+
+    int len = strlen(mkc_os_argv[0]);
+
+    tmp = mkc_os_argv[0];
+
+    memset(tmp,0,len);
+
+    mkc_os_argv[1] = NULL;
+
+    strncpy(tmp,title,len);
 }

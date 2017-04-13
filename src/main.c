@@ -138,6 +138,7 @@ int main(int argc, char **argv){
 
 
     server_config.argc = argc;
+    mkc_os_argv = argv;
     init_server_conf();
 
     int opt;
@@ -173,12 +174,15 @@ int main(int argc, char **argv){
         usage();
         exit(1);
     }
-    /*  
     if(mkc_save_argv(argc, argv) != 0){
 
         return 1;
     }
-    */
+
+    if(mkc_init_setproctitle(environ) != 0){
+
+        return 1;
+    }
 
     server_config.procs = zmalloc(sizeof(mkc_process_t) * server_config.topics->len);
     int i ;
@@ -187,6 +191,7 @@ int main(int argc, char **argv){
         server_config.procs[i] =  zmalloc(sizeof(mkc_process_t));
         memset(server_config.procs[i],0,sizeof(mkc_process_t));
     }
+    mkc_setproctitle( "mkc:master process");
 
     //创建多进程
     mkc_spawn_worker_process();

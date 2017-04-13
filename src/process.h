@@ -19,6 +19,10 @@
 #define _PROCESS_H
 #include <stdio.h>
 
+extern char **environ;
+static char **os_argv;
+static char *os_last_argv;
+
 typedef struct mkc_process_t{
 
     pid_t pid;
@@ -39,6 +43,8 @@ static int run = 0;
 
 void mkc_process_daemon();
 
+int mkc_init_setproctitle(char **envp);
+
 void mkc_setproctitle(const char *title);
 
 void mkc_master_process();
@@ -58,4 +64,5 @@ void mkc_signal_master_process(int sig);
 void mkc_master_handler(int sig);
 
 void mkc_master_process_exit();
+
 #endif

@@ -181,6 +181,7 @@ uri  http://delivery.meitu.com/commit/commit
 # bug fix.
 
 20161201 修复传输数据大的情况下，导致内存异常的bug.
+
 20170410 增加多进程，增加信号平滑控制机制
 
 ...

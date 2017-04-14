@@ -42,7 +42,7 @@ make
 make install
 make && make install
 
-### 安装 zookeeper
+### 安装 zookeeper --多线程版本已经启用
 
 wget http://apache.org/dist/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
 

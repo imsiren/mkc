@@ -61,13 +61,11 @@ typedef struct server_conf_t {
 
     int daemon;
 
-    int zookeeper_debug;
 
     int verbose;
 
     sds brokers;
 
-    sds zookeeper;
 
     char *group;
 

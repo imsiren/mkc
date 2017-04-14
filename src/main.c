@@ -44,6 +44,8 @@
 #define BROKER_PATH "/brokers/ids"
 
 
+char *mkc_signal ;
+int mkc_process;
 
 server_conf_t server_config;
 
@@ -51,10 +53,11 @@ static void init_server_conf(){
 
     server_config.brokers = sdsnew("");
     server_config.daemonize = 1;
-    server_config.pidfile = "./mkc.pid";
+    server_config.pidfile = "./logs/mkc.pid";
     server_config.loglevel = 1 ;//warning
     server_config.logfile = "./logs/mkc.log";
     server_config.confpath = "./conf";
+    server_config.conffile = "config/server.conf";
 
     server_config.timeout = 100;
     //server_config.cmd_t = hash_init(SERVER_COMMAND_NUM);
@@ -73,19 +76,20 @@ static void logger(const rd_kafka_t *rk,int level, const char *fac, const char *
 
 static void usage(){
     fprintf(stderr,
-            "Usage: bin [options] <topic[:part]> <topic[:part]>..\n"
+            "Usage: bin [options] \n"
             "\n"
             "librdkafka version %s (0x%08x)\n"
             "\n"
             " Options:\n"
             "  -c <>      config file\n"
+            "  -s stop|reload"
             "\n",
             rd_kafka_version_str(), rd_kafka_version()
            );
 
 }
 
-static int write_pid(){
+static int mkc_save_pid(){
 
     FILE *fp = NULL;
 
@@ -93,7 +97,7 @@ static int write_pid(){
 
     pid_t pid = getpid();
 
-    sprintf(pid_file,"%s/%d",server_config.pidpath,pid);
+    sprintf(pid_file,"%s/%s",server_config.pidpath,server_config.pidfile);
 
     fp = fopen(pid_file ,"w+");
 
@@ -143,7 +147,7 @@ int main(int argc, char **argv){
 
     int opt;
 
-    while((opt = getopt(argc, argv,"c:u:b:g:v:d:DO")) != -1){
+    while((opt = getopt(argc, argv,"cd:s")) != -1){
 
         switch(opt){
             case 'c':
@@ -154,13 +158,17 @@ int main(int argc, char **argv){
 
                 server_config.daemon = 1;
                 break;
-            default:
-                usage();
-                exit(1);
+            case 's':
+                if(!strcmp("reload",optarg)
+                 || !strcmp("stop",optarg)){
+
+                    mkc_signal = optarg;
+                }
                 break;
+            default:
+                exit(1);
         }
     }
-
 
     if(!server_config.conffile ){
 
@@ -174,10 +182,13 @@ int main(int argc, char **argv){
         usage();
         exit(1);
     }
+    fprintf(stderr,"logfile :%s\n",server_config.logfile);
+/*
     if(mkc_save_argv(argc, argv) != 0){
 
         return 1;
     }
+*/
 
     if(mkc_init_setproctitle(environ) != 0){
 
@@ -191,10 +202,19 @@ int main(int argc, char **argv){
         server_config.procs[i] =  zmalloc(sizeof(mkc_process_t));
         memset(server_config.procs[i],0,sizeof(mkc_process_t));
     }
-    mkc_setproctitle( "mkc:master process");
+    //mkc_setproctitle( "mkc: master process -c ");
+
+    //服务以信号模式启动
+    if(mkc_signal){
+
+        mkc_signal_process(mkc_signal);
+        exit(0);
+     }
 
     //创建多进程
     mkc_spawn_worker_process();
+
+    mkc_save_pid();
 
     mkc_master_process();
 

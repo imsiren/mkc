@@ -18,6 +18,8 @@
 #ifndef _PROCESS_H
 #define _PROCESS_H
 #include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 extern char **environ;
 static char **os_argv;
@@ -64,5 +66,7 @@ void mkc_signal_master_process(int sig);
 void mkc_master_handler(int sig);
 
 void mkc_master_process_exit();
+
+int mkc_signal_process(char *sig);
 
 #endif

@@ -28,6 +28,56 @@
 #include "kafka.h"
 #include "mkc.h"
 
+int mkc_signal_process(char *sig){
+   
+
+
+    printf("mkc signal process start");
+    char pid_file[1024] = {0}; 
+
+    sprintf(pid_file,"%s/%s",server_config.pidpath,server_config.pidfile);
+    
+    FILE *fp = fopen(pid_file,"r");
+
+    if(!fp){
+        mkc_write_log(MKC_LOG_ERROR,"read pid file error [%s], error[%s]",pid_file,strerror(errno));
+        return 0;
+    }
+
+    char buf[1024] = {0};
+    fread(buf,1024,1,fp);
+    if(fclose(fp)){
+
+        mkc_write_log(MKC_LOG_ERROR,"close pid file error [%s], error[%s]",pid_file,strerror(errno));
+        return 1;
+    }
+
+    pid_t pid = atoi(buf);
+    if(!pid){
+
+        mkc_write_log(MKC_LOG_ERROR,"invalid PID num \"%s\" in \"%s\".",pid,pid_file);
+        return 1;
+    }
+    int signo = 0;
+    if(!strcmp("stop",sig)){
+
+        signo = SIGQUIT;
+    }else if(!strcmp("reload",sig)){
+
+        signo = SIGHUP;
+    }else{
+
+        mkc_write_log(MKC_LOG_ERROR,"invalid signo. ");
+        return -1;
+    }
+    if(!kill(pid,signo)){
+
+        mkc_write_log(MKC_LOG_ERROR,"kill pid \"%d\" signo \"%s\" error[%s].",pid,sig,strerror(errno));
+        return -1;
+    }
+
+    return 0;
+}
 void mkc_set_worker_process_handler(){
 
     signal(SIGQUIT, mkc_worker_process_handler);
@@ -87,7 +137,7 @@ int mkc_spawn_worker_process(){
         mkc_topic *topic = 0;
         switch(pid){
             case 0:
-                mkc_setproctitle("mkc: worker process");
+                //mkc_setproctitle("mkc: worker process");
                 kafka_init_server();
 
                 topic = (mkc_topic*)node->value;
@@ -234,10 +284,23 @@ void mkc_master_process(){
 int mkc_init_setproctitle(char **envp){
 
     int i;
+    int size = 0;
+    char *p = 0;
     for(i = 0;envp[i] != NULL;i++){
 
+        size += strlen(envp[i]);
         continue;
     }
+    p = zmalloc(size);
+    if(!p){
+        mkc_write_log(MKC_LOG_ERROR,"zmalloc() error");
+        return 1;
+    }
+    for(i = 0;envp[i] != NULL;i++){
+        p = strcpy(p,envp[i]);
+        environ[i] = p;
+    }
+/*
     environ = zmalloc(sizeof(char*) + (i + 1));
     if(!environ){
 
@@ -252,6 +315,7 @@ int mkc_init_setproctitle(char **envp){
         strcpy(environ[i], envp[i]);
 
     }
+*/
     environ[i] = NULL;
     return 0;
 }
@@ -259,7 +323,7 @@ int mkc_init_setproctitle(char **envp){
 void mkc_setproctitle(const char *title){
     char *tmp = NULL;
 
-    int len = strlen(mkc_os_argv[0]);
+    int len = strlen(mkc_os_argv[0]) + strlen(title) + 2;
 
     tmp = mkc_os_argv[0];
 

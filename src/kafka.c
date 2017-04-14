@@ -155,6 +155,7 @@ http_client_post:{
                          mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,rkmessage->payload,response->http_code);
 
                          zfree(response);
+                        mkc_write_log(MKC_LOG_ERROR,"::::::::::%d\t%d\n",conf->retrynum,retry_num);
                          //如果指定了了重试次数或者为0，则一直重试
                          //如果一直失败会阻塞
                          if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ < conf->retrynum)){

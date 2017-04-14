@@ -70,10 +70,6 @@ int parse_server_conf(char *file_name){
             server_config.brokers = sdscat(server_config.brokers,vector[1]);
             server_config.brokers = sdscat(server_config.brokers,",");
 
-        }else if(!strcasecmp(vector[0],"zookeeper")){
-
-            server_config.zookeeper = sdscat(server_config.zookeeper,vector[1]);
-
         }else if(!strcasecmp(vector[0],"log-file")){
 
             FILE *fp = fopen(server_config.logfile,"a+"); 
@@ -98,6 +94,9 @@ int parse_server_conf(char *file_name){
         }else if(!strcasecmp(vector[0],"pid-path")){
 
             server_config.pidpath = zstrdup(vector[1]);
+        }else if(!strcasecmp(vector[0],"pid-file")){
+
+            server_config.pidfile = zstrdup(vector[1]);
 
         }else if(!strcasecmp(vector[0],"timeout")){
 
@@ -117,15 +116,6 @@ int parse_server_conf(char *file_name){
 
                 server_config.loglevel    =   MKC_LOG_WARNING;
             }
-        }else if(!strcasecmp(vector[0],"zookeeper-debug")){
-
-            server_config.zookeeper_debug = 0;
-
-            if(!strcasecmp(vector[1],"yes")){
-
-                server_config.zookeeper_debug = 1;
-            }
-
             /*  
         }else if(!strcasecmp(vector[0],"queuelogfile")){
 

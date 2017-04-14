@@ -62,6 +62,12 @@ make
 
 make install
 
+./mkc -c server.conf
+
+#### 信号模式 ,用于重启服务
+
+./mkc -s stop|reload
+
 # 配置相关
 
 配置分为两层，server.conf和module.conf
@@ -72,12 +78,14 @@ make install
 #守护模式
 daemonize on
 
-#zookeeper 主机名称和端口名
 
-zookeeper 172.18.6.10:2181
+brokers ip:port,ip:port
 
 #配置路径
 confpath /web/kafka-consumer/consumer/conf
+conffiel config/server.conf
+
+pidfile logs/mkc.pid
 
 #监听kafka最大的阻塞时间,ms
 timeout 100

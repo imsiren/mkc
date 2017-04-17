@@ -26,6 +26,10 @@
 #include <stdio.h>
 #include <signal.h>
 #include <ctype.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <string.h>
 
 #include "mkc.h"
 #include "cJSON.h"
@@ -48,6 +52,61 @@ char *mkc_signal ;
 int mkc_process;
 
 server_conf_t server_config;
+
+static int mkc_daemon(){
+
+    int fd;
+    
+    switch(fork()){
+        case -1 :
+
+            break;
+        case 0:
+
+            break;
+        default:
+            exit(0);
+    }
+
+    int pid = getpid();
+
+    if(setsid() == -1){
+
+        mkc_write_log(MKC_LOG_ERROR,"setsid() error.");
+        return 1;
+    }
+    umask(0);
+
+    fd = open("/dev/null",O_RDWR);
+
+    if(fd == -1){
+
+        mkc_write_log(MKC_LOG_ERROR,"open() error.");
+        return 1;
+    }
+    if(dup2(fd,STDIN_FILENO) == -1){
+
+        mkc_write_log(MKC_LOG_ERROR,"dup2(stdin) error.");
+        return 1;
+    }
+    if(dup2(fd,STDOUT_FILENO) == -1){
+
+        mkc_write_log(MKC_LOG_ERROR,"dup2(stdout) error.");
+        return 1;
+    }
+
+    if(fd > STDERR_FILENO){
+
+        mkc_write_log(MKC_LOG_ERROR,"dup2() error %d > %d. ",fd, STDERR_FILENO);
+
+        if(close(fd) == -1){
+
+            return 1;
+        }
+    }
+
+    return 0;
+}
 
 static void init_server_conf(){
 
@@ -209,6 +268,12 @@ int main(int argc, char **argv){
         mkc_signal_process(mkc_signal);
         exit(0);
      }
+
+    if(mkc_daemon() != 0){
+
+        fprintf(stderr,"daemon() error.");
+        exit(1);
+    }
 
     //创建多进程
     mkc_spawn_worker_process();

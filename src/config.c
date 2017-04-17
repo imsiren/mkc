@@ -40,7 +40,7 @@ int parse_server_conf(char *file_name){
     FILE *fp    =   fopen(file_name,"r");
 
     if(!fp){
-	    mkc_write_log(MKC_LOG_ERROR,"fopen file [%s] %s",file_name,strerror(errno));
+	    fprintf(stderr,"fopen file [%s] %s",file_name,strerror(errno));
         return -1;
     }
     sds config   =   sdsnew("");

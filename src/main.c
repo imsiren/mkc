@@ -57,7 +57,7 @@ static void init_server_conf(){
     server_config.loglevel = 1 ;//warning
     server_config.logfile = "./logs/mkc.log";
     server_config.confpath = "./conf";
-    server_config.conffile = "config/server.conf";
+    server_config.conffile = "conf/server.conf";
 
     server_config.timeout = 100;
     //server_config.cmd_t = hash_init(SERVER_COMMAND_NUM);
@@ -147,7 +147,7 @@ int main(int argc, char **argv){
 
     int opt;
 
-    while((opt = getopt(argc, argv,"cd:s")) != -1){
+    while((opt = getopt(argc, argv,"c:ds")) != -1){
 
         switch(opt){
             case 'c':
@@ -174,9 +174,8 @@ int main(int argc, char **argv){
 
         usage();
         exit(1);
-    }else{
-        fprintf(stderr,"load conf file:%s\n",server_config.conffile);
     }
+    fprintf(stderr,"load conf file:%s\n",server_config.conffile);
 
     if(parse_server_conf(server_config.conffile) == -1){
         usage();

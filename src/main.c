@@ -148,7 +148,7 @@ static void usage(){
 
 }
 
-static int mkc_save_pid(){
+static int mkc_create_pid(){
 
     FILE *fp = NULL;
 
@@ -269,7 +269,7 @@ int main(int argc, char **argv){
         exit(0);
      }
 
-    if(mkc_daemon() != 0){
+    if(server_config.daemonize == 1 && mkc_daemon() != 0){
 
         fprintf(stderr,"daemon() error.");
         exit(1);
@@ -278,12 +278,11 @@ int main(int argc, char **argv){
     //创建多进程
     mkc_spawn_worker_process();
 
-    mkc_save_pid();
+    mkc_create_pid();
 
     mkc_master_process();
 
     exit(0);
-    /*   后续加入守护进程。 */
 }
 
 

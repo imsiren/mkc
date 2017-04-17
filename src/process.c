@@ -75,7 +75,12 @@ int mkc_signal_process(char *sig){
         mkc_write_log(MKC_LOG_ERROR,"kill pid \"%d\" signo \"%s\" error[%s].",pid,sig,strerror(errno));
         return -1;
     }
+    //删除pid文件
 
+    if(unlink(server_config.pidfile) != 0){
+
+        return 1;
+    }
     return 0;
 }
 void mkc_set_worker_process_handler(){
@@ -250,7 +255,6 @@ void mkc_master_process(){
 
     int live = 0;
     while(1){
-
 
         live = mkc_reap_children();
 

@@ -80,7 +80,8 @@ int parse_server_conf(char *file_name){
                 continue;
             }
             server_config.logfile = sdsdup(vector[1]);
-            fclose(fp);
+            //fclose(fp);
+            server_config.logfp = fp;
 
         }else if(!strcasecmp(vector[0],"daemonize")){
             server_config.daemonize = 0;

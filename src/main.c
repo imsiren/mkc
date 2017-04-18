@@ -206,7 +206,7 @@ int main(int argc, char **argv){
 
     int opt;
 
-    while((opt = getopt(argc, argv,"c:ds")) != -1){
+    while((opt = getopt(argc, argv,"c:ds:")) != -1){
 
         switch(opt){
             case 'c':

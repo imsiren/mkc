@@ -32,7 +32,7 @@ int mkc_signal_process(char *sig){
    
 
 
-    printf("mkc signal process start");
+    fprintf(stderr,"mkc signal process start\n");
     char pid_file[1024] = {0}; 
 
     sprintf(pid_file,"%s/%s",server_config.pidpath,server_config.pidfile);

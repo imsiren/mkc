@@ -20,6 +20,8 @@
 
 
 char **mkc_os_argv;
+char *mkc_os_argv_last;
+
 char **mkc_argv;
 
 char **mkc_environ;

@@ -142,7 +142,7 @@ int mkc_spawn_worker_process(){
         mkc_topic *topic = 0;
         switch(pid){
             case 0:
-                //mkc_setproctitle("mkc: worker process");
+                mkc_setproctitle("mkc: worker process");
                 kafka_init_server();
 
                 topic = (mkc_topic*)node->value;
@@ -285,6 +285,28 @@ void mkc_master_process(){
         }
     }
 }
+char *mkc_cpystrn(char *dst,const char *src, size_t n)
+{
+    if (n == 0) {
+        return dst;
+    }
+
+    while (--n) {
+        *dst = *src;
+
+        if (*dst == '\0') {
+            return dst;
+        }
+
+        dst++;
+        src++;
+    }
+
+    *dst = '\0';
+
+    return dst;
+}
+
 int mkc_init_setproctitle(char **envp){
 
     int i;
@@ -295,14 +317,25 @@ int mkc_init_setproctitle(char **envp){
         size += strlen(envp[i]);
         continue;
     }
+
+    mkc_os_argv_last = mkc_os_argv[0];
+
+    for(i = 0;i < server_config.argc; i++){
+           if(mkc_os_argv_last == mkc_os_argv[i]){
+                mkc_os_argv_last = mkc_os_argv[i] + strlen(mkc_os_argv[i]) + 1;
+           }
+           
+    }
     p = zmalloc(size);
     if(!p){
         mkc_write_log(MKC_LOG_ERROR,"zmalloc() error");
         return 1;
     }
     for(i = 0;envp[i] != NULL;i++){
-        p = strcpy(p,envp[i]);
-        environ[i] = p;
+        if(mkc_os_argv_last = envp[i]){
+            p = strcpy(p,envp[i]);
+            environ[i] = p;
+        }
     }
 /*
     environ = zmalloc(sizeof(char*) + (i + 1));
@@ -325,15 +358,23 @@ int mkc_init_setproctitle(char **envp){
 }
 
 void mkc_setproctitle(const char *title){
-    char *tmp = NULL;
-
-    int len = strlen(mkc_os_argv[0]) + strlen(title) + 2;
-
-    tmp = mkc_os_argv[0];
-
-    memset(tmp,0,len);
+/*
+    char *p = NULL;
 
     mkc_os_argv[1] = NULL;
 
-    strncpy(tmp,title,len);
+    p = mkc_cpystrn(mkc_os_argv[0], "mkc: ",mkc_os_argv_last - mkc_os_argv[0]);
+    p = mkc_cpystrn(p , title,mkc_os_argv_last - (char*)p);
+    int i,size;
+
+    for(i = 0;i < server_config.argc;i++){
+
+        p = mkc_cpystrn(p , mkc_os_argv[i], mkc_os_argv_last - (char *)p); 
+        p = mkc_cpystrn(p , " ", mkc_os_argv_last - (char*)p);
+    }
+    if(mkc_os_argv_last - (char*)p){
+
+        memset( p ,0, mkc_os_argv_last - (char*)p);
+    }
+*/
 }

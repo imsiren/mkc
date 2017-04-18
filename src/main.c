@@ -250,6 +250,7 @@ int main(int argc, char **argv){
 
     if(mkc_init_setproctitle(environ) != 0){
 
+        fprintf(stderr,"mkc_init_setproctitle error.");
         return 1;
     }
 
@@ -260,7 +261,6 @@ int main(int argc, char **argv){
         server_config.procs[i] =  zmalloc(sizeof(mkc_process_t));
         memset(server_config.procs[i],0,sizeof(mkc_process_t));
     }
-    //mkc_setproctitle( "mkc: master process -c ");
 
     //服务以信号模式启动
     if(mkc_signal){
@@ -269,12 +269,15 @@ int main(int argc, char **argv){
         exit(0);
      }
 
+/*
     if(server_config.daemonize == 1 && mkc_daemon() != 0){
 
         fprintf(stderr,"daemon() error.");
         exit(1);
     }
+*/
 
+    mkc_setproctitle( "mkc: master process -c ");
     //创建多进程
     mkc_spawn_worker_process();
 

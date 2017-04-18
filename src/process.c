@@ -142,13 +142,13 @@ int mkc_spawn_worker_process(){
         mkc_topic *topic = 0;
         switch(pid){
             case 0:
-                mkc_setproctitle("mkc: worker process");
                 kafka_init_server();
 
                 topic = (mkc_topic*)node->value;
 
                 mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
 
+                setproctitle("mkc:%s [%s]", "worker process",topic->name);
                 kafka_consume(topic);
 
                 break;

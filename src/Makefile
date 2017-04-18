@@ -6,8 +6,8 @@ INSTALL=install
 CONSUMER_NAME=mkc
 $(CC)=gcc;
 
-all : main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o logger.o process.o kafka.o
-	$(CC) -g -o $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o process.o kafka.o -lrdkafka -lz -lpthread -lm -ljansson
+all : main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o logger.o process.o kafka.o setproctitle.o
+	$(CC) -g -o $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o process.o kafka.o setproctitle.o -lrdkafka -lz -lpthread -lm -ljansson
 main.o: main.c consumer.h mkc.h
 	$(CC)  -c -g  main.c
 http.o: http.c http.c consumer.h
@@ -30,10 +30,12 @@ process.o: process.c process.h
 	$(CC) -c -g process.c
 kafka.o: kafka.c kafka.h
 	$(CC) -c -g kafka.c
+setproctitle.o:
+	$(CC) -c -g setproctitle.c
 install:all
 	@mkdir -p $(INSTALL_BIN)
 
 	cp $(CONSUMER_NAME) $(INSTALL_BIN)/$(CONSUMER_NAME)
 clean:
-	rm -rf $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o process.o kafka.o
+	rm -rf $(CONSUMER_NAME) main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o process.o kafka.o setproctitle.o
 

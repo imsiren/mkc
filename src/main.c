@@ -248,12 +248,7 @@ int main(int argc, char **argv){
     }
 */
 
-    if(mkc_init_setproctitle(environ) != 0){
-
-        fprintf(stderr,"mkc_init_setproctitle error.");
-        return 1;
-    }
-
+    spt_init(argc,argv);
     server_config.procs = zmalloc(sizeof(mkc_process_t) * server_config.topics->len);
     int i ;
     for(i = 0;i < server_config.topics->len; i ++){
@@ -269,15 +264,13 @@ int main(int argc, char **argv){
         exit(0);
      }
 
-/*
     if(server_config.daemonize == 1 && mkc_daemon() != 0){
 
         fprintf(stderr,"daemon() error.");
         exit(1);
     }
-*/
 
-    mkc_setproctitle( "mkc: master process -c ");
+    setproctitle("mkc:%s","master process");
     //创建多进程
     mkc_spawn_worker_process();
 

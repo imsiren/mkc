@@ -67,8 +67,6 @@ typedef struct server_conf_t {
     sds brokers;
 
 
-    char *group;
-
     list *topics;
 
     char *domain;
@@ -109,6 +107,8 @@ typedef struct server_conf_t {
     hash_table *modules;
 
     int argc;
+
+    char *kafkadebug;
     //char **argv;
     //hash_table *cmd_t;
     //module_conf_t **command_module_map;

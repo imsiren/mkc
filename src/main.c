@@ -116,7 +116,8 @@ static void init_server_conf(){
     server_config.loglevel = 1 ;//warning
     server_config.logfile = "./logs/mkc.log";
     server_config.confpath = "./conf";
-    server_config.conffile = "conf/server.conf";
+    server_config.kafkadebug = NULL;
+    //server_config.conffile = "conf/server.conf";
 
     server_config.timeout = 100;
     //server_config.cmd_t = hash_init(SERVER_COMMAND_NUM);

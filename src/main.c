@@ -208,7 +208,7 @@ int main(int argc, char **argv){
 
     int opt;
 
-    while((opt = getopt(argc, argv,"c:ds")) != -1){
+    while((opt = getopt(argc, argv,"c:ds:")) != -1){
 
         switch(opt){
             case 'c':
@@ -250,11 +250,7 @@ int main(int argc, char **argv){
     }
 */
 
-    if(mkc_init_setproctitle(environ) != 0){
-
-        return 1;
-    }
-
+    spt_init(argc,argv);
     server_config.procs = zmalloc(sizeof(mkc_process_t) * server_config.topics->len);
     int i ;
     for(i = 0;i < server_config.topics->len; i ++){
@@ -262,7 +258,6 @@ int main(int argc, char **argv){
         server_config.procs[i] =  zmalloc(sizeof(mkc_process_t));
         memset(server_config.procs[i],0,sizeof(mkc_process_t));
     }
-    //mkc_setproctitle( "mkc: master process -c ");
 
     //服务以信号模式启动
     if(mkc_signal){
@@ -277,6 +272,7 @@ int main(int argc, char **argv){
         exit(1);
     }
 
+    setproctitle("mkc:%s","master process");
     //创建多进程
     mkc_spawn_worker_process();
 

@@ -307,6 +307,7 @@ char *mkc_cpystrn(char *dst,const char *src, size_t n)
     return dst;
 }
 
+/*
 int mkc_init_setproctitle(char **envp){
 
     int i;
@@ -337,7 +338,6 @@ int mkc_init_setproctitle(char **envp){
             environ[i] = p;
         }
     }
-/*
     environ = zmalloc(sizeof(char*) + (i + 1));
     if(!environ){
 
@@ -352,10 +352,10 @@ int mkc_init_setproctitle(char **envp){
         strcpy(environ[i], envp[i]);
 
     }
-*/
     environ[i] = NULL;
     return 0;
 }
+*/
 
 void mkc_setproctitle(const char *title){
 /*

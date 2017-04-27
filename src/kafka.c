@@ -222,23 +222,25 @@ int kafka_init_server(){
         mkc_write_log(MKC_LOG_NOTICE,"%%Debug configuration failed:%s :%s",errstr,server_config.kafkadebug);
     }
 
-    //rd_kafka_conf_set_stats_cb(conf,stats_cb);
-    if(strchr("CO",mode)){
+    if(server_config.groupid != NULL && rd_kafka_conf_set(conf,"group.id",server_config.groupid,errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
-        if(server_config.groupid != NULL && rd_kafka_conf_set(conf,"group.id",server_config.groupid,errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK){
+        mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
+    }
+    //兼容低版本
+    if(server_config.fallback != NULL){
+        if(rd_kafka_conf_set(conf,"api.version.request","false",errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
             mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
         }
-        //兼容低版本
-        if(server_config.fallback != NULL){
-            if(rd_kafka_topic_conf_set(topic_conf,"api.version.request","false",errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
+        if(rd_kafka_conf_set(conf,"broker.version.fallback",server_config.fallback,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
-                mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
-            }
-            if(rd_kafka_topic_conf_set(topic_conf,"broker.version.fallback",server_config.fallback,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
-                mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
-            }
+            mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
         }
+    }
+
+    //rd_kafka_conf_set_stats_cb(conf,stats_cb);
+    if(strchr("CO",mode)){
+
         //支持断点续传
         if(rd_kafka_topic_conf_set(topic_conf,"offset.store.path",server_config.log_path,errstr,sizeof(err) != RD_KAFKA_CONF_OK)){
 

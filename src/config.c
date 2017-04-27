@@ -84,8 +84,9 @@ int parse_server_conf(char *file_name){
             server_config.logfp = fp;
 
         }else if(!strcasecmp(vector[0],"daemonize")){
-            server_config.daemonize = 0;
+
             if(!strcasecmp(vector[1],"on")){
+
                server_config.daemonize = 1; 
             }
         }else if(!strcasecmp(vector[0],"conf-path")){
@@ -117,15 +118,13 @@ int parse_server_conf(char *file_name){
 
                 server_config.loglevel    =   MKC_LOG_WARNING;
             }
-            /*  
-        }else if(!strcasecmp(vector[0],"queuelogfile")){
+        }else if(!strcasecmp(vector[0],"groupid")){
 
-            server_config.queuelogfile =   zstrdup(vector[1]);
+            server_config.groupid=   zstrdup(vector[1]);
 
-        }else if(!strcasecmp(vector[0],"append-queue-file")){
+        }else if(!strcasecmp(vector[0],"fallback")){
 
-            server_config.appendqueuelog   =   atoi(vector[1]);
-            */
+            server_config.fallback =   zstrdup(vector[1]);
 
         }else if(!strcasecmp(vector[0],"topic")){
 

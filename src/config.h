@@ -86,6 +86,10 @@ typedef struct server_conf_t {
 
     char *logfile;
 
+    char *fallback;
+
+    char *groupid;
+
     //日志句柄
     FILE *logfp;
 

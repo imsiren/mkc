@@ -225,14 +225,19 @@ int kafka_init_server(){
 
     //rd_kafka_conf_set_stats_cb(conf,stats_cb);
     if(strchr("CO",mode)){
-        if(!server_config.group){
 
-            server_config.group = "rdkafka_default";
-        }
-        if(rd_kafka_conf_set(conf,"group.id",server_config.group,errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK){
+        if(server_config.group != NULL && rd_kafka_conf_set(conf,"group.id",server_config.group,errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
             mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
             exit(1);
+        }
+        //兼容低版本
+        if(server_config.fallback != NULL){
+            if(rd_kafka_topic_conf_set(topic_conf,"broker.version.fallback",server_config.fallback,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
+
+                mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
+                exit(1);
+            }
         }
         //支持断点续传
         if(rd_kafka_topic_conf_set(topic_conf,"offset.store.path",server_config.log_path,errstr,sizeof(err) != RD_KAFKA_CONF_OK)){

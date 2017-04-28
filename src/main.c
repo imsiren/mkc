@@ -38,6 +38,7 @@
 #include "sds.h"
 #include "logger.h"
 #include "process.h"
+#include "mysql.h"
 
 #include <librdkafka/rdkafka.h>  /* for Kafka driver */
 
@@ -276,7 +277,7 @@ int main(int argc, char **argv){
         exit(1);
     }
 
-    mkc_mysql_init(&server_config.mysql->mkc_mysql_pconnect);
+    mkc_mysql_init(&server_config.mkc_mysql_pconnect);
 
     setproctitle("mkc:%s","master process");
     //创建多进程

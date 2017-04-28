@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <mysql.h>
 
 #include "kafka.h"
 #include "config.h"
@@ -27,6 +28,7 @@
 #include "logger.h"
 #include "kafka.h"
 #include "mkc.h"
+
 
 int mkc_signal_process(char *sig){
    
@@ -92,7 +94,7 @@ void mkc_set_worker_process_handler(){
 //子进程信号处理程序
 void mkc_worker_process_handler(){
 
-    mkc_mysql_close(&server_config.mysql->mkc_mysql_pconnect);
+    mkc_mysql_close(&server_config.mkc_mysql_pconnect);
     
     kafka_consume_close();
 

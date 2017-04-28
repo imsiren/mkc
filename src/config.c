@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "sds.h"
-#include "consumer.h"
 #include "config.h"
 #include "hash.h"
 #include "list.h"
@@ -188,21 +187,22 @@ int parse_server_conf(char *file_name){
 
             sdsfreesplitres(vector,argc);
         }
-        if(!server_config.confpath){
-
-            mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.");
-            exit(1);
-        }
-        if(server_config.commands->len == 0){
-
-            mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.");
-
-            return -1;
-        }
-        sdsfree(config);
-        sdsfreesplitres(lines,totalline);
-        return 0;
     }
+    if(!server_config.confpath){
+
+        mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.");
+        exit(1);
+    }
+    if(server_config.commands->len == 0){
+
+        mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.");
+
+        return -1;
+    }
+    sdsfree(config);
+    sdsfreesplitres(lines,totalline);
+    return 0;
+}
 
 /* *
  * @desc 解析模块配置

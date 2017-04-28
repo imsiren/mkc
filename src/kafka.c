@@ -159,19 +159,23 @@ http_client_post:{
                          mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,rkmessage->payload,response->http_code);
 
                          zfree(response);
-                         mkc_write_log(MKC_LOG_ERROR,"::::::::::%d\t%d\n",conf->retrynum,retry_num);
+                         //mkc_write_log(MKC_LOG_ERROR,"::::::::::%d\t%d\n",conf->retrynum,retry_num);
                          //如果标记为跳过，则当前commitId直接忽略,处理吓一条数据
-                         if(mkc_commitid_is_skiped(&server_config.mysql->mkc_mysql_pconnect,commitId,commandId)){
+                         if(mkc_commitid_is_skiped(&server_config.mkc_mysql_pconnect,commitId,commandId)){
 
+                             mkc_write_log(MKC_LOG_NOTICE,"mkc will skip commitId [%d] commandId [%d]",commitId,commandId);
                              break;
                          }
                          //如果指定了了重试次数或者为0，则一直重试
                          //如果一直失败会阻塞
                          if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ < conf->retrynum)){
+
+                             save_mkc_queue_log(&server_config.mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,1,retry_num);
                              usleep(1000);
                              goto http_client_post;
                          }
                      }
+                    save_mkc_queue_log(&server_config.mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,0,retry_num);
                  }
                  current = current->next;
     }

@@ -32,7 +32,6 @@ typedef struct mkc_mysql_t{
     char *db_name;
     int port;
 
-    MYSQL mkc_mysql_pconnect;
 }mkc_mysql_t;
 
 typedef struct {
@@ -122,6 +121,9 @@ typedef struct server_conf_t {
     char *kafkadebug;
 
     mkc_mysql_t *mysql;
+
+    MYSQL mkc_mysql_pconnect;
+
     //char **argv;
     //hash_table *cmd_t;
     //module_conf_t **command_module_map;

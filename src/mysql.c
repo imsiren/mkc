@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "mysql.h"
+#include "logger.h"
 
 void mkc_mysql_ping(MYSQL *conn){
     if(!mysql_ping(conn)){
@@ -29,7 +30,7 @@ MYSQL mkc_mysql_init(MYSQL conn){
 
 MYSQL* mkc_mysql_init(MYSQL *conn){
     if (!mysql_init(conn)) {
-        printf("Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
+        mkc_write_log(MKC_LOG_ERROR,"Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
         exit(1);
     }
 
@@ -43,7 +44,7 @@ MYSQL* mkc_mysql_init(MYSQL *conn){
             server_config.mysql->db_name,
             server_config.mysql->port,
             NULL, 0) == NULL) {
-        printf("Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
+        mkc_write_log(MKC_LOG_ERROR, "Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
         exit(1);
     }
     return conn;
@@ -52,7 +53,7 @@ MYSQL* mkc_mysql_init(MYSQL *conn){
 int mkc_mysql_exec(MYSQL *conn,const char *sql) {
     int ret = mysql_real_query(conn, sql,strlen(sql));
     if(ret){
-        printf("c Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
+        mkc_write_log(MKC_LOG_ERROR , "c Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
     }
     return ret;
 }

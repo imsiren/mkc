@@ -87,8 +87,8 @@ int mkc_write_log(int log_level, const char *format,...){
     log = sdscat(log,buffer);
     log = sdscat(log,"\n");
 
-    //FILE *log_fp = fopen(server_config.logfile,"a+");
-    FILE *log_fp = server_config.logfp;
+    FILE *log_fp = fopen(server_config.logfile,"a+");
+//    FILE *log_fp = server_config.logfp;
 
     if(log_fp){// &&  (server_config.loglevel & log_level)){
 
@@ -98,6 +98,7 @@ int mkc_write_log(int log_level, const char *format,...){
 
             fprintf(stderr,"mkc error:%s %s\n",server_config.logfile,strerror(errno));
         }
+        fclose(log_fp);
     }else{
 
         fprintf(stderr,"open file [%s] error with [%s]\n", server_config.logfile,strerror(errno));

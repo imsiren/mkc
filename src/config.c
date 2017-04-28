@@ -72,20 +72,23 @@ int parse_server_conf(char *file_name){
 
         }else if(!strcasecmp(vector[0],"log-file")){
 
+            server_config.logfp = 0;
             FILE *fp = fopen(server_config.logfile,"a+"); 
 
             if(!fp){
                 //todo 待完善
                 mkc_write_log(MKC_LOG_ERROR,"open log-file[%s] error :%s",server_config.logfile,strerror(errno));
-                continue;
+                exit(0);
             }
             server_config.logfile = sdsdup(vector[1]);
             //fclose(fp);
             server_config.logfp = fp;
 
         }else if(!strcasecmp(vector[0],"daemonize")){
+
             server_config.daemonize = 0;
             if(!strcasecmp(vector[1],"on")){
+
                server_config.daemonize = 1; 
             }
         }else if(!strcasecmp(vector[0],"conf-path")){
@@ -117,18 +120,7 @@ int parse_server_conf(char *file_name){
 
                 server_config.loglevel    =   MKC_LOG_WARNING;
             }
-            /*  
-        }else if(!strcasecmp(vector[0],"queuelogfile")){
-
-            server_config.queuelogfile =   zstrdup(vector[1]);
-
-        }else if(!strcasecmp(vector[0],"append-queue-file")){
-
-            server_config.appendqueuelog   =   atoi(vector[1]);
-            */
-
         }else if(!strcasecmp(vector[0],"topic")){
-
 
             mkc_topic *topic = zmalloc(sizeof(mkc_topic));
 
@@ -164,6 +156,17 @@ int parse_server_conf(char *file_name){
             if(module != NULL){
                 //server_config.cmd_t = hash_add(server_config.cmd_t,module->name,module,module_conf_free);
             }
+        }else if(!strcasecmp(vector[0],"groupid")){
+
+            server_config.groupid=   zstrdup(vector[1]);
+
+        }else if(!strcasecmp(vector[0],"fallback")){
+
+            server_config.fallback =   zstrdup(vector[1]);
+
+        }else if(!strcasecmp(vector[0],"kafka-debug")){
+
+            server_config.kafkadebug =   zstrdup(vector[1]);
         }
 
         sdsfreesplitres(vector,argc);

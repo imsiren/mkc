@@ -29,6 +29,7 @@
 #include "kafka.h"
 #include "mkc.h"
 
+extern server_conf_t *server_conf;
 
 int mkc_signal_process(char *sig){
    
@@ -37,7 +38,7 @@ int mkc_signal_process(char *sig){
     fprintf(stderr,"mkc signal process start\n");
     char pid_file[1024] = {0}; 
 
-    sprintf(pid_file,"%s/%s",server_config.pidpath,server_config.pidfile);
+    sprintf(pid_file,"%s/%s",server_conf->pidpath,server_conf->pidfile);
     
     FILE *fp = fopen(pid_file,"r");
 
@@ -79,7 +80,7 @@ int mkc_signal_process(char *sig){
     }
     //删除pid文件
 
-    if(unlink(server_config.pidfile) != 0){
+    if(unlink(server_conf->pidfile) != 0){
 
         return 1;
     }
@@ -94,7 +95,7 @@ void mkc_set_worker_process_handler(){
 //子进程信号处理程序
 void mkc_worker_process_handler(){
 
-    mkc_mysql_close(&server_config.mkc_mysql_pconnect);
+    mkc_mysql_close(&server_conf->mkc_mysql_pconnect);
     
     kafka_consume_close();
 
@@ -138,9 +139,9 @@ int mkc_spawn_worker_process(){
     int i;
     list_node *node;
 
-    node = server_config.topics->head;
+    node = server_conf->topics->head;
 
-    for(i = 0; i < server_config.topics->len ; i++){
+    for(i = 0; i < server_conf->topics->len ; i++){
         pid_t pid = 0;
         pid = fork();
         
@@ -165,9 +166,9 @@ int mkc_spawn_worker_process(){
 
                 break;
         }
-        server_config.procs[i]->pid = pid;
-        server_config.procs[i]->exited = 0;
-        server_config.procs[i]->exiting = 0;
+        server_conf->procs[i]->pid = pid;
+        server_conf->procs[i]->exited = 0;
+        server_conf->procs[i]->exiting = 0;
         node = node->next;
     }
     return 0;
@@ -181,18 +182,18 @@ void mkc_signal_worker_process(int sig){
 
     int i, ret;
     pid_t pid = 0;
-    for(i = 0; i < server_config.topics->len ; i++){
+    for(i = 0; i < server_conf->topics->len ; i++){
 
-        if(server_config.procs[i]->exited == 0){
+        if(server_conf->procs[i]->exited == 0){
 
-            pid = server_config.procs[i]->pid;
-            server_config.procs[i]->exited = 0;
-            server_config.procs[i]->exiting = 1;
+            pid = server_conf->procs[i]->pid;
+            server_conf->procs[i]->exited = 0;
+            server_conf->procs[i]->exiting = 1;
             mkc_write_log(MKC_LOG_NOTICE,"mkc will close pid [%d] ." ,pid);
             if(kill(pid,sig) == 0){
 
-                server_config.procs[i]->exited = 1;
-                server_config.procs[i]->exiting = 0;
+                server_conf->procs[i]->exited = 1;
+                server_conf->procs[i]->exiting = 0;
                 continue;
             }
             mkc_write_log(MKC_LOG_NOTICE, "mkc stoped worker process [%d] error, errno[%d],error [%s]", pid, errno,strerror(errno));
@@ -226,10 +227,10 @@ int mkc_reap_children(){
     int i ;
     int live = 0;
 
-    for(i = 0; i < server_config.topics->len ;i++){
+    for(i = 0; i < server_conf->topics->len ;i++){
 
         //正在退出的进程也算活跃进程
-        if(server_config.procs[i]->exited == 0){
+        if(server_conf->procs[i]->exited == 0){
 
             live ++;
         }
@@ -326,7 +327,7 @@ int mkc_init_setproctitle(char **envp){
 
     mkc_os_argv_last = mkc_os_argv[0];
 
-    for(i = 0;i < server_config.argc; i++){
+    for(i = 0;i < server_conf->argc; i++){
            if(mkc_os_argv_last == mkc_os_argv[i]){
                 mkc_os_argv_last = mkc_os_argv[i] + strlen(mkc_os_argv[i]) + 1;
            }
@@ -372,7 +373,7 @@ void mkc_setproctitle(const char *title){
     p = mkc_cpystrn(p , title,mkc_os_argv_last - (char*)p);
     int i,size;
 
-    for(i = 0;i < server_config.argc;i++){
+    for(i = 0;i < server_conf->argc;i++){
 
         p = mkc_cpystrn(p , mkc_os_argv[i], mkc_os_argv_last - (char *)p); 
         p = mkc_cpystrn(p , " ", mkc_os_argv_last - (char*)p);

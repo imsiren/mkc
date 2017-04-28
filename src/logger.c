@@ -28,6 +28,7 @@
 
 #define MKC_LOG_BUFFER_SIZE 1024 * 1024
 
+extern server_conf_t *server_conf;
 int mkc_write_log(int log_level, const char *format,...){
 
     time_t now;
@@ -87,21 +88,21 @@ int mkc_write_log(int log_level, const char *format,...){
     log = sdscat(log,buffer);
     log = sdscat(log,"\n");
 
-    FILE *log_fp = fopen(server_config.logfile,"a+");
-//    FILE *log_fp = server_config.logfp;
+    FILE *log_fp = fopen(server_conf->logfile,"a+");
+//    FILE *log_fp = server_conf->logfp;
 
-    if(log_fp){// &&  (server_config.loglevel & log_level)){
+    if(log_fp){// &&  (server_conf->loglevel & log_level)){
 
         int ret = fputs(log,log_fp);
 
         if(ret == EOF){
 
-            fprintf(stderr,"mkc error:%s %s\n",server_config.logfile,strerror(errno));
+            fprintf(stderr,"mkc error:%s %s\n",server_conf->logfile,strerror(errno));
         }
         fclose(log_fp);
     }else{
 
-        fprintf(stderr,"open file [%s] error with [%s]\n", server_config.logfile,strerror(errno));
+        fprintf(stderr,"open file [%s] error with [%s]\n", server_conf->logfile,strerror(errno));
         fprintf(stderr,"%s\n", log);
     }
 

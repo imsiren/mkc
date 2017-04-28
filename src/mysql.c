@@ -3,6 +3,7 @@
 #include "mysql.h"
 #include "logger.h"
 
+extern server_conf_t *server_conf;
 void mkc_mysql_ping(MYSQL *conn){
     if(!mysql_ping(conn)){
         mkc_mysql_close(conn);
@@ -38,11 +39,11 @@ MYSQL* mkc_mysql_init(MYSQL *conn){
     mysql_options(conn, MYSQL_OPT_RECONNECT, (char*)&value);
 
     if (mysql_real_connect(conn,
-            server_config.mysql->host,
-            server_config.mysql->user_name,
-            server_config.mysql->password,
-            server_config.mysql->db_name,
-            server_config.mysql->port,
+            server_conf->mysql->host,
+            server_conf->mysql->user_name,
+            server_conf->mysql->password,
+            server_conf->mysql->db_name,
+            server_conf->mysql->port,
             NULL, 0) == NULL) {
         mkc_write_log(MKC_LOG_ERROR, "Error %u: %s\n", mysql_errno(conn), mysql_error(conn));
         exit(1);
@@ -73,6 +74,7 @@ int mkc_commitid_is_skiped(MYSQL *conn,int commit_id, int command_id){
         ret = 1;
         mysql_free_result(res);
     }
+    zfree(sql);
     return ret;
 }
 
@@ -87,6 +89,7 @@ int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *conte
     int len = strlen(content) + strlen(INSERT_COMMAND) + 128;
     char *sql = (char *)zmalloc(len); 
     sprintf(sql,INSERT_COMMAND,commit_id,command_id,content,status,retry_num,now,now);
+    mkc_write_log(MKC_LOG_NOTICE,sql);
     int ret = mkc_mysql_exec(conn,sql);
     if(!ret){
         last_insert_id = mysql_insert_id(conn);
@@ -95,13 +98,14 @@ int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *conte
     return last_insert_id;
 }
 
-int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status, int retry_num){
+int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status){
     int num_rows = 0;
     time_t now;
     time(&now);
     int len = strlen(UPDATE_COMMAND) + 128;
     char *sql = (char *)zmalloc(len);
-    sprintf(sql,UPDATE_COMMAND,retry_num,now,commit_id,command_id,status);
+    sprintf(sql,UPDATE_COMMAND,now,commit_id,command_id,status);
+    mkc_write_log(MKC_LOG_NOTICE,sql);
     int ret = mkc_mysql_exec(conn,sql);
     if(!ret){
         num_rows = mysql_affected_rows(conn);
@@ -112,9 +116,12 @@ int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status,
 
 int save_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num){
     int ret;
-    if(select_mkc_queue_log(conn, commit_id, command_id)){
-        ret = update_mkc_queue_log(conn,commit_id,command_id,status,retry_num);
+    mkc_write_log(MKC_LOG_NOTICE ,"mkc saved queue log.");
+    if(select_mkc_queue_log(conn, commit_id, command_id) > 0){
+
+        ret = update_mkc_queue_log(conn,commit_id,command_id,status);
     } else{
+
         ret = insert_mkc_queue_log(conn,commit_id,command_id,content,status,retry_num);
     }
     return ret;
@@ -132,5 +139,6 @@ int select_mkc_queue_log(MYSQL *conn, int commit_id, int command_id){
     res = mysql_store_result(conn);
     res_num = mysql_num_rows(res);
     mysql_free_result(res);
+    zfree(sql);
     return res_num;
 }

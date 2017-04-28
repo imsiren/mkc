@@ -35,7 +35,7 @@ int http_client_create(const char *host,int port){
 
     if((he = gethostbyname(host)) == NULL){
 
-        printf("get host byname error:%d %s\n",errno,strerror(errno));
+        mkc_write_log(MKC_LOG_WARNING, "get host [%s:%d] byname error:%d %s\n",host,port,errno,strerror(errno));
         return -1;
     }
     server_addr.sin_family = AF_INET;
@@ -44,13 +44,13 @@ int http_client_create(const char *host,int port){
 
     if((socket_fd = socket(AF_INET,SOCK_STREAM,0)) == -1){
 
-        printf("create socket error:%d %s\n",errno,strerror(errno));
+        mkc_write_log(MKC_LOG_WARNING, "create socket error:%d %s\n",errno,strerror(errno));
         return -1;
     }
 
     if(connect(socket_fd,(struct sockaddr*)&server_addr,sizeof(struct sockaddr)) == -1){
 
-        printf("connect error:%d %s\n",errno,strerror(errno));
+        mkc_write_log(MKC_LOG_WARNING, "connect error:%d %s\n",errno,strerror(errno));
         return -1;
     }
     return socket_fd;
@@ -153,7 +153,7 @@ static int http_client_parse_file(const char *url,char *file,char *host){
         memcpy(host,p,strlen(p));
     }
 
-    printf("host %s file %s\n",host,file);
+    mkc_write_log(MKC_LOG_NOTICE, "host [%s] file [%s]",host,file);
     return 0;
 }
 

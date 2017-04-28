@@ -42,6 +42,7 @@ typedef struct {
     char *method;
     int delay;  //延迟时间
     int retrynum; // 0 失败一直重试，值到uri的code为200.
+    int retry_delay;
     sds *commands;
     int command_len;
 }module_conf_t ;
@@ -79,8 +80,9 @@ typedef struct server_conf_t {
 
     list *topics;
 
-    char *domain;
+    list *properties;
 
+    char *domain;
 
     sds confpath;
 

@@ -29,6 +29,8 @@
 #include "http.h"
 #include "librdkafka/rdkafka.h"
 
+extern server_conf_t *server_conf;
+
 static void rebalance_cb(rd_kafka_t *rk,rd_kafka_resp_err_t err,rd_kafka_topic_partition_list_t *partitions,void *opaque){
 
     mkc_write_log(MKC_LOG_NOTICE, "%% Consumer  rebalanced: ");
@@ -119,7 +121,7 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
     char command_id[128];
     sprintf(command_id,"%d",commandId);
 
-    list *module_conf = hash_find(server_config.modules, command_id,strlen(command_id));
+    list *module_conf = hash_find(server_conf->modules, command_id,strlen(command_id));
     list_node *current = NULL;
 
     if(!module_conf){
@@ -154,14 +156,17 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
 http_client_post:{
                      response = http_client_post(url,header, rkmessage->payload,rkmessage->len);
 
-                     if(response && response->http_code != 200){
+                     if(response == NULL  || response->http_code != 200){
 
-                         mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,rkmessage->payload,response->http_code);
+                         mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,rkmessage->payload,response != NULL ? response->http_code : -1);
 
-                         zfree(response);
+                        if(!response){
+
+                            zfree(response);
+                        }
                          //mkc_write_log(MKC_LOG_ERROR,"::::::::::%d\t%d\n",conf->retrynum,retry_num);
                          //如果标记为跳过，则当前commitId直接忽略,处理吓一条数据
-                         if(mkc_commitid_is_skiped(&server_config.mkc_mysql_pconnect,commitId,commandId)){
+                         if(mkc_commitid_is_skiped(&server_conf->mkc_mysql_pconnect,commitId,commandId)){
 
                              mkc_write_log(MKC_LOG_NOTICE,"mkc will skip commitId [%d] commandId [%d]",commitId,commandId);
                              break;
@@ -170,12 +175,13 @@ http_client_post:{
                          //如果一直失败会阻塞
                          if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ < conf->retrynum)){
 
-                             save_mkc_queue_log(&server_config.mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,1,retry_num);
-                             usleep(1000);
+                             save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,1,retry_num);
+                             usleep(conf->retry_delay * 1000);
                              goto http_client_post;
                          }
                      }
-                    save_mkc_queue_log(&server_config.mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,0,retry_num);
+            
+                     save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,0,retry_num);
                  }
                  current = current->next;
     }
@@ -209,7 +215,7 @@ int kafka_init_server(){
 
     conf = rd_kafka_conf_new();
 
-    if(rd_kafka_conf_set(conf, "metadata.broker.list",server_config.brokers,errstr,sizeof(errstr) != RD_KAFKA_CONF_OK)){
+    if(rd_kafka_conf_set(conf, "metadata.broker.list",server_conf->brokers,errstr,sizeof(errstr) != RD_KAFKA_CONF_OK)){
 
         mkc_write_log(MKC_LOG_ERROR,"Failed to set brokers:%s",errstr);
         exit(0);
@@ -230,32 +236,34 @@ int kafka_init_server(){
     char *conf_file = "";
 
 
-    if(server_config.kafkadebug != NULL && rd_kafka_conf_set(conf,"debug",server_config.kafkadebug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
+    if(server_conf->kafkadebug != NULL && rd_kafka_conf_set(conf,"debug",server_conf->kafkadebug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
-        mkc_write_log(MKC_LOG_NOTICE,"%%Debug configuration failed:%s :%s",errstr,server_config.kafkadebug);
+        mkc_write_log(MKC_LOG_NOTICE,"%%Debug configuration failed:%s :%s",errstr,server_conf->kafkadebug);
     }
 
-    if(server_config.groupid != NULL && rd_kafka_conf_set(conf,"group.id",server_config.groupid,errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK){
+    if(server_conf->groupid != NULL && rd_kafka_conf_set(conf,"group.id",server_conf->groupid,errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
         mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
     }
     //兼容低版本
-    if(server_config.fallback != NULL){
+    if(server_conf->fallback != NULL){
         if(rd_kafka_conf_set(conf,"api.version.request","false",errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
             mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
         }
-        if(rd_kafka_conf_set(conf,"broker.version.fallback",server_config.fallback,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
+        if(rd_kafka_conf_set(conf,"broker.version.fallback",server_conf->fallback,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 
             mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
         }
     }
 
     //rd_kafka_conf_set_stats_cb(conf,stats_cb);
-    if(strchr("CO",mode)){
+    //if(strchr("CO",mode)){
+    if(1){
 
         //支持断点续传
-        if(rd_kafka_topic_conf_set(topic_conf,"offset.store.path",server_config.log_path,errstr,sizeof(err) != RD_KAFKA_CONF_OK)){
+        /*
+        if(rd_kafka_topic_conf_set(topic_conf,"offset.store.path",server_conf->log_path,errstr,sizeof(err) != RD_KAFKA_CONF_OK)){
 
             mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
         }
@@ -267,9 +275,27 @@ int kafka_init_server(){
 
             mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
         }
+        */
+        list_node *current = server_conf->properties->head;
+
+        while(current != NULL){
+
+            mkc_write_log(MKC_LOG_NOTICE ,"mkc write conf [%s] : [%s]",current->key,current->value);
+            if(rd_kafka_topic_conf_set(topic_conf,current->key,current->value,errstr,sizeof(err)) != RD_KAFKA_CONF_OK){
+
+                mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
+            }
+             
+            current = current->next;
+        }
+        
         rd_kafka_conf_set_default_topic_conf(conf,topic_conf);
 
         rd_kafka_conf_set_rebalance_cb(conf,rebalance_cb);
+    }
+    if(rd_kafka_topic_conf_set(topic_conf,"auto.offset.reset","smallest",errstr,sizeof(err)) != RD_KAFKA_CONF_OK){
+
+            mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
     }
 
     if(!(rk = rd_kafka_new(RD_KAFKA_CONSUMER,conf,errstr, sizeof(errstr)))){
@@ -297,20 +323,20 @@ int kafka_init_server(){
 void kafka_consume(mkc_topic *topic){
 
     rd_kafka_resp_err_t err;
-    topics = rd_kafka_topic_partition_list_new(server_config.argc - optind);
+    topics = rd_kafka_topic_partition_list_new(server_conf->argc - optind);
 
     int partition = -1;
     int i = 0;
     int is_subscription = 1;
 
     list_node *node;
-    node = server_config.topics->head;
+    node = server_conf->topics->head;
 
-    if(server_config.topics->len > 1){
+    if(server_conf->topics->len > 1){
 
         is_subscription = 1;
     }
-    //for(i = 0 ; i < server_config.topics->len ;i ++){
+    //for(i = 0 ; i < server_conf->topics->len ;i ++){
 
     //mkc_topic *mtopic = 0;
     //   topic = (mkc_topic*)node->value;
@@ -348,7 +374,7 @@ void kafka_consume(mkc_topic *topic){
     while(kafka_run){
 
         rd_kafka_message_t *rkmessage;
-        rkmessage = rd_kafka_consumer_poll(rk, server_config.timeout);
+        rkmessage = rd_kafka_consumer_poll(rk, server_conf->timeout);
 
         if(rkmessage){
 
@@ -383,11 +409,11 @@ void kafka_consume_close(){
 
     if (kafka_run <= 0){
 
-        FILE *fp = fopen(server_config.logfile,"a+");
+        FILE *fp = fopen(server_conf->logfile,"a+");
 
         if(!fp){
 
-            mkc_write_log(MKC_LOG_WARNING,"Failed to open file [%s].", server_config.logfile);
+            mkc_write_log(MKC_LOG_WARNING,"Failed to open file [%s].", server_conf->logfile);
             rd_kafka_dump(stdout, rk);
         }else{
 

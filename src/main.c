@@ -52,7 +52,7 @@
 char *mkc_signal ;
 int mkc_process;
 
-server_conf_t server_config;
+server_conf_t *server_conf;
 
 static int mkc_daemon(){
 
@@ -111,27 +111,30 @@ static int mkc_daemon(){
 
 static void init_server_conf(){
 
-    server_config.brokers = sdsnew("");
-    server_config.daemonize = 1;
-    server_config.pidfile = "./logs/mkc.pid";
-    server_config.loglevel = 1 ;//warning
-    server_config.logfile = "./logs/mkc.log";
-    server_config.confpath = "./conf";
-    server_config.kafkadebug = NULL;
-    //server_config.conffile = "conf/server.conf";
+    server_conf->brokers = sdsnew("");
+    server_conf->daemonize = 1;
+    server_conf->pidfile = "./logs/mkc.pid";
+    server_conf->loglevel = 1 ;//warning
+    server_conf->logfile = "./logs/mkc.log";
+    server_conf->confpath = "./conf";
+    server_conf->kafkadebug = NULL;
+    //server_conf->conffile = "conf/server.conf";
 
-    server_config.timeout = 100;
-    //server_config.cmd_t = hash_init(SERVER_COMMAND_NUM);
+    server_conf->timeout = 100;
+    //server_conf->cmd_t = hash_init(SERVER_COMMAND_NUM);
 
-    server_config.topics = list_create();
-    server_config.commands = list_create();
-    //server_config.modules = zmalloc(sizeof(list) * SERVER_COMMAND_NUM);
-    server_config.modules = hash_init(SERVER_COMMAND_NUM);
-    server_config.mkc_run = 1;
-    server_config.fallback = NULL;
-    server_config.groupid = NULL;
+    server_conf->topics = list_create();
 
-    server_config.mysql = zmalloc(sizeof(mkc_mysql_t));
+    //topic properties
+    server_conf->properties = list_create();
+    server_conf->commands = list_create();
+    //server_conf->modules = zmalloc(sizeof(list) * SERVER_COMMAND_NUM);
+    server_conf->modules = hash_init(SERVER_COMMAND_NUM);
+    server_conf->mkc_run = 1;
+    server_conf->fallback = NULL;
+    server_conf->groupid = NULL;
+
+    server_conf->mysql = zmalloc(sizeof(mkc_mysql_t));
     
 }
 
@@ -163,7 +166,7 @@ static int mkc_create_pid(){
 
     pid_t pid = getpid();
 
-    sprintf(pid_file,"%s/%s",server_config.pidpath,server_config.pidfile);
+    sprintf(pid_file,"%s/%s",server_conf->pidpath,server_conf->pidfile);
 
     fp = fopen(pid_file ,"w+");
 
@@ -206,8 +209,9 @@ static int mkc_save_argv(int argc, char *const *argv){
 
 int main(int argc, char **argv){
 
+    server_conf = zmalloc(sizeof(server_conf_t));
 
-    server_config.argc = argc;
+    server_conf->argc = argc;
     mkc_os_argv = argv;
     init_server_conf();
 
@@ -217,12 +221,12 @@ int main(int argc, char **argv){
 
         switch(opt){
             case 'c':
-                server_config.conffile = optarg;
+                server_conf->conffile = optarg;
                 break;
 
             case 'd': //daemon
 
-                server_config.daemon = 1;
+                server_conf->daemon = 1;
                 break;
             case 's':
                 if(!strcmp("reload",optarg)
@@ -236,18 +240,18 @@ int main(int argc, char **argv){
         }
     }
 
-    if(!server_config.conffile ){
+    if(!server_conf->conffile ){
 
         usage();
         exit(1);
     }
-    fprintf(stderr,"load conf file:%s\n",server_config.conffile);
+    fprintf(stderr,"load conf file:%s\n",server_conf->conffile);
 
-    if(parse_server_conf(server_config.conffile) == -1){
+    if(parse_server_conf(server_conf->conffile) == -1){
         usage();
         exit(1);
     }
-    fprintf(stderr,"logfile :%s\n",server_config.logfile);
+    fprintf(stderr,"logfile :%s\n",server_conf->logfile);
 /*
     if(mkc_save_argv(argc, argv) != 0){
 
@@ -256,12 +260,12 @@ int main(int argc, char **argv){
 */
 
     spt_init(argc,argv);
-    server_config.procs = zmalloc(sizeof(mkc_process_t) * server_config.topics->len);
+    server_conf->procs = zmalloc(sizeof(mkc_process_t) * server_conf->topics->len);
     int i ;
-    for(i = 0;i < server_config.topics->len; i ++){
+    for(i = 0;i < server_conf->topics->len; i ++){
 
-        server_config.procs[i] =  zmalloc(sizeof(mkc_process_t));
-        memset(server_config.procs[i],0,sizeof(mkc_process_t));
+        server_conf->procs[i] =  zmalloc(sizeof(mkc_process_t));
+        memset(server_conf->procs[i],0,sizeof(mkc_process_t));
     }
 
     //服务以信号模式启动
@@ -271,13 +275,13 @@ int main(int argc, char **argv){
         exit(0);
      }
 
-    if(server_config.daemonize == 1 && mkc_daemon() != 0){
+    if(server_conf->daemonize == 1 && mkc_daemon() != 0){
 
         fprintf(stderr,"daemon() error.");
         exit(1);
     }
 
-    mkc_mysql_init(&server_config.mkc_mysql_pconnect);
+    mkc_mysql_init(&server_conf->mkc_mysql_pconnect);
 
     setproctitle("mkc:%s","master process");
     //创建多进程

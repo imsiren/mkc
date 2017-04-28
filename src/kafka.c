@@ -108,12 +108,16 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
         return -1;
     }	
 
-    int command = cjson_get_item(root,"commandId")->valueint;
+    //命令号
+    int commandId = cjson_get_item(root,"commandId")->valueint;
 
-    mkc_write_log(MKC_LOG_NOTICE,"commandId[%d] ",command);
+    //提交号
+    int commitId = cjson_get_item(root,"commitId")->valueint;
+
+    mkc_write_log(MKC_LOG_NOTICE,"commandId[%d] ",commandId);
 
     char command_id[128];
-    sprintf(command_id,"%d",command);
+    sprintf(command_id,"%d",commandId);
 
     list *module_conf = hash_find(server_config.modules, command_id,strlen(command_id));
     list_node *current = NULL;
@@ -155,7 +159,12 @@ http_client_post:{
                          mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,rkmessage->payload,response->http_code);
 
                          zfree(response);
-                        mkc_write_log(MKC_LOG_ERROR,"::::::::::%d\t%d\n",conf->retrynum,retry_num);
+                         mkc_write_log(MKC_LOG_ERROR,"::::::::::%d\t%d\n",conf->retrynum,retry_num);
+                         //如果标记为跳过，则当前commitId直接忽略,处理吓一条数据
+                         if(mkc_commitid_is_skiped(&server_config.mysql->mkc_mysql_pconnect,commitId,commandId)){
+
+                             break;
+                         }
                          //如果指定了了重试次数或者为0，则一直重试
                          //如果一直失败会阻塞
                          if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ < conf->retrynum)){

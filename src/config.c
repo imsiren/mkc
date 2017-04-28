@@ -167,25 +167,42 @@ int parse_server_conf(char *file_name){
         }else if(!strcasecmp(vector[0],"kafka-debug")){
 
             server_config.kafkadebug =   zstrdup(vector[1]);
+        }else if(!strcasecmp(vector[0],"mysql")){
+
+            if(!strcasecmp(vector[1],"host")){
+
+                server_config.mysql->host = zstrdup(vector[2]);
+            }else if(!strcasecmp(vector[1],"port")){
+
+                server_config.mysql->port= atoi(vector[2]);
+            }else if(!strcasecmp(vector[1],"user_name")){
+
+                server_config.mysql->user_name= zstrdup(vector[2]);
+            }else if(!strcasecmp(vector[1],"password")){
+
+                server_config.mysql->password = zstrdup(vector[2]);
+            }else if(!strcasecmp(vector[1],"db_name")){
+
+                server_config.mysql->db_name = zstrdup(vector[2]);
+            }
+
+            sdsfreesplitres(vector,argc);
         }
+        if(!server_config.confpath){
 
-        sdsfreesplitres(vector,argc);
+            mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.");
+            exit(1);
+        }
+        if(server_config.commands->len == 0){
+
+            mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.");
+
+            return -1;
+        }
+        sdsfree(config);
+        sdsfreesplitres(lines,totalline);
+        return 0;
     }
-    if(!server_config.confpath){
-
-        mkc_write_log(MKC_LOG_ERROR,"there is no confpath in server conf.");
-        exit(1);
-    }
-    if(server_config.commands->len == 0){
-
-        mkc_write_log(MKC_LOG_ERROR,"there is no filters num in conf.");
-
-        return -1;
-    }
-    sdsfree(config);
-    sdsfreesplitres(lines,totalline);
-    return 0;
-}
 
 /* *
  * @desc 解析模块配置

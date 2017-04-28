@@ -129,6 +129,9 @@ static void init_server_conf(){
     server_config.mkc_run = 1;
     server_config.fallback = NULL;
     server_config.groupid = NULL;
+
+    server_config.mysql = zmalloc(sizeof(mkc_mysql_t));
+    
 }
 
 static void logger(const rd_kafka_t *rk,int level, const char *fac, const char *buf){
@@ -272,6 +275,8 @@ int main(int argc, char **argv){
         fprintf(stderr,"daemon() error.");
         exit(1);
     }
+
+    mkc_mysql_init(&server_config.mysql->mkc_mysql_pconnect);
 
     setproctitle("mkc:%s","master process");
     //创建多进程

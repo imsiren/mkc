@@ -4,10 +4,14 @@ INSTALL_BIN=$(PREFIX)/bin
 INSTALL=install
 
 CONSUMER_NAME=mkc
+
 $(CC)=gcc;
 
-all : setproctitle.o main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o logger.o process.o kafka.o
-	$(CC) -g -o $(CONSUMER_NAME) setproctitle.o main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o process.o kafka.o -lrdkafka -lz -lpthread -lm -ljansson
+MYSQL=-I/usr/local/include/mysql/ -L/usr/local/lib/ -lmysqlclient
+
+
+all : setproctitle.o main.o http.o config.o cjson.o sds.o zmalloc.o hash.o list.o logger.o process.o kafka.o mysql.o
+	$(CC) -g -o $(CONSUMER_NAME) setproctitle.o main.o http.o config.o cJSON.o sds.o hash.o list.o zmalloc.o logger.o process.o kafka.o -lrdkafka -lz -lpthread -lm -ljansson $(MYSQL)
 main.o: main.c consumer.h mkc.h
 	$(CC)  -c -g  main.c
 http.o: http.c http.c consumer.h
@@ -32,6 +36,8 @@ kafka.o: kafka.c kafka.h
 	$(CC) -c -g kafka.c
 setproctitle.o:
 	$(CC) -c -g setproctitle.c
+mysql.o: mysql.c mysql.h
+	$(CC) -c -g mysql.c
 install:all
 	@mkdir -p $(INSTALL_BIN)
 

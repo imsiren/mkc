@@ -92,9 +92,12 @@ void mkc_set_worker_process_handler(){
 //子进程信号处理程序
 void mkc_worker_process_handler(){
 
+    mkc_mysql_close(&server_config.mysql->mkc_mysql_pconnect);
+    
     kafka_consume_close();
 
     if(!run){
+
         exit(1);
     }
 

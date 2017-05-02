@@ -293,10 +293,12 @@ int kafka_init_server(){
 
         rd_kafka_conf_set_rebalance_cb(conf,rebalance_cb);
     }
+/*
     if(rd_kafka_topic_conf_set(topic_conf,"auto.offset.reset","smallest",errstr,sizeof(err)) != RD_KAFKA_CONF_OK){
 
             mkc_write_log(MKC_LOG_ERROR,"%% %s",errstr);
     }
+*/
 
     if(!(rk = rd_kafka_new(RD_KAFKA_CONSUMER,conf,errstr, sizeof(errstr)))){
 

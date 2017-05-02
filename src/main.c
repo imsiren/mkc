@@ -283,7 +283,7 @@ int main(int argc, char **argv){
 
     mkc_mysql_init(&server_conf->mkc_mysql_pconnect);
 
-    setproctitle("mkc:%s","master process");
+    setproctitle("mkc:%s -c %s","master process",server_conf->conffile);
     //创建多进程
     mkc_spawn_worker_process();
 

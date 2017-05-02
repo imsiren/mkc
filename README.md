@@ -74,48 +74,66 @@ make install
 
 ## server.conf
 ```
-
 #守护模式
 daemonize on
 
+#全局配置[TODO]
+#...
 
-brokers ip:port,ip:port
+#brokers 172.18.6.10:9094,172.18.6.10:9093,172.18.6.10:9097
+brokers 172.18.6.10:9094,172.18.6.10:9093,172.18.6.10:9097
+
+#只有高版本才支持group 0.9+，如果kafka server 版本更低，请不要配置此项
+groupid  rdkafka_default
+
+#设置broker.version.fallback 为低版本 ,需要librdkafka > 0.9
+#fallback 0.8.2
+
+#debug 模式 cgrp,topic,fetch
+
+#kafka-debug all 
+
+#topic 配置
+property auto.offset.rest smallest
+property offset.store.path  /web/kafka-consumer/mkc/offset
+property offset.store.method file
+property offset.store.sync.interval.ms 100
+
 
 #配置路径
-confpath /web/kafka-consumer/consumer/conf
-conffiel config/server.conf
+conf-path /web/kafka-consumer/mkc/conf
 
-pidfile logs/mkc.pid
+timeout 1000
 
-#监听kafka最大的阻塞时间,ms
-timeout 100
-
-#开启debug模式
-debug yes
-
-#日志级别
-loglevel verbose 
+#日志级别 warning notice error
+log-level verbose 
 
 #日志路径
-logfile /web/kafka-consumer/consumer/logs/mkc.log
+log-file /web/kafka-consumer/mkc/logs/mkc.log
 
-#监听的topic
+#进程ID目录
+pid-path /web/kafka-consumer/mkc/
 
-topic imsiren
-topic siren
-topic memcachedelete
 
-#要消费的命令号，注意，这里配置了module里面才会生效，只在module配置是不成效的
+#topicName partition offset [auto.offset.reset]
+topic test
+topic siren 
+
 filters 10303023
 filters 10209392
 filters 10102939 
+filters 10103030
+filters 11000001
 
-#加载模块配置，支持多个
+module test-module.conf
 
-module moduleA.conf
-module moduleB.conf
-module moduleC.conf
-module moduleD.conf
+
+#数据库监控配置
+mysql host 172.18.5.187
+mysql port 3306
+mysql user_name meitu
+mysql password meitu
+mysql db_name testdb
 
 ```
 ## module.conf

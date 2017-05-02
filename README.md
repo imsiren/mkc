@@ -124,11 +124,14 @@ module moduleD.conf
 #模块名称
 name test
 
-#延迟时间，毫秒
+#队列数据处理延迟时间，毫秒
 delay 3000
 
 #失败重试次数 0一直重试，它依赖HTTP的code，200为成功，500为失败
 retrynum 0
+
+#数据处理失败重试延迟时间
+retry_num 3000
 
 #提交方式 （默认&&推荐）
 method post
@@ -168,9 +171,9 @@ uri  http://delivery.meitu.com/commit/commit
     就会堵住后面队列消费的情况，而这种情况我们是已知的，该消息是可以忽略的，
     因此我们需要人工干预跳过这条消费继续执行后面的数据消费
 
-5、增加zookeeper支持[done]
+5、增加zookeeper支持[done] #已经废弃
 
-6、增加kafka消费的高级配置项
+6、增加kafka消费的高级配置项 [done]
 
 #注意
 

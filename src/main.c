@@ -113,12 +113,12 @@ static void init_server_conf(){
 
     server_conf->brokers = sdsnew("");
     server_conf->daemonize = 1;
-    server_conf->pidfile = "./logs/mkc.pid";
+    server_conf->pidfile = "logs/mkc.pid";
     server_conf->loglevel = 1 ;//warning
-    server_conf->logfile = "./logs/mkc.log";
-    server_conf->confpath = "./conf";
+    server_conf->logfile = "logs/mkc.log";
+    server_conf->confpath = "conf";
     server_conf->kafkadebug = NULL;
-    //server_conf->conffile = "conf/server.conf";
+    server_conf->conffile = "conf/server.conf";
 
     server_conf->timeout = 100;
     //server_conf->cmd_t = hash_init(SERVER_COMMAND_NUM);
@@ -160,7 +160,6 @@ static void usage(){
 
 static int mkc_create_pid(){
 
-    FILE *fp = NULL;
 
     char pid_file[1024] = {0};
 
@@ -168,42 +167,28 @@ static int mkc_create_pid(){
 
     sprintf(pid_file,"%s/%s",server_conf->pidpath,server_conf->pidfile);
 
-    fp = fopen(pid_file ,"w+");
+    mkc_write_log(MKC_LOG_NOTICE ,"pid file [%s].",pid_file);
 
-    if(fp == NULL){
+    unlink(pid_file);
+
+    int fd = creat(pid_file,S_IRUSR | S_IWUSR | S_IRGRP| S_IROTH);
+
+    if(fd < 0){
 
         mkc_write_log(MKC_LOG_ERROR,"%s [%s]",strerror(errno),pid_file);
         return -1;
     }
-    char pidstr[128] = {0};
+    char pidstr[64] = {0};
 
-    sprintf(pidstr,"%d",pid);
+    int len = sprintf(pidstr,"%d",pid);
 
-    fputs(pidstr,fp);
-
-    fclose(fp);
-    return 0;
-}
-
-static int mkc_save_argv(int argc, char *const *argv){
-
-    mkc_argc = argc;
-    mkc_argv = zmalloc(sizeof(char) * (argc +1));
-
-    int i ,len;
-    for(i = 0; i < argc;i++){
-
-        len = strlen(argv[i]) + 1;
-        mkc_argv[i] = zmalloc(len);
-        if(mkc_argv[i] == NULL){
-
-            mkc_write_log(MKC_LOG_ERROR,"zmalloc() error");
-            return 1;
-        }
-        memcpy(mkc_argv[i] ,(char *)argv[i], len);
+    if( len != write(fd,pidstr, len)){
+        
+        mkc_write_log(MKC_LOG_ERROR,"Unable to write the PID file.");
+        close(fd);
+        return -1;
     }
-
-    mkc_argv[i] = NULL;
+    close(fd);
     return 0;
 }
 
@@ -241,7 +226,6 @@ int main(int argc, char **argv){
     }
 
     if(!server_conf->conffile ){
-
         usage();
         exit(1);
     }
@@ -252,12 +236,6 @@ int main(int argc, char **argv){
         exit(1);
     }
     fprintf(stderr,"logfile :%s\n",server_conf->logfile);
-/*
-    if(mkc_save_argv(argc, argv) != 0){
-
-        return 1;
-    }
-*/
 
     spt_init(argc,argv);
     server_conf->procs = zmalloc(sizeof(mkc_process_t) * server_conf->topics->len);
@@ -271,7 +249,10 @@ int main(int argc, char **argv){
     //服务以信号模式启动
     if(mkc_signal){
 
-        mkc_signal_process(mkc_signal);
+        if(!mkc_signal_process(mkc_signal)){
+            
+            mkc_write_log(MKC_LOG_ERROR,"mkc start with signal error");
+        }
         exit(0);
      }
 

@@ -32,8 +32,6 @@
 extern server_conf_t *server_conf;
 
 int mkc_signal_process(char *sig){
-   
-
 
     fprintf(stderr,"mkc signal process start\n");
     char pid_file[1024] = {0}; 
@@ -43,9 +41,12 @@ int mkc_signal_process(char *sig){
     FILE *fp = fopen(pid_file,"r");
 
     if(!fp){
+
         mkc_write_log(MKC_LOG_ERROR,"read pid file error [%s], error[%s]",pid_file,strerror(errno));
         return 0;
     }
+
+    mkc_write_log(MKC_LOG_NOTICE,"read pid file [%s].",pid_file);
 
     char buf[1024] = {0};
     fread(buf,1024,1,fp);
@@ -73,7 +74,7 @@ int mkc_signal_process(char *sig){
         mkc_write_log(MKC_LOG_ERROR,"invalid signo. ");
         return -1;
     }
-    if(!kill(pid,signo)){
+    if(kill(pid,signo) != 0){
 
         mkc_write_log(MKC_LOG_ERROR,"kill pid \"%d\" signo \"%s\" error[%s].",pid,sig,strerror(errno));
         return -1;
@@ -93,13 +94,20 @@ void mkc_set_worker_process_handler(){
 }
 
 //子进程信号处理程序
-void mkc_worker_process_handler(){
+void mkc_worker_process_handler(int signo){
 
     mkc_mysql_close(&server_conf->mkc_mysql_pconnect);
     
     kafka_consume_close();
 
     if(!run){
+        //restart
+        /*if(signo == SIGHUP){
+
+            mkc_write_log(MKC_LOG_NOTICE ,"reloading :execvp(%s,{\"%s\",\"%s\",\"%s\"})",mkc_os_argv[0], mkc_os_argv[0],mkc_os_argv[1],mkc_os_argv[2]);
+            execvp(mkc_os_argv[0], mkc_os_argv);
+        }
+*/
 
         exit(1);
     }
@@ -148,9 +156,10 @@ int mkc_spawn_worker_process(){
         mkc_topic *topic = 0;
         switch(pid){
             case 0:
-                kafka_init_server();
 
                 topic = (mkc_topic*)node->value;
+
+                kafka_init_server(topic);
 
                 mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
 
@@ -237,6 +246,18 @@ int mkc_reap_children(){
     }
     return live;
 }
+
+void mkc_pctl_execv(){
+
+    mkc_write_log(MKC_LOG_NOTICE , "reloading:execvp(\"%s\",\"%s\",\"%s\")",
+        mkc_os_argv[0],
+        mkc_os_argv[1],
+        mkc_os_argv[2]
+    );
+
+    execvp(mkc_os_argv[0], mkc_os_argv);
+}
+
 void mkc_master_process(){
 
 
@@ -269,6 +290,10 @@ void mkc_master_process(){
             //wait worker exited.
             sleep(3);
 
+            if(mkc_sigreload){
+                mkc_sigreload = 0;
+                mkc_pctl_execv();
+            }
             mkc_master_process_exit();
         }
 
@@ -276,7 +301,7 @@ void mkc_master_process(){
 
         if(mkc_sigreload == 1){
 
-            //mkc_signal_worker_process(SIGHUP);
+            mkc_signal_worker_process(SIGHUP);
             continue;
         }
         if(mkc_sigterm == 1){

@@ -201,7 +201,7 @@ static void logger (const rd_kafka_t *rk, int level,
             level, fac, rd_kafka_name(rk), buf);
 }
 
-int kafka_init_server(){
+int kafka_init_server(mkc_topic *topic){
 
     rd_kafka_resp_err_t err;
     rd_kafka_conf_t *conf;
@@ -231,10 +231,7 @@ int kafka_init_server(){
     char mode = 'C';
     int daemon = 0,verbose = 0;
 
-
-    mkc_topic *topic = NULL;
     char *conf_file = "";
-
 
     if(server_conf->kafkadebug != NULL && rd_kafka_conf_set(conf,"debug",server_conf->kafkadebug,errstr,sizeof(errstr)) != RD_KAFKA_CONF_OK){
 

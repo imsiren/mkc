@@ -291,6 +291,8 @@ int main(int argc, char **argv){
 
     mkc_master_process();
 
+    mkc_master_process_bury();
+
     exit(0);
 }
 

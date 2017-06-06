@@ -142,20 +142,25 @@ int mkc_spawn_worker_process(){
     node = server_conf->topics->head;
 
     for(i = 0; i < server_conf->topics->len ; i++){
+        int exited = 0;
         pid_t pid = 0;
         pid = fork();
         
         mkc_topic *topic = 0;
         switch(pid){
             case 0:
-                kafka_init_server();
+                if(kafka_init_server() < 0){
 
-                topic = (mkc_topic*)node->value;
+                    exited = 1;
+                }
+                if(exited != 1){
+                    topic = (mkc_topic*)node->value;
 
-                mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
+                    mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
 
-                setproctitle("mkc:%s [%s]", "worker process",topic->name);
-                kafka_consume(topic);
+                    setproctitle("mkc:%s [%s]", "worker process",topic->name);
+                    kafka_consume(topic);
+                }
 
                 break;
             case -1:
@@ -167,7 +172,7 @@ int mkc_spawn_worker_process(){
                 break;
         }
         server_conf->procs[i]->pid = pid;
-        server_conf->procs[i]->exited = 0;
+        server_conf->procs[i]->exited = exited;
         server_conf->procs[i]->exiting = 0;
         node = node->next;
     }
@@ -237,6 +242,47 @@ int mkc_reap_children(){
     }
     return live;
 }
+
+void mkc_master_process_bury(){
+
+    int err_code;
+    int status, child ,live;
+    pid_t pid;
+
+    err_code = MKC_LOG_WARNING;
+    while((pid = waitpid(-1,&status,WNOHANG | WUNTRACED)) > 0){
+
+        char buf[128];
+
+        child = mkc_reap_children();
+
+        if(WIFEXITED(status)){
+
+            snprintf(buf,sizeof(buf), "with code %d",WEXITSTATUS(status));
+
+        }else if(WIFSIGNALED(status)){
+            
+            const char *have_core = WCOREDUMP(status) ? " - core dumped" :"";
+            snprintf(buf,sizeof(buf), "on signal %d(%s)", WTERMSIG(status),have_core);
+
+        }else if(WIFSTOPPED(status)){
+
+            snprintf(buf,sizeof(buf), "child %d stooped for tracing", (int)pid);
+            err_code = MKC_LOG_NOTICE;
+        }
+        mkc_write_log(err_code,buf);
+
+        live = mkc_reap_children();
+
+        if(live == 0){
+
+            mkc_write_log(MKC_LOG_NOTICE, "there no child process, mkc master process will stop.", (int)pid);
+            exit(1);
+        }
+    }
+
+}
+
 void mkc_master_process(){
 
 
@@ -276,7 +322,8 @@ void mkc_master_process(){
 
         if(mkc_sigreload == 1){
 
-            //mkc_signal_worker_process(SIGHUP);
+            //发送reload
+            mkc_signal_worker_process(SIGHUP);
             continue;
         }
         if(mkc_sigterm == 1){

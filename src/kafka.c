@@ -218,7 +218,7 @@ int kafka_init_server(mkc_topic *topic){
     if(rd_kafka_conf_set(conf, "metadata.broker.list",server_conf->brokers,errstr,sizeof(errstr) != RD_KAFKA_CONF_OK)){
 
         mkc_write_log(MKC_LOG_ERROR,"Failed to set brokers:%s",errstr);
-        exit(0);
+        return -1;
     }
 
     //设置日志记录callback
@@ -300,7 +300,7 @@ int kafka_init_server(mkc_topic *topic){
     if(!(rk = rd_kafka_new(RD_KAFKA_CONSUMER,conf,errstr, sizeof(errstr)))){
 
         mkc_write_log(MKC_LOG_ERROR," Failed to create new consumer:%s",errstr);
-        exit(0);
+        return -1;
     }
 
     if(mode == 'D'){

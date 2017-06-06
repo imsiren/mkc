@@ -150,21 +150,27 @@ int mkc_spawn_worker_process(){
     node = server_conf->topics->head;
 
     for(i = 0; i < server_conf->topics->len ; i++){
+        int exited = 0;
         pid_t pid = 0;
         pid = fork();
         
         mkc_topic *topic = 0;
         switch(pid){
             case 0:
+                if(kafka_init_server() < 0){
 
-                topic = (mkc_topic*)node->value;
+                    exited = 1;
+                }
+                if(exited != 1){
+                    topic = (mkc_topic*)node->value;
 
                 kafka_init_server(topic);
 
                 mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
 
-                setproctitle("mkc:%s [%s]", "worker process",topic->name);
-                kafka_consume(topic);
+                    setproctitle("mkc:%s [%s]", "worker process",topic->name);
+                    kafka_consume(topic);
+                }
 
                 break;
             case -1:
@@ -176,7 +182,7 @@ int mkc_spawn_worker_process(){
                 break;
         }
         server_conf->procs[i]->pid = pid;
-        server_conf->procs[i]->exited = 0;
+        server_conf->procs[i]->exited = exited;
         server_conf->procs[i]->exiting = 0;
         node = node->next;
     }
@@ -257,6 +263,45 @@ void mkc_pctl_execv(){
 
     execvp(mkc_os_argv[0], mkc_os_argv);
 }
+void mkc_master_process_bury(){
+
+    int err_code;
+    int status, child ,live;
+    pid_t pid;
+
+    err_code = MKC_LOG_WARNING;
+    while((pid = waitpid(-1,&status,WNOHANG | WUNTRACED)) > 0){
+
+        char buf[128];
+
+        child = mkc_reap_children();
+
+        if(WIFEXITED(status)){
+
+            snprintf(buf,sizeof(buf), "with code %d",WEXITSTATUS(status));
+
+        }else if(WIFSIGNALED(status)){
+            
+            const char *have_core = WCOREDUMP(status) ? " - core dumped" :"";
+            snprintf(buf,sizeof(buf), "on signal %d(%s)", WTERMSIG(status),have_core);
+
+        }else if(WIFSTOPPED(status)){
+
+            snprintf(buf,sizeof(buf), "child %d stooped for tracing", (int)pid);
+            err_code = MKC_LOG_NOTICE;
+        }
+        mkc_write_log(err_code,buf);
+
+        live = mkc_reap_children();
+
+        if(live == 0){
+
+            mkc_write_log(MKC_LOG_NOTICE, "there no child process, mkc master process will stop.", (int)pid);
+            exit(1);
+        }
+    }
+
+}
 
 void mkc_master_process(){
 
@@ -301,6 +346,10 @@ void mkc_master_process(){
 
         if(mkc_sigreload == 1){
 
+<<<<<<< HEAD
+=======
+            //发送reload
+>>>>>>> 7f20b79373b132a4b057fd83b58688f6f13fc546
             mkc_signal_worker_process(SIGHUP);
             continue;
         }
@@ -338,74 +387,3 @@ char *mkc_cpystrn(char *dst,const char *src, size_t n)
     return dst;
 }
 
-/*
-int mkc_init_setproctitle(char **envp){
-
-    int i;
-    int size = 0;
-    char *p = 0;
-    for(i = 0;envp[i] != NULL;i++){
-
-        size += strlen(envp[i]);
-        continue;
-    }
-
-    mkc_os_argv_last = mkc_os_argv[0];
-
-    for(i = 0;i < server_conf->argc; i++){
-           if(mkc_os_argv_last == mkc_os_argv[i]){
-                mkc_os_argv_last = mkc_os_argv[i] + strlen(mkc_os_argv[i]) + 1;
-           }
-           
-    }
-    p = zmalloc(size);
-    if(!p){
-        mkc_write_log(MKC_LOG_ERROR,"zmalloc() error");
-        return 1;
-    }
-    for(i = 0;envp[i] != NULL;i++){
-        if(mkc_os_argv_last = envp[i]){
-            p = strcpy(p,envp[i]);
-            environ[i] = p;
-        }
-    }
-    environ = zmalloc(sizeof(char*) + (i + 1));
-    if(!environ){
-
-        mkc_write_log(MKC_LOG_ERROR,"zmalloc() error");
-        return 1;
-    }
-
-    for(i = 0;envp[i] != NULL;i++){
-
-        environ[i] = zmalloc(sizeof(char) + strlen(envp[i]));
-
-        strcpy(environ[i], envp[i]);
-
-    }
-    environ[i] = NULL;
-    return 0;
-}
-*/
-
-void mkc_setproctitle(const char *title){
-/*
-    char *p = NULL;
-
-    mkc_os_argv[1] = NULL;
-
-    p = mkc_cpystrn(mkc_os_argv[0], "mkc: ",mkc_os_argv_last - mkc_os_argv[0]);
-    p = mkc_cpystrn(p , title,mkc_os_argv_last - (char*)p);
-    int i,size;
-
-    for(i = 0;i < server_conf->argc;i++){
-
-        p = mkc_cpystrn(p , mkc_os_argv[i], mkc_os_argv_last - (char *)p); 
-        p = mkc_cpystrn(p , " ", mkc_os_argv_last - (char*)p);
-    }
-    if(mkc_os_argv_last - (char*)p){
-
-        memset( p ,0, mkc_os_argv_last - (char*)p);
-    }
-*/
-}

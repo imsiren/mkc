@@ -270,7 +270,7 @@ int main(int argc, char **argv){
 
     mkc_create_pid();
 
-    mkc_master_process();
+//    mkc_master_process();
 
     mkc_master_process_bury();
 

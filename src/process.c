@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <string.h>
 #include <mysql.h>
+#include <sys/wait.h>
 
 #include "kafka.h"
 #include "config.h"
@@ -109,7 +110,7 @@ void mkc_worker_process_handler(int signo){
         }
 */
 
-        exit(1);
+        exit(0);
     }
 
     run = 0;
@@ -270,7 +271,7 @@ void mkc_master_process_bury(){
     pid_t pid;
 
     err_code = MKC_LOG_WARNING;
-    while((pid = waitpid(-1,&status,WNOHANG | WUNTRACED)) > 0){
+    while((pid = waitpid(-1,&status, WUNTRACED)) > 0){
 
         char buf[128];
 
@@ -278,12 +279,12 @@ void mkc_master_process_bury(){
 
         if(WIFEXITED(status)){
 
-            snprintf(buf,sizeof(buf), "with code %d",WEXITSTATUS(status));
+            snprintf(buf,sizeof(buf), "pid [%d] exited with code %d",(int)pid ,WEXITSTATUS(status));
 
         }else if(WIFSIGNALED(status)){
             
             const char *have_core = WCOREDUMP(status) ? " - core dumped" :"";
-            snprintf(buf,sizeof(buf), "on signal %d(%s)", WTERMSIG(status),have_core);
+            snprintf(buf,sizeof(buf), "pid [%d] on signal %d(%s)",(int)pid, WTERMSIG(status),have_core);
 
         }else if(WIFSTOPPED(status)){
 
@@ -346,10 +347,7 @@ void mkc_master_process(){
 
         if(mkc_sigreload == 1){
 
-<<<<<<< HEAD
-=======
             //发送reload
->>>>>>> 7f20b79373b132a4b057fd83b58688f6f13fc546
             mkc_signal_worker_process(SIGHUP);
             continue;
         }

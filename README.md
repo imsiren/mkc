@@ -126,6 +126,9 @@ filters 10103030
 filters 11000001
 
 module test-module.conf
+module moduleA.conf
+module moduleB.conf
+module moduleC.conf
 
 
 #数据库监控配置

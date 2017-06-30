@@ -37,6 +37,7 @@ int mkc_signal_process(char *sig){
     fprintf(stderr,"mkc signal process start\n");
     char pid_file[1024] = {0}; 
 
+    //读取主进程ID
     sprintf(pid_file,"%s/%s",server_conf->pidpath,server_conf->pidfile);
     
     FILE *fp = fopen(pid_file,"r");
@@ -75,6 +76,7 @@ int mkc_signal_process(char *sig){
         mkc_write_log(MKC_LOG_ERROR,"invalid signo. ");
         return -1;
     }
+    //主进程发送信号
     if(kill(pid,signo) != 0){
 
         mkc_write_log(MKC_LOG_ERROR,"kill pid \"%d\" signo \"%s\" error[%s].",pid,sig,strerror(errno));
@@ -301,6 +303,14 @@ void mkc_master_process_bury(){
             exit(1);
         }
     }
+
+    //reload
+    if(mkc_sigreload){
+
+        mkc_sigreload = 0;
+        mkc_write_log(MKC_LOG_NOTICE, "mkc will reload", (int)pid);
+    }
+
 
 }
 

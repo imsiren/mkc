@@ -54,6 +54,8 @@ cd ./zookeeper-3.4.9/src/c
 
 ### 安装consumer
 
+安装路径固定为 /usr/local/mkc/bin/mkc
+
 git clone https://gitlab.meitu.com/mdp/mkc
 
 cd mkc/
@@ -207,6 +209,8 @@ uri  http://delivery.meitu.com/commit/commit
 20161201 修复传输数据大的情况下，导致内存异常的bug.
 
 20170410 增加多进程，增加信号平滑控制机制
+
+20170703 完善reload机制
 
 ...
 

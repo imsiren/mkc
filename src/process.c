@@ -143,6 +143,21 @@ void mkc_signal_handler(int sig){
             mkc_sigterm = 1;
             break;
     }
+
+    //通知子进程
+    if(mkc_sigreload == 1){
+
+        //发送reload
+        mkc_signal_worker_process(SIGHUP);
+    } 
+    if(mkc_sigterm == 1){
+
+        mkc_signal_worker_process(SIGKILL);
+    }
+    if(mkc_sigquit == 1){
+
+        mkc_signal_worker_process(SIGQUIT);
+    }
 }
 
 //创建子进程处理kafka数据
@@ -156,7 +171,7 @@ int mkc_spawn_worker_process(){
         int exited = 0;
         pid_t pid = 0;
         pid = fork();
-        
+
         mkc_topic *topic = 0;
         switch(pid){
             case 0:
@@ -290,27 +305,28 @@ void mkc_master_process_bury(){
 
         }else if(WIFSTOPPED(status)){
 
-            snprintf(buf,sizeof(buf), "child %d stooped for tracing", (int)pid);
+            snprintf(buf,sizeof(buf), "child %d stoped for tracing", (int)pid);
             err_code = MKC_LOG_NOTICE;
         }
         mkc_write_log(err_code,buf);
 
-        live = mkc_reap_children();
-
-        if(live == 0){
-
-            mkc_write_log(MKC_LOG_NOTICE, "there no child process, mkc master process will stop.", (int)pid);
-            exit(1);
-        }
     }
 
+    //wait for child exited
+    sleep(5);
+    
+    char *mkc_binfile = "/usr/local/mkc/bin/mkc";
     //reload
     if(mkc_sigreload){
-
         mkc_sigreload = 0;
         mkc_write_log(MKC_LOG_NOTICE, "mkc will reload", (int)pid);
-    }
+        mkc_write_log(MKC_LOG_NOTICE ,"reloading :execvp(%s,{\"%s\",\"%s\",\"%s\"})",mkc_binfile, mkc_os_argv[0],mkc_os_argv[1],mkc_os_argv[2]);
+        mkc_write_log(MKC_LOG_NOTICE ,"reloading:execl(%s,\"%s\",\"%s\",\"%s\")", mkc_binfile, "mkc", mkc_os_argv[1],mkc_os_argv[2]);
+        if(execl(mkc_binfile,"mkc", mkc_os_argv[1],mkc_os_argv[2],(char*)0 ) < 0){
 
+            mkc_write_log(MKC_LOG_ERROR,"call execl errno[%d] error [%s]",errno,strerror(errno));
+        }
+    }
 
 }
 

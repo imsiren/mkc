@@ -105,6 +105,7 @@ typedef struct server_conf_t {
 
     char *pidfile;
 
+
     int sockfd;
 
     int process_num;

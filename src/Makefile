@@ -3,6 +3,7 @@ PREFIX?=/usr/local/mkc
 INSTALL_BIN=$(PREFIX)/bin
 INSTALL=install
 
+
 CONSUMER_NAME=mkc
 
 $(CC)=gcc;

@@ -272,6 +272,9 @@ int main(int argc, char **argv){
 
 //    mkc_master_process();
 
+    //初始化信号处理函数
+    mkc_init_signal();
+
     mkc_master_process_bury();
 
     exit(0);

@@ -23,4 +23,7 @@ int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status)
 int insert_mkc_queue_log(MYSQL *conn,int commit_id,int command_id,char *content,int status,int retry_num);
 int select_mkc_queue_log(MYSQL *conn, int commit_id, int command_id);
 int mkc_commitid_is_skiped(MYSQL *conn,int commit_id, int command_id);
+
+sds addslashes(char *src,int len);
+
 #endif

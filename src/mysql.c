@@ -88,13 +88,20 @@ int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *conte
     time(&now);
     int len = strlen(content) + strlen(INSERT_COMMAND) + 128;
     char *sql = (char *)zmalloc(len); 
-    sprintf(sql,INSERT_COMMAND,commit_id,command_id,content,status,retry_num,now,now);
-    mkc_write_log(MKC_LOG_NOTICE,sql);
+    sds s_content = addslashes(content,strlen(content));
+
+    sprintf(sql,INSERT_COMMAND,commit_id,command_id,s_content,status,retry_num,now,now);
+
+    //mkc_write_log(MKC_LOG_NOTICE,sql);
     int ret = mkc_mysql_exec(conn,sql);
+
     if(!ret){
+
         last_insert_id = mysql_insert_id(conn);
     }
+    sdsfree(s_content);
     zfree(sql);
+
     return last_insert_id;
 }
 
@@ -105,7 +112,7 @@ int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status)
     int len = strlen(UPDATE_COMMAND) + 128;
     char *sql = (char *)zmalloc(len);
     sprintf(sql,UPDATE_COMMAND,now,commit_id,command_id,status);
-    mkc_write_log(MKC_LOG_NOTICE,sql);
+    //mkc_write_log(MKC_LOG_NOTICE,sql);
     int ret = mkc_mysql_exec(conn,sql);
     if(!ret){
         num_rows = mysql_affected_rows(conn);
@@ -116,7 +123,7 @@ int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status)
 
 int save_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num){
     int ret;
-    mkc_write_log(MKC_LOG_NOTICE ,"mkc saved queue log.");
+    //mkc_write_log(MKC_LOG_NOTICE ,"mkc saved queue log.");
     if(select_mkc_queue_log(conn, commit_id, command_id) > 0){
 
         ret = update_mkc_queue_log(conn,commit_id,command_id,status);
@@ -141,4 +148,33 @@ int select_mkc_queue_log(MYSQL *conn, int commit_id, int command_id){
     mysql_free_result(res);
     zfree(sql);
     return res_num;
+}
+sds addslashes(const char *src , int len){
+    char *target, *source, *end;
+
+    sds new_str = sdsnewlen(len);
+    end = src + len;
+
+    target = new_str;
+
+    source = src;
+
+    while(source < end){
+        switch(*source){
+            case '\0':
+                *target++ = '\\';
+                *target++ = '0';
+                break;
+            case '\'':
+            case '\"':
+            case '\\':
+                *target++ = '\\';
+            default:
+                *target++ = *source;
+                break;
+        }
+    }
+
+    *target = 0;
+    return new_str;
 }

@@ -87,11 +87,13 @@ int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *conte
     time_t now;
     time(&now);
 
-    int len = strlen(content) + strlen(INSERT_COMMAND) + 128;
-    char *sql = (char *)zmalloc(len); 
-    //sds s_content = addslashes(content,strlen(content));
+    int len = strlen(INSERT_COMMAND) + 128;
+    sds s_content = addslashes(content,strlen(content));
+    char *sql = (char *)zmalloc(sdslen(s_content) + len); 
 
-    sprintf(sql,INSERT_COMMAND,commit_id,command_id,content,status,retry_num,now,now);
+    sprintf(sql,INSERT_COMMAND,commit_id,command_id,s_content,status,retry_num,now,now);
+    int end = strlen(sql);
+    sql[end+1] = '\0';
 
     mkc_write_log(MKC_LOG_NOTICE,sql);
     int ret = mkc_mysql_exec(conn,sql);
@@ -100,7 +102,7 @@ int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *conte
 
         last_insert_id = mysql_insert_id(conn);
     }
-    //sdsfree(s_content);
+    sdsfree(s_content);
     zfree(sql);
 
     return last_insert_id;
@@ -151,9 +153,11 @@ int select_mkc_queue_log(MYSQL *conn, int commit_id, int command_id){
     return res_num;
 }
 sds addslashes(char *src , int len){
+
     char *target, *source, *end;
 
-    sds new_str = sdsnewlen("", len);
+    sds new_str = sdsnewlen("", len * 2);
+
     end = src + len;
 
     target = new_str;
@@ -174,8 +178,9 @@ sds addslashes(char *src , int len){
                 *target++ = *source;
                 break;
         }
+        source ++;
     }
 
-    *target = 0;
+    *target = '\0';
     return new_str;
 }

@@ -180,12 +180,10 @@ int mkc_spawn_worker_process(){
                     exited = 1;
                 }
                 if(exited != 1){
+
                     topic = (mkc_topic*)node->value;
-
-                kafka_init_server(topic);
-
-                mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
-
+                    kafka_init_server(topic);
+                    mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
                     setproctitle("mkc:%s [%s]", "worker process",topic->name);
                     kafka_consume(topic);
                 }
@@ -309,6 +307,10 @@ void mkc_master_process_bury(){
             err_code = MKC_LOG_NOTICE;
         }
         mkc_write_log(err_code,buf);
+        //如果为重启模式
+        if(mkc_sigreload){
+            
+        }
 
     }
 
@@ -320,7 +322,6 @@ void mkc_master_process_bury(){
     if(mkc_sigreload){
         mkc_sigreload = 0;
         mkc_write_log(MKC_LOG_NOTICE, "mkc will reload", (int)pid);
-        mkc_write_log(MKC_LOG_NOTICE ,"reloading :execvp(%s,{\"%s\",\"%s\",\"%s\"})",mkc_binfile, mkc_os_argv[0],mkc_os_argv[1],mkc_os_argv[2]);
         mkc_write_log(MKC_LOG_NOTICE ,"reloading:execl(%s,\"%s\",\"%s\",\"%s\")", mkc_binfile, "mkc", mkc_os_argv[1],mkc_os_argv[2]);
         if(execl(mkc_binfile,"mkc", mkc_os_argv[1],mkc_os_argv[2],(char*)0 ) < 0){
 

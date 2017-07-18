@@ -21,6 +21,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include "config.h"
+
 extern char **environ;
 static char **os_argv;
 static char *os_last_argv;
@@ -30,7 +32,7 @@ typedef struct mkc_process_t{
     pid_t pid;
     int exited;
     int exiting;
-
+    struct mkc_topic *topic;
 } mkc_process_t;
 
 
@@ -68,5 +70,10 @@ void mkc_master_handler(int sig);
 void mkc_master_process_exit();
 
 int mkc_signal_process(char *sig);
+
+void mkc_restart_worker_process(int exited_pid);
+
+void mkc_do_worker_process(struct mkc_topic *topic);
+
 
 #endif

@@ -18,10 +18,13 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <errno.h>
 #include <string.h>
 #include <mysql.h>
 #include <sys/wait.h>
+#include <sys/uio.h>
+#include <sys/types.h>
 
 #include "kafka.h"
 #include "config.h"
@@ -139,9 +142,11 @@ void mkc_signal_handler(int sig){
         case SIGALRM:
             mkc_sigalrm = 1;
             break;
+/*
         case SIGTERM:
             mkc_sigterm = 1;
             break;
+*/
     }
 
     //通知子进程
@@ -166,26 +171,22 @@ int mkc_spawn_worker_process(){
     list_node *node;
 
     node = server_conf->topics->head;
-
+    
     for(i = 0; i < server_conf->topics->len ; i++){
         int exited = 0;
         pid_t pid = 0;
         pid = fork();
 
         mkc_topic *topic = 0;
+        topic = (mkc_topic*)node->value;
         switch(pid){
             case 0:
                 if(kafka_init_server() < 0){
-
                     exited = 1;
                 }
                 if(exited != 1){
 
-                    topic = (mkc_topic*)node->value;
-                    kafka_init_server(topic);
-                    mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
-                    setproctitle("mkc:%s [%s]", "worker process",topic->name);
-                    kafka_consume(topic);
+                    mkc_do_worker_process(topic);
                 }
 
                 break;
@@ -200,9 +201,71 @@ int mkc_spawn_worker_process(){
         server_conf->procs[i]->pid = pid;
         server_conf->procs[i]->exited = exited;
         server_conf->procs[i]->exiting = 0;
+        //保存topic信息
+        server_conf->procs[i]->topic = topic;
         node = node->next;
     }
     return 0;
+}
+
+//当子进程异常退出时用它重启子进程
+void mkc_restart_worker_process(int exited_pid){
+
+    int i = 0;
+    int pip[2];
+    char buffer[128] = {0};
+    if(pipe(pip) != 0){
+
+        mkc_write_log(MKC_LOG_ERROR,"create pipe error :%s", strerror(errno));
+        exit(1);
+    }
+    mkc_topic *topic = 0;
+    for(i ; i < server_conf->topics->len; i++){
+
+        if(server_conf->procs[i]->pid == exited_pid){
+
+            topic = server_conf->procs[i]->topic;
+            break;
+        }
+    }
+    if(topic == 0){
+
+        mkc_write_log(MKC_LOG_NOTICE ,"pid [%d] worker process exited and restart failed. ",exited_pid);
+        return ;
+    }
+    mkc_write_log(MKC_LOG_NOTICE ,"worker process will restart by topic[%s]",topic->name);
+    int pid = fork();
+    int work_pid = 0;
+    switch(pid){
+        case 0:
+            work_pid = getpid();
+            close(pip[0]);
+            sprintf(buffer,"%d",work_pid);
+            write(pip[1],buffer, strlen(buffer));
+            topic = server_conf->procs[i]->topic;
+            mkc_do_worker_process(topic); 
+        break;
+        case -1:
+
+        break;
+    }
+
+    //等待子进程 
+    sleep(1);
+    close(pip[1]);
+    if(read(pip[0],buffer,128) < 0){
+
+    }
+    work_pid = atoi(buffer);
+    server_conf->procs[i]->pid = work_pid;
+}
+//阻塞模式获取数据
+void mkc_do_worker_process(mkc_topic * topic){
+
+    kafka_init_server(topic);
+    mkc_write_log(MKC_LOG_NOTICE, "mkc spawn work proces [%d] with topic[%s] .", getpid(),topic->name);
+    setproctitle("mkc:%s [%s]", "worker process",topic->name);
+    kafka_consume(topic);
 }
 /**
  * @brief 发信号通知所有子进程
@@ -300,6 +363,7 @@ void mkc_master_process_bury(){
             
             const char *have_core = WCOREDUMP(status) ? " - core dumped" :"";
             snprintf(buf,sizeof(buf), "pid [%d] on signal %d(%s)",(int)pid, WTERMSIG(status),have_core);
+            mkc_restart_worker_process(pid);
 
         }else if(WIFSTOPPED(status)){
 
@@ -307,10 +371,6 @@ void mkc_master_process_bury(){
             err_code = MKC_LOG_NOTICE;
         }
         mkc_write_log(err_code,buf);
-        //如果为重启模式
-        if(mkc_sigreload){
-            
-        }
 
     }
 
@@ -328,6 +388,7 @@ void mkc_master_process_bury(){
             mkc_write_log(MKC_LOG_ERROR,"call execl errno[%d] error [%s]",errno,strerror(errno));
         }
     }
+    mkc_write_log(MKC_LOG_NOTICE, "bye bye ...");
 
 }
 

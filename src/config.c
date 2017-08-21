@@ -74,6 +74,7 @@ int parse_server_conf(char *file_name){
         }else if(!strcasecmp(vector[0],"log-file")){
 
             server_conf->logfp = 0;
+            server_conf->logfile = strdup(vector[1]);
             FILE *fp = fopen(server_conf->logfile,"a+"); 
 
             if(!fp){

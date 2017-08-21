@@ -104,7 +104,7 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
 
     //判断是否为json格式.
 
-    if(root->type == cJSON_False || root->type == cJSON_NULL){
+    if(root == 0x0 || root->type == cJSON_False || root->type == cJSON_NULL){
 
         mkc_write_log(MKC_LOG_WARNING,"invalid json data :[%s]",rkmessage->payload);
         return -1;

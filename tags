@@ -4,317 +4,255 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-BROKER_PATH	src/main.c	/^#define BROKER_PATH /;"	d	file:
-BUFFER_SIZE	src/http.h	/^#define BUFFER_SIZE /;"	d
+BROKER_PATH	src/main.c	49;"	d	file:
+BUFFER_SIZE	src/http.h	22;"	d
 CONSUMER_NAME	src/Makefile	/^CONSUMER_NAME=mkc$/;"	m
-HASH_MAX_SIZE	src/hash.h	/^#define HASH_MAX_SIZE /;"	d
-HAVE_MALLOC_SIZE	src/zmalloc.h	/^#define HAVE_MALLOC_SIZE /;"	d
-HAVE_SETPROCTITLE	src/setproctitle.c	/^#define HAVE_SETPROCTITLE /;"	d	file:
-HTTP_POST	src/http.h	/^#define HTTP_POST /;"	d
-INSERT_COMMAND	src/mysql.h	/^#define INSERT_COMMAND /;"	d
+HASH_MAX_SIZE	src/hash.h	24;"	d
+HAVE_MALLOC_SIZE	src/zmalloc.h	42;"	d
+HAVE_MALLOC_SIZE	src/zmalloc.h	52;"	d
+HAVE_MALLOC_SIZE	src/zmalloc.h	60;"	d
+HAVE_SETPROCTITLE	src/setproctitle.c	42;"	d	file:
+HTTP_POST	src/http.h	24;"	d
+INSERT_COMMAND	src/mysql.h	10;"	d
 INSTALL	src/Makefile	/^INSTALL=install$/;"	m
 INSTALL_BIN	src/Makefile	/^INSTALL_BIN=$(PREFIX)\/bin$/;"	m
-IS_SKIP_COMMAND	src/mysql.h	/^#define IS_SKIP_COMMAND /;"	d
-LOG_ERROR	src/consumer.h	/^#define LOG_ERROR /;"	d
-LOG_VERBOSE	src/consumer.h	/^#define LOG_VERBOSE /;"	d
-MAX_LOGMSG_LEN	src/consumer.h	/^#define MAX_LOGMSG_LEN /;"	d
-MKC_LOG_BUFFER_SIZE	src/logger.c	/^#define MKC_LOG_BUFFER_SIZE /;"	d	file:
-MKC_LOG_ERROR	src/logger.h	/^#define MKC_LOG_ERROR /;"	d
-MKC_LOG_NOTICE	src/logger.h	/^#define MKC_LOG_NOTICE /;"	d
-MKC_LOG_WARNING	src/logger.h	/^#define MKC_LOG_WARNING /;"	d
+IS_SKIP_COMMAND	src/mysql.h	13;"	d
+LOG_ERROR	src/consumer.h	28;"	d
+LOG_VERBOSE	src/consumer.h	27;"	d
+MAX_LOGMSG_LEN	src/consumer.h	26;"	d
+MKC_LOG_BUFFER_SIZE	src/logger.c	29;"	d	file:
+MKC_LOG_ERROR	src/logger.h	22;"	d
+MKC_LOG_NOTICE	src/logger.h	23;"	d
+MKC_LOG_WARNING	src/logger.h	24;"	d
 MYSQL	src/Makefile	/^MYSQL= -I\/usr\/local\/mysql\/include -L\/usr\/local\/mysql\/lib\/ -lmysqlclient$/;"	m
 PREFIX	src/Makefile	/^PREFIX?=\/usr\/local\/mkc$/;"	m
-PREFIX_SIZE	src/zmalloc.c	/^#define PREFIX_SIZE /;"	d	file:
-REPLACE_COMMAND	src/mysql.h	/^#define REPLACE_COMMAND /;"	d
-SDS_LLSTR_SIZE	src/sds.c	/^#define SDS_LLSTR_SIZE /;"	d	file:
-SDS_MAX_PREALLOC	src/sds.h	/^#define SDS_MAX_PREALLOC /;"	d
-SELECT_COMMAND	src/mysql.h	/^#define SELECT_COMMAND /;"	d
-SERVER_COMMAND_NUM	src/main.c	/^#define SERVER_COMMAND_NUM /;"	d	file:
-SPT	src/setproctitle.c	/^} SPT;$/;"	v	typeref:struct:__anon11	file:
-SPT	src/setproctitle.c	/^} SPT;$/;"	v	typeref:struct:__anon5	file:
-SPT_MAXTITLE	src/setproctitle.c	/^#define SPT_MAXTITLE /;"	d	file:
-SPT_MIN	src/setproctitle.c	/^#define SPT_MIN(/;"	d	file:
-UPDATE_COMMAND	src/mysql.h	/^#define UPDATE_COMMAND /;"	d
-ZMALLOC_LIB	src/zmalloc.h	/^#define ZMALLOC_LIB /;"	d
-_GNU_SOURCE	src/setproctitle.c	/^#define _GNU_SOURCE$/;"	d	file:
-_HTTP_H_	src/http.h	/^#define _HTTP_H_$/;"	d
-_KAFKA_H	src/kafka.h	/^#define _KAFKA_H$/;"	d
-_MKC_MYSQL_H_	src/mysql.h	/^#define _MKC_MYSQL_H_$/;"	d
-_PROCESS_H	src/process.h	/^#define _PROCESS_H$/;"	d
-_TPOLL_H_	src/tpoll.h	/^#define _TPOLL_H_$/;"	d
-__CONF_H_	src/config.h	/^#define __CONF_H_$/;"	d
-__CONSUMER_H_	src/consumer.h	/^#define __CONSUMER_H_$/;"	d
-__HASH_H_	src/hash.h	/^#define __HASH_H_$/;"	d
-__LIST_H_	src/list.h	/^#define __LIST_H_$/;"	d
-__LOGGER_H_	src/logger.h	/^#define __LOGGER_H_$/;"	d
-__SDS_H	src/sds.h	/^#define __SDS_H$/;"	d
-__ZMALLOC_H	src/zmalloc.h	/^#define __ZMALLOC_H$/;"	d
-__anon10::data	src/hash.h	/^    list **data;$/;"	m	struct:__anon10	access:public
-__anon10::element_num	src/hash.h	/^    int element_num;$/;"	m	struct:__anon10	access:public
-__anon10::free	src/hash.h	/^    int free;$/;"	m	struct:__anon10	access:public
-__anon10::size	src/hash.h	/^    int size;$/;"	m	struct:__anon10	access:public
-__anon11::arg0	src/setproctitle.c	/^	const char *arg0;$/;"	m	struct:__anon11	file:	access:public
-__anon11::base	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon11	file:	access:public
-__anon11::end	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon11	file:	access:public
-__anon11::error	src/setproctitle.c	/^	int error;$/;"	m	struct:__anon11	file:	access:public
-__anon11::nul	src/setproctitle.c	/^	char *nul;$/;"	m	struct:__anon11	file:	access:public
-__anon11::reset	src/setproctitle.c	/^	_Bool reset;$/;"	m	struct:__anon11	file:	access:public
-__anon12::arg	src/tpoll.h	/^    void    *arg;$/;"	m	struct:__anon12	access:public
-__anon12::next	src/tpoll.h	/^    struct tpoll_work *next;$/;"	m	struct:__anon12	typeref:struct:__anon12::tpoll_work	access:public
-__anon12::routine	src/tpoll.h	/^    void (*routine)(void *);$/;"	m	struct:__anon12	access:public
-__anon1::buffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon1	file:	access:public
-__anon1::length	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon1	file:	access:public
-__anon1::offset	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon1	file:	access:public
-__anon2::command_len	src/config.h	/^    int command_len;$/;"	m	struct:__anon2	access:public
-__anon2::commands	src/config.h	/^    sds *commands;$/;"	m	struct:__anon2	access:public
-__anon2::delay	src/config.h	/^    int delay;  \/\/延迟时间$/;"	m	struct:__anon2	access:public
-__anon2::method	src/config.h	/^    char *method;$/;"	m	struct:__anon2	access:public
-__anon2::name	src/config.h	/^    char *name;$/;"	m	struct:__anon2	access:public
-__anon2::retry_delay	src/config.h	/^    int retry_delay;$/;"	m	struct:__anon2	access:public
-__anon2::retrynum	src/config.h	/^    int retrynum; \/\/ 0 失败一直重试，值到uri的code为200.$/;"	m	struct:__anon2	access:public
-__anon2::uri	src/config.h	/^    char *uri;$/;"	m	struct:__anon2	access:public
-__anon3::command_no	src/config.h	/^    int command_no; \/\/ 命令号$/;"	m	struct:__anon3	access:public
-__anon3::module_conf	src/config.h	/^    module_conf_t **module_conf;$/;"	m	struct:__anon3	access:public
-__anon4::data	src/hash.h	/^    list **data;$/;"	m	struct:__anon4	access:public
-__anon4::element_num	src/hash.h	/^    int element_num;$/;"	m	struct:__anon4	access:public
-__anon4::free	src/hash.h	/^    int free;$/;"	m	struct:__anon4	access:public
-__anon4::size	src/hash.h	/^    int size;$/;"	m	struct:__anon4	access:public
-__anon5::arg0	src/setproctitle.c	/^	const char *arg0;$/;"	m	struct:__anon5	file:	access:public
-__anon5::base	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon5	file:	access:public
-__anon5::end	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon5	file:	access:public
-__anon5::error	src/setproctitle.c	/^	int error;$/;"	m	struct:__anon5	file:	access:public
-__anon5::nul	src/setproctitle.c	/^	char *nul;$/;"	m	struct:__anon5	file:	access:public
-__anon5::reset	src/setproctitle.c	/^	_Bool reset;$/;"	m	struct:__anon5	file:	access:public
-__anon6::arg	src/tpoll.h	/^    void    *arg;$/;"	m	struct:__anon6	access:public
-__anon6::next	src/tpoll.h	/^    struct tpoll_work *next;$/;"	m	struct:__anon6	typeref:struct:__anon6::tpoll_work	access:public
-__anon6::routine	src/tpoll.h	/^    void (*routine)(void *);$/;"	m	struct:__anon6	access:public
-__anon7::buffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon7	file:	access:public
-__anon7::length	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon7	file:	access:public
-__anon7::offset	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon7	file:	access:public
-__anon8::command_len	src/config.h	/^    int command_len;$/;"	m	struct:__anon8	access:public
-__anon8::commands	src/config.h	/^    sds *commands;$/;"	m	struct:__anon8	access:public
-__anon8::delay	src/config.h	/^    int delay;  \/\/延迟时间$/;"	m	struct:__anon8	access:public
-__anon8::method	src/config.h	/^    char *method;$/;"	m	struct:__anon8	access:public
-__anon8::name	src/config.h	/^    char *name;$/;"	m	struct:__anon8	access:public
-__anon8::retry_delay	src/config.h	/^    int retry_delay;$/;"	m	struct:__anon8	access:public
-__anon8::retrynum	src/config.h	/^    int retrynum; \/\/ 0 失败一直重试，值到uri的code为200.$/;"	m	struct:__anon8	access:public
-__anon8::uri	src/config.h	/^    char *uri;$/;"	m	struct:__anon8	access:public
-__anon9::command_no	src/config.h	/^    int command_no; \/\/ 命令号$/;"	m	struct:__anon9	access:public
-__anon9::module_conf	src/config.h	/^    module_conf_t **module_conf;$/;"	m	struct:__anon9	access:public
-__str	src/zmalloc.h	/^#define __str(/;"	d
-__xstr	src/zmalloc.h	/^#define __xstr(/;"	d
-arg	src/tpoll.h	/^    void    *arg;$/;"	m	struct:__anon12	access:public
-arg	src/tpoll.h	/^    void    *arg;$/;"	m	struct:__anon6	access:public
-arg0	src/setproctitle.c	/^	const char *arg0;$/;"	m	struct:__anon11	file:	access:public
-arg0	src/setproctitle.c	/^	const char *arg0;$/;"	m	struct:__anon5	file:	access:public
-argc	src/config.h	/^    int argc;$/;"	m	struct:server_conf_t	access:public
-base	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon11	file:	access:public
-base	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon5	file:	access:public
-brokers	src/config.h	/^    sds brokers;$/;"	m	struct:server_conf_t	access:public
-buf	src/sds.h	/^    char buf[];$/;"	m	struct:sdshdr	access:public
-buffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon1	file:	access:public
-buffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon7	file:	access:public
+PREFIX_SIZE	src/zmalloc.c	48;"	d	file:
+PREFIX_SIZE	src/zmalloc.c	51;"	d	file:
+PREFIX_SIZE	src/zmalloc.c	53;"	d	file:
+REPLACE_COMMAND	src/mysql.h	9;"	d
+SDS_LLSTR_SIZE	src/sds.c	300;"	d	file:
+SDS_MAX_PREALLOC	src/sds.h	34;"	d
+SELECT_COMMAND	src/mysql.h	12;"	d
+SERVER_COMMAND_NUM	src/main.c	47;"	d	file:
+SPT	src/setproctitle.c	/^} SPT;$/;"	v	typeref:struct:__anon1	file:
+SPT	src/setproctitle.c	/^} SPT;$/;"	v	typeref:struct:__anon7	file:
+SPT_MAXTITLE	src/setproctitle.c	213;"	d	file:
+SPT_MIN	src/setproctitle.c	67;"	d	file:
+UPDATE_COMMAND	src/mysql.h	11;"	d
+ZMALLOC_LIB	src/zmalloc.h	39;"	d
+ZMALLOC_LIB	src/zmalloc.h	49;"	d
+ZMALLOC_LIB	src/zmalloc.h	65;"	d
+_GNU_SOURCE	src/setproctitle.c	29;"	d	file:
+_HTTP_H_	src/http.h	20;"	d
+_KAFKA_H	src/kafka.h	19;"	d
+_MKC_MYSQL_H_	src/mysql.h	2;"	d
+_PROCESS_H	src/process.h	19;"	d
+_TPOLL_H_	src/tpoll.h	20;"	d
+__CONF_H_	src/config.h	20;"	d
+__CONSUMER_H_	src/consumer.h	19;"	d
+__HASH_H_	src/hash.h	19;"	d
+__LIST_H_	src/list.h	19;"	d
+__LOGGER_H_	src/logger.h	20;"	d
+__SDS_H	src/sds.h	32;"	d
+__ZMALLOC_H	src/zmalloc.h	32;"	d
+__str	src/zmalloc.h	36;"	d
+__xstr	src/zmalloc.h	35;"	d
+addslashes	src/mysql.c	/^sds addslashes(char *src , int len){$/;"	f
+arg	src/tpoll.h	/^    void    *arg;$/;"	m	struct:__anon12
+arg	src/tpoll.h	/^    void    *arg;$/;"	m	struct:__anon6
+arg0	src/setproctitle.c	/^	const char *arg0;$/;"	m	struct:__anon1	file:
+arg0	src/setproctitle.c	/^	const char *arg0;$/;"	m	struct:__anon7	file:
+argc	src/config.h	/^    int argc;$/;"	m	struct:server_conf_t
+base	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon1	file:
+base	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon7	file:
+brokers	src/config.h	/^    sds brokers;$/;"	m	struct:server_conf_t
+buf	src/sds.h	/^    char buf[];$/;"	m	struct:sdshdr
+buffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon3	file:
+buffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon9	file:
 cJSON	src/cJSON.h	/^typedef struct cJSON {$/;"	s
 cJSON	src/cJSON.h	/^} cJSON;$/;"	t	typeref:struct:cJSON
-cJSON::child	src/cJSON.h	/^	struct cJSON *child;		\/* An array or object item will have a child pointer pointing to a chain of the items in the array\/object. *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON	access:public
-cJSON::next	src/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON	access:public
-cJSON::prev	src/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::	access:public
-cJSON::string	src/cJSON.h	/^	char *string;				\/* The item's name string, if this item is the child of, or is in the list of subitems of an object. *\/$/;"	m	struct:cJSON	access:public
-cJSON::type	src/cJSON.h	/^	int type;					\/* The type of the item, as above. *\/$/;"	m	struct:cJSON	access:public
-cJSON::valuedouble	src/cJSON.h	/^	double valuedouble;			\/* The item's number, if type==cJSON_Number *\/$/;"	m	struct:cJSON	access:public
-cJSON::valueint	src/cJSON.h	/^	int valueint;				\/* The item's number, if type==cJSON_Number *\/$/;"	m	struct:cJSON	access:public
-cJSON::valuestring	src/cJSON.h	/^	char *valuestring;			\/* The item's string, if type==cJSON_String *\/$/;"	m	struct:cJSON	access:public
-cJSON_AddBoolToObject	src/cJSON.h	/^#define cJSON_AddBoolToObject(/;"	d
-cJSON_AddFalseToObject	src/cJSON.h	/^#define cJSON_AddFalseToObject(/;"	d
-cJSON_AddItemReferenceToArray	src/cJSON.c	/^void	cJSON_AddItemReferenceToArray(cJSON *array, cJSON *item)						{cJSON_AddItemToArray(array,create_reference(item));}$/;"	f	signature:(cJSON *array, cJSON *item)
-cJSON_AddItemReferenceToObject	src/cJSON.c	/^void	cJSON_AddItemReferenceToObject(cJSON *object,const char *string,cJSON *item)	{cJSON_AddItemToObject(object,string,create_reference(item));}$/;"	f	signature:(cJSON *object,const char *string,cJSON *item)
-cJSON_AddItemToArray	src/cJSON.c	/^void   cJSON_AddItemToArray(cJSON *array, cJSON *item)						{cJSON *c=array->child;if (!item) return; if (!c) {array->child=item;} else {while (c && c->next) c=c->next; suffix_object(c,item);}}$/;"	f	signature:(cJSON *array, cJSON *item)
-cJSON_AddItemToObject	src/cJSON.c	/^void   cJSON_AddItemToObject(cJSON *object,const char *string,cJSON *item)	{if (!item) return; if (item->string) cJSON_free(item->string);item->string=cJSON_strdup(string);cJSON_AddItemToArray(object,item);}$/;"	f	signature:(cJSON *object,const char *string,cJSON *item)
-cJSON_AddItemToObjectCS	src/cJSON.c	/^void   cJSON_AddItemToObjectCS(cJSON *object,const char *string,cJSON *item)	{if (!item) return; if (!(item->type&cJSON_StringIsConst) && item->string) cJSON_free(item->string);item->string=(char*)string;item->type|=cJSON_StringIsConst;cJSON_AddItemToArray(object,item);}$/;"	f	signature:(cJSON *object,const char *string,cJSON *item)
-cJSON_AddNullToObject	src/cJSON.h	/^#define cJSON_AddNullToObject(/;"	d
-cJSON_AddNumberToObject	src/cJSON.h	/^#define cJSON_AddNumberToObject(/;"	d
-cJSON_AddStringToObject	src/cJSON.h	/^#define cJSON_AddStringToObject(/;"	d
-cJSON_AddTrueToObject	src/cJSON.h	/^#define cJSON_AddTrueToObject(/;"	d
-cJSON_Array	src/cJSON.h	/^#define cJSON_Array /;"	d
-cJSON_ArrayForEach	src/cJSON.h	/^#define cJSON_ArrayForEach(/;"	d
-cJSON_CreateArray	src/cJSON.c	/^cJSON *cJSON_CreateArray(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_Array;return item;}$/;"	f	signature:(void)
-cJSON_CreateBool	src/cJSON.c	/^cJSON *cJSON_CreateBool(int b)					{cJSON *item=cJSON_New_Item();if(item)item->type=b?cJSON_True:cJSON_False;return item;}$/;"	f	signature:(int b)
-cJSON_CreateDoubleArray	src/cJSON.c	/^cJSON *cJSON_CreateDoubleArray(const double *numbers,int count)	{int i;cJSON *n=0,*p=0,*a=cJSON_CreateArray();for(i=0;a && i<count;i++){n=cJSON_CreateNumber(numbers[i]);if(!n){cJSON_Delete(a);return 0;}if(!i)a->child=n;else suffix_object(p,n);p=n;}return a;}$/;"	f	signature:(const double *numbers,int count)
-cJSON_CreateFalse	src/cJSON.c	/^cJSON *cJSON_CreateFalse(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_False;return item;}$/;"	f	signature:(void)
-cJSON_CreateFloatArray	src/cJSON.c	/^cJSON *cJSON_CreateFloatArray(const float *numbers,int count)	{int i;cJSON *n=0,*p=0,*a=cJSON_CreateArray();for(i=0;a && i<count;i++){n=cJSON_CreateNumber(numbers[i]);if(!n){cJSON_Delete(a);return 0;}if(!i)a->child=n;else suffix_object(p,n);p=n;}return a;}$/;"	f	signature:(const float *numbers,int count)
-cJSON_CreateIntArray	src/cJSON.c	/^cJSON *cJSON_CreateIntArray(const int *numbers,int count)		{int i;cJSON *n=0,*p=0,*a=cJSON_CreateArray();for(i=0;a && i<count;i++){n=cJSON_CreateNumber(numbers[i]);if(!n){cJSON_Delete(a);return 0;}if(!i)a->child=n;else suffix_object(p,n);p=n;}return a;}$/;"	f	signature:(const int *numbers,int count)
-cJSON_CreateNull	src/cJSON.c	/^cJSON *cJSON_CreateNull(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_NULL;return item;}$/;"	f	signature:(void)
-cJSON_CreateNumber	src/cJSON.c	/^cJSON *cJSON_CreateNumber(double num)			{cJSON *item=cJSON_New_Item();if(item){item->type=cJSON_Number;item->valuedouble=num;item->valueint=(int)num;}return item;}$/;"	f	signature:(double num)
-cJSON_CreateObject	src/cJSON.c	/^cJSON *cJSON_CreateObject(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_Object;return item;}$/;"	f	signature:(void)
-cJSON_CreateString	src/cJSON.c	/^cJSON *cJSON_CreateString(const char *string)	{cJSON *item=cJSON_New_Item();if(item){item->type=cJSON_String;item->valuestring=cJSON_strdup(string);if(!item->valuestring){cJSON_Delete(item);return 0;}}return item;}$/;"	f	signature:(const char *string)
-cJSON_CreateStringArray	src/cJSON.c	/^cJSON *cJSON_CreateStringArray(const char **strings,int count)	{int i;cJSON *n=0,*p=0,*a=cJSON_CreateArray();for(i=0;a && i<count;i++){n=cJSON_CreateString(strings[i]);if(!n){cJSON_Delete(a);return 0;}if(!i)a->child=n;else suffix_object(p,n);p=n;}return a;}$/;"	f	signature:(const char **strings,int count)
-cJSON_CreateTrue	src/cJSON.c	/^cJSON *cJSON_CreateTrue(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_True;return item;}$/;"	f	signature:(void)
-cJSON_Delete	src/cJSON.c	/^void cJSON_Delete(cJSON *c)$/;"	f	signature:(cJSON *c)
-cJSON_DeleteItemFromArray	src/cJSON.c	/^void   cJSON_DeleteItemFromArray(cJSON *array,int which)			{cJSON_Delete(cJSON_DetachItemFromArray(array,which));}$/;"	f	signature:(cJSON *array,int which)
-cJSON_DeleteItemFromObject	src/cJSON.c	/^void   cJSON_DeleteItemFromObject(cJSON *object,const char *string) {cJSON_Delete(cJSON_DetachItemFromObject(object,string));}$/;"	f	signature:(cJSON *object,const char *string)
-cJSON_DetachItemFromArray	src/cJSON.c	/^cJSON *cJSON_DetachItemFromArray(cJSON *array,int which)			{cJSON *c=array->child;while (c && which>0) c=c->next,which--;if (!c) return 0;$/;"	f	signature:(cJSON *array,int which)
-cJSON_DetachItemFromObject	src/cJSON.c	/^cJSON *cJSON_DetachItemFromObject(cJSON *object,const char *string) {int i=0;cJSON *c=object->child;while (c && cJSON_strcasecmp(c->string,string)) i++,c=c->next;if (c) return cJSON_DetachItemFromArray(object,i);return 0;}$/;"	f	signature:(cJSON *object,const char *string)
-cJSON_Duplicate	src/cJSON.c	/^cJSON *cJSON_Duplicate(cJSON *item,int recurse)$/;"	f	signature:(cJSON *item,int recurse)
-cJSON_False	src/cJSON.h	/^#define cJSON_False /;"	d
-cJSON_GetArrayItem	src/cJSON.c	/^cJSON *cJSON_GetArrayItem(cJSON *array,int item)				{cJSON *c=array?array->child:0;while (c && item>0) item--,c=c->next; return c;}$/;"	f	signature:(cJSON *array,int item)
-cJSON_GetArraySize	src/cJSON.c	/^int    cJSON_GetArraySize(cJSON *array)							{cJSON *c=array->child;int i=0;while(c)i++,c=c->next;return i;}$/;"	f	signature:(cJSON *array)
-cJSON_GetErrorPtr	src/cJSON.c	/^const char *cJSON_GetErrorPtr(void) {return global_ep;}$/;"	f	signature:(void)
-cJSON_GetObjectItem	src/cJSON.c	/^cJSON *cJSON_GetObjectItem(cJSON *object,const char *string)	{cJSON *c=object?object->child:0;while (c && cJSON_strcasecmp(c->string,string)) c=c->next; return c;}$/;"	f	signature:(cJSON *object,const char *string)
-cJSON_HasObjectItem	src/cJSON.c	/^int cJSON_HasObjectItem(cJSON *object,const char *string)		{return cJSON_GetObjectItem(object,string)?1:0;}$/;"	f	signature:(cJSON *object,const char *string)
+cJSON_AddBoolToObject	src/cJSON.h	148;"	d
+cJSON_AddFalseToObject	src/cJSON.h	147;"	d
+cJSON_AddItemReferenceToArray	src/cJSON.c	/^void	cJSON_AddItemReferenceToArray(cJSON *array, cJSON *item)						{cJSON_AddItemToArray(array,create_reference(item));}$/;"	f
+cJSON_AddItemReferenceToObject	src/cJSON.c	/^void	cJSON_AddItemReferenceToObject(cJSON *object,const char *string,cJSON *item)	{cJSON_AddItemToObject(object,string,create_reference(item));}$/;"	f
+cJSON_AddItemToArray	src/cJSON.c	/^void   cJSON_AddItemToArray(cJSON *array, cJSON *item)						{cJSON *c=array->child;if (!item) return; if (!c) {array->child=item;} else {while (c && c->next) c=c->next; suffix_object(c,item);}}$/;"	f
+cJSON_AddItemToObject	src/cJSON.c	/^void   cJSON_AddItemToObject(cJSON *object,const char *string,cJSON *item)	{if (!item) return; if (item->string) cJSON_free(item->string);item->string=cJSON_strdup(string);cJSON_AddItemToArray(object,item);}$/;"	f
+cJSON_AddItemToObjectCS	src/cJSON.c	/^void   cJSON_AddItemToObjectCS(cJSON *object,const char *string,cJSON *item)	{if (!item) return; if (!(item->type&cJSON_StringIsConst) && item->string) cJSON_free(item->string);item->string=(char*)string;item->type|=cJSON_StringIsConst;cJSON_AddItemToArray(object,item);}$/;"	f
+cJSON_AddNullToObject	src/cJSON.h	145;"	d
+cJSON_AddNumberToObject	src/cJSON.h	149;"	d
+cJSON_AddStringToObject	src/cJSON.h	150;"	d
+cJSON_AddTrueToObject	src/cJSON.h	146;"	d
+cJSON_Array	src/cJSON.h	37;"	d
+cJSON_ArrayForEach	src/cJSON.h	157;"	d
+cJSON_CreateArray	src/cJSON.c	/^cJSON *cJSON_CreateArray(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_Array;return item;}$/;"	f
+cJSON_CreateBool	src/cJSON.c	/^cJSON *cJSON_CreateBool(int b)					{cJSON *item=cJSON_New_Item();if(item)item->type=b?cJSON_True:cJSON_False;return item;}$/;"	f
+cJSON_CreateDoubleArray	src/cJSON.c	/^cJSON *cJSON_CreateDoubleArray(const double *numbers,int count)	{int i;cJSON *n=0,*p=0,*a=cJSON_CreateArray();for(i=0;a && i<count;i++){n=cJSON_CreateNumber(numbers[i]);if(!n){cJSON_Delete(a);return 0;}if(!i)a->child=n;else suffix_object(p,n);p=n;}return a;}$/;"	f
+cJSON_CreateFalse	src/cJSON.c	/^cJSON *cJSON_CreateFalse(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_False;return item;}$/;"	f
+cJSON_CreateFloatArray	src/cJSON.c	/^cJSON *cJSON_CreateFloatArray(const float *numbers,int count)	{int i;cJSON *n=0,*p=0,*a=cJSON_CreateArray();for(i=0;a && i<count;i++){n=cJSON_CreateNumber(numbers[i]);if(!n){cJSON_Delete(a);return 0;}if(!i)a->child=n;else suffix_object(p,n);p=n;}return a;}$/;"	f
+cJSON_CreateIntArray	src/cJSON.c	/^cJSON *cJSON_CreateIntArray(const int *numbers,int count)		{int i;cJSON *n=0,*p=0,*a=cJSON_CreateArray();for(i=0;a && i<count;i++){n=cJSON_CreateNumber(numbers[i]);if(!n){cJSON_Delete(a);return 0;}if(!i)a->child=n;else suffix_object(p,n);p=n;}return a;}$/;"	f
+cJSON_CreateNull	src/cJSON.c	/^cJSON *cJSON_CreateNull(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_NULL;return item;}$/;"	f
+cJSON_CreateNumber	src/cJSON.c	/^cJSON *cJSON_CreateNumber(double num)			{cJSON *item=cJSON_New_Item();if(item){item->type=cJSON_Number;item->valuedouble=num;item->valueint=(int)num;}return item;}$/;"	f
+cJSON_CreateObject	src/cJSON.c	/^cJSON *cJSON_CreateObject(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_Object;return item;}$/;"	f
+cJSON_CreateString	src/cJSON.c	/^cJSON *cJSON_CreateString(const char *string)	{cJSON *item=cJSON_New_Item();if(item){item->type=cJSON_String;item->valuestring=cJSON_strdup(string);if(!item->valuestring){cJSON_Delete(item);return 0;}}return item;}$/;"	f
+cJSON_CreateStringArray	src/cJSON.c	/^cJSON *cJSON_CreateStringArray(const char **strings,int count)	{int i;cJSON *n=0,*p=0,*a=cJSON_CreateArray();for(i=0;a && i<count;i++){n=cJSON_CreateString(strings[i]);if(!n){cJSON_Delete(a);return 0;}if(!i)a->child=n;else suffix_object(p,n);p=n;}return a;}$/;"	f
+cJSON_CreateTrue	src/cJSON.c	/^cJSON *cJSON_CreateTrue(void)					{cJSON *item=cJSON_New_Item();if(item)item->type=cJSON_True;return item;}$/;"	f
+cJSON_Delete	src/cJSON.c	/^void cJSON_Delete(cJSON *c)$/;"	f
+cJSON_DeleteItemFromArray	src/cJSON.c	/^void   cJSON_DeleteItemFromArray(cJSON *array,int which)			{cJSON_Delete(cJSON_DetachItemFromArray(array,which));}$/;"	f
+cJSON_DeleteItemFromObject	src/cJSON.c	/^void   cJSON_DeleteItemFromObject(cJSON *object,const char *string) {cJSON_Delete(cJSON_DetachItemFromObject(object,string));}$/;"	f
+cJSON_DetachItemFromArray	src/cJSON.c	/^cJSON *cJSON_DetachItemFromArray(cJSON *array,int which)			{cJSON *c=array->child;while (c && which>0) c=c->next,which--;if (!c) return 0;$/;"	f
+cJSON_DetachItemFromObject	src/cJSON.c	/^cJSON *cJSON_DetachItemFromObject(cJSON *object,const char *string) {int i=0;cJSON *c=object->child;while (c && cJSON_strcasecmp(c->string,string)) i++,c=c->next;if (c) return cJSON_DetachItemFromArray(object,i);return 0;}$/;"	f
+cJSON_Duplicate	src/cJSON.c	/^cJSON *cJSON_Duplicate(cJSON *item,int recurse)$/;"	f
+cJSON_False	src/cJSON.h	32;"	d
+cJSON_GetArrayItem	src/cJSON.c	/^cJSON *cJSON_GetArrayItem(cJSON *array,int item)				{cJSON *c=array?array->child:0;while (c && item>0) item--,c=c->next; return c;}$/;"	f
+cJSON_GetArraySize	src/cJSON.c	/^int    cJSON_GetArraySize(cJSON *array)							{cJSON *c=array->child;int i=0;while(c)i++,c=c->next;return i;}$/;"	f
+cJSON_GetErrorPtr	src/cJSON.c	/^const char *cJSON_GetErrorPtr(void) {return global_ep;}$/;"	f
+cJSON_GetObjectItem	src/cJSON.c	/^cJSON *cJSON_GetObjectItem(cJSON *object,const char *string)	{cJSON *c=object?object->child:0;while (c && cJSON_strcasecmp(c->string,string)) c=c->next; return c;}$/;"	f
+cJSON_HasObjectItem	src/cJSON.c	/^int cJSON_HasObjectItem(cJSON *object,const char *string)		{return cJSON_GetObjectItem(object,string)?1:0;}$/;"	f
 cJSON_Hooks	src/cJSON.h	/^typedef struct cJSON_Hooks {$/;"	s
 cJSON_Hooks	src/cJSON.h	/^} cJSON_Hooks;$/;"	t	typeref:struct:cJSON_Hooks
-cJSON_Hooks::free_fn	src/cJSON.h	/^      void (*free_fn)(void *ptr);$/;"	m	struct:cJSON_Hooks	access:public
-cJSON_Hooks::malloc_fn	src/cJSON.h	/^      void *(*malloc_fn)(size_t sz);$/;"	m	struct:cJSON_Hooks	access:public
-cJSON_InitHooks	src/cJSON.c	/^void cJSON_InitHooks(cJSON_Hooks* hooks)$/;"	f	signature:(cJSON_Hooks* hooks)
-cJSON_InsertItemInArray	src/cJSON.c	/^void   cJSON_InsertItemInArray(cJSON *array,int which,cJSON *newitem)		{cJSON *c=array->child;while (c && which>0) c=c->next,which--;if (!c) {cJSON_AddItemToArray(array,newitem);return;}$/;"	f	signature:(cJSON *array,int which,cJSON *newitem)
-cJSON_IsReference	src/cJSON.h	/^#define cJSON_IsReference /;"	d
-cJSON_Minify	src/cJSON.c	/^void cJSON_Minify(char *json)$/;"	f	signature:(char *json)
-cJSON_NULL	src/cJSON.h	/^#define cJSON_NULL /;"	d
-cJSON_New_Item	src/cJSON.c	/^static cJSON *cJSON_New_Item(void)$/;"	f	file:	signature:(void)
-cJSON_Number	src/cJSON.h	/^#define cJSON_Number /;"	d
-cJSON_Object	src/cJSON.h	/^#define cJSON_Object /;"	d
-cJSON_Parse	src/cJSON.c	/^cJSON *cJSON_Parse(const char *value) {return cJSON_ParseWithOpts(value,0,0);}$/;"	f	signature:(const char *value)
-cJSON_ParseWithOpts	src/cJSON.c	/^cJSON *cJSON_ParseWithOpts(const char *value,const char **return_parse_end,int require_null_terminated)$/;"	f	signature:(const char *value,const char **return_parse_end,int require_null_terminated)
-cJSON_Print	src/cJSON.c	/^char *cJSON_Print(cJSON *item)				{return print_value(item,0,1,0);}$/;"	f	signature:(cJSON *item)
-cJSON_PrintBuffered	src/cJSON.c	/^char *cJSON_PrintBuffered(cJSON *item,int prebuffer,int fmt)$/;"	f	signature:(cJSON *item,int prebuffer,int fmt)
-cJSON_PrintUnformatted	src/cJSON.c	/^char *cJSON_PrintUnformatted(cJSON *item)	{return print_value(item,0,0,0);}$/;"	f	signature:(cJSON *item)
-cJSON_ReplaceItemInArray	src/cJSON.c	/^void   cJSON_ReplaceItemInArray(cJSON *array,int which,cJSON *newitem)		{cJSON *c=array->child;while (c && which>0) c=c->next,which--;if (!c) return;$/;"	f	signature:(cJSON *array,int which,cJSON *newitem)
-cJSON_ReplaceItemInObject	src/cJSON.c	/^void   cJSON_ReplaceItemInObject(cJSON *object,const char *string,cJSON *newitem){int i=0;cJSON *c=object->child;while(c && cJSON_strcasecmp(c->string,string))i++,c=c->next;if(c){newitem->string=cJSON_strdup(string);cJSON_ReplaceItemInArray(object,i,newitem);}}$/;"	f	signature:(cJSON *object,const char *string,cJSON *newitem)
-cJSON_SetIntValue	src/cJSON.h	/^#define cJSON_SetIntValue(/;"	d
-cJSON_SetNumberValue	src/cJSON.h	/^#define cJSON_SetNumberValue(/;"	d
-cJSON_String	src/cJSON.h	/^#define cJSON_String /;"	d
-cJSON_StringIsConst	src/cJSON.h	/^#define cJSON_StringIsConst /;"	d
-cJSON_True	src/cJSON.h	/^#define cJSON_True /;"	d
-cJSON__h	src/cJSON.h	/^#define cJSON__h$/;"	d
+cJSON_InitHooks	src/cJSON.c	/^void cJSON_InitHooks(cJSON_Hooks* hooks)$/;"	f
+cJSON_InsertItemInArray	src/cJSON.c	/^void   cJSON_InsertItemInArray(cJSON *array,int which,cJSON *newitem)		{cJSON *c=array->child;while (c && which>0) c=c->next,which--;if (!c) {cJSON_AddItemToArray(array,newitem);return;}$/;"	f
+cJSON_IsReference	src/cJSON.h	40;"	d
+cJSON_Minify	src/cJSON.c	/^void cJSON_Minify(char *json)$/;"	f
+cJSON_NULL	src/cJSON.h	34;"	d
+cJSON_New_Item	src/cJSON.c	/^static cJSON *cJSON_New_Item(void)$/;"	f	file:
+cJSON_Number	src/cJSON.h	35;"	d
+cJSON_Object	src/cJSON.h	38;"	d
+cJSON_Parse	src/cJSON.c	/^cJSON *cJSON_Parse(const char *value) {return cJSON_ParseWithOpts(value,0,0);}$/;"	f
+cJSON_ParseWithOpts	src/cJSON.c	/^cJSON *cJSON_ParseWithOpts(const char *value,const char **return_parse_end,int require_null_terminated)$/;"	f
+cJSON_Print	src/cJSON.c	/^char *cJSON_Print(cJSON *item)				{return print_value(item,0,1,0);}$/;"	f
+cJSON_PrintBuffered	src/cJSON.c	/^char *cJSON_PrintBuffered(cJSON *item,int prebuffer,int fmt)$/;"	f
+cJSON_PrintUnformatted	src/cJSON.c	/^char *cJSON_PrintUnformatted(cJSON *item)	{return print_value(item,0,0,0);}$/;"	f
+cJSON_ReplaceItemInArray	src/cJSON.c	/^void   cJSON_ReplaceItemInArray(cJSON *array,int which,cJSON *newitem)		{cJSON *c=array->child;while (c && which>0) c=c->next,which--;if (!c) return;$/;"	f
+cJSON_ReplaceItemInObject	src/cJSON.c	/^void   cJSON_ReplaceItemInObject(cJSON *object,const char *string,cJSON *newitem){int i=0;cJSON *c=object->child;while(c && cJSON_strcasecmp(c->string,string))i++,c=c->next;if(c){newitem->string=cJSON_strdup(string);cJSON_ReplaceItemInArray(object,i,newitem);}}$/;"	f
+cJSON_SetIntValue	src/cJSON.h	153;"	d
+cJSON_SetNumberValue	src/cJSON.h	154;"	d
+cJSON_String	src/cJSON.h	36;"	d
+cJSON_StringIsConst	src/cJSON.h	41;"	d
+cJSON_True	src/cJSON.h	33;"	d
+cJSON__h	src/cJSON.h	24;"	d
 cJSON_free	src/cJSON.c	/^static void (*cJSON_free)(void *ptr) = free;$/;"	v	file:
 cJSON_malloc	src/cJSON.c	/^static void *(*cJSON_malloc)(size_t sz) = malloc;$/;"	v	file:
-cJSON_strcasecmp	src/cJSON.c	/^static int cJSON_strcasecmp(const char *s1,const char *s2)$/;"	f	file:	signature:(const char *s1,const char *s2)
-cJSON_strdup	src/cJSON.c	/^static char* cJSON_strdup(const char* str)$/;"	f	file:	signature:(const char* str)
-calloc	src/zmalloc.c	/^#define calloc(/;"	d	file:
-child	src/cJSON.h	/^	struct cJSON *child;		\/* An array or object item will have a child pointer pointing to a chain of the items in the array\/object. *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON	access:public
+cJSON_strcasecmp	src/cJSON.c	/^static int cJSON_strcasecmp(const char *s1,const char *s2)$/;"	f	file:
+cJSON_strdup	src/cJSON.c	/^static char* cJSON_strdup(const char* str)$/;"	f	file:
+calloc	src/zmalloc.c	60;"	d	file:
+calloc	src/zmalloc.c	65;"	d	file:
+child	src/cJSON.h	/^	struct cJSON *child;		\/* An array or object item will have a child pointer pointing to a chain of the items in the array\/object. *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON
 cjson	src/cJSON.h	/^typedef struct cJSON cjson;$/;"	t	typeref:struct:cJSON
-cjson_create_string	src/cJSON.h	/^#define cjson_create_string(/;"	d
-cjson_delete	src/cJSON.h	/^#define cjson_delete(/;"	d
-cjson_get_item	src/cJSON.h	/^#define cjson_get_item(/;"	d
-cjson_parse	src/cJSON.h	/^#define cjson_parse(/;"	d
-cjson_print	src/cJSON.h	/^#define cjson_print(/;"	d
-command_len	src/config.h	/^    int command_len;$/;"	m	struct:__anon2	access:public
-command_len	src/config.h	/^    int command_len;$/;"	m	struct:__anon8	access:public
-command_no	src/config.h	/^    int command_no; \/\/ 命令号$/;"	m	struct:__anon3	access:public
-command_no	src/config.h	/^    int command_no; \/\/ 命令号$/;"	m	struct:__anon9	access:public
-commands	src/config.h	/^    list *commands;$/;"	m	struct:server_conf_t	access:public
-commands	src/config.h	/^    sds *commands;$/;"	m	struct:__anon2	access:public
-commands	src/config.h	/^    sds *commands;$/;"	m	struct:__anon8	access:public
-conffile	src/config.h	/^    char *conffile;$/;"	m	struct:server_conf_t	access:public
-confpath	src/config.h	/^    sds confpath;$/;"	m	struct:server_conf_t	access:public
-create_reference	src/cJSON.c	/^static cJSON *create_reference(cJSON *item) {cJSON *ref=cJSON_New_Item();if (!ref) return 0;memcpy(ref,item,sizeof(cJSON));ref->string=0;ref->type|=cJSON_IsReference;ref->next=ref->prev=0;return ref;}$/;"	f	file:	signature:(cJSON *item)
-daemon	src/config.h	/^    int daemon;$/;"	m	struct:server_conf_t	access:public
-daemonize	src/config.h	/^    int daemonize;$/;"	m	struct:server_conf_t	access:public
-data	src/hash.h	/^    list **data;$/;"	m	struct:__anon10	access:public
-data	src/hash.h	/^    list **data;$/;"	m	struct:__anon4	access:public
-db_name	src/config.h	/^    char *db_name;$/;"	m	struct:mkc_mysql_t	access:public
-delay	src/config.h	/^    int delay;  \/\/延迟时间$/;"	m	struct:__anon2	access:public
-delay	src/config.h	/^    int delay;  \/\/延迟时间$/;"	m	struct:__anon8	access:public
-domain	src/config.h	/^    char *domain;$/;"	m	struct:server_conf_t	access:public
-element_num	src/hash.h	/^    int element_num;$/;"	m	struct:__anon10	access:public
-element_num	src/hash.h	/^    int element_num;$/;"	m	struct:__anon4	access:public
-end	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon11	file:	access:public
-end	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon5	file:	access:public
-ensure	src/cJSON.c	/^static char* ensure(printbuffer *p,int needed)$/;"	f	file:	signature:(printbuffer *p,int needed)
-error	src/setproctitle.c	/^	int error;$/;"	m	struct:__anon11	file:	access:public
-error	src/setproctitle.c	/^	int error;$/;"	m	struct:__anon5	file:	access:public
-exited	src/process.h	/^    int exited;$/;"	m	struct:mkc_process_t	access:public
-exiting	src/process.h	/^    int exiting;$/;"	m	struct:mkc_process_t	access:public
-fallback	src/config.h	/^    char *fallback;$/;"	m	struct:server_conf_t	access:public
+cjson_create_string	src/cJSON.h	49;"	d
+cjson_delete	src/cJSON.h	46;"	d
+cjson_get_item	src/cJSON.h	44;"	d
+cjson_parse	src/cJSON.h	43;"	d
+cjson_print	src/cJSON.h	47;"	d
+command_len	src/config.h	/^    int command_len;$/;"	m	struct:__anon10
+command_len	src/config.h	/^    int command_len;$/;"	m	struct:__anon4
+command_no	src/config.h	/^    int command_no; \/\/ 命令号$/;"	m	struct:__anon11
+command_no	src/config.h	/^    int command_no; \/\/ 命令号$/;"	m	struct:__anon5
+commands	src/config.h	/^    list *commands;$/;"	m	struct:server_conf_t
+commands	src/config.h	/^    sds *commands;$/;"	m	struct:__anon10
+commands	src/config.h	/^    sds *commands;$/;"	m	struct:__anon4
+conffile	src/config.h	/^    char *conffile;$/;"	m	struct:server_conf_t
+confpath	src/config.h	/^    sds confpath;$/;"	m	struct:server_conf_t
+create_reference	src/cJSON.c	/^static cJSON *create_reference(cJSON *item) {cJSON *ref=cJSON_New_Item();if (!ref) return 0;memcpy(ref,item,sizeof(cJSON));ref->string=0;ref->type|=cJSON_IsReference;ref->next=ref->prev=0;return ref;}$/;"	f	file:
+daemon	src/config.h	/^    int daemon;$/;"	m	struct:server_conf_t
+daemonize	src/config.h	/^    int daemonize;$/;"	m	struct:server_conf_t
+data	src/hash.h	/^    list **data;$/;"	m	struct:__anon2
+data	src/hash.h	/^    list **data;$/;"	m	struct:__anon8
+db_name	src/config.h	/^    char *db_name;$/;"	m	struct:mkc_mysql_t
+delay	src/config.h	/^    int delay;  \/\/延迟时间$/;"	m	struct:__anon10
+delay	src/config.h	/^    int delay;  \/\/延迟时间$/;"	m	struct:__anon4
+domain	src/config.h	/^    char *domain;$/;"	m	struct:server_conf_t
+element_num	src/hash.h	/^    int element_num;$/;"	m	struct:__anon2
+element_num	src/hash.h	/^    int element_num;$/;"	m	struct:__anon8
+end	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon1	file:
+end	src/setproctitle.c	/^	char *base, *end;$/;"	m	struct:__anon7	file:
+ensure	src/cJSON.c	/^static char* ensure(printbuffer *p,int needed)$/;"	f	file:
+error	src/setproctitle.c	/^	int error;$/;"	m	struct:__anon1	file:
+error	src/setproctitle.c	/^	int error;$/;"	m	struct:__anon7	file:
+exited	src/process.h	/^    int exited;$/;"	m	struct:mkc_process_t
+exiting	src/process.h	/^    int exiting;$/;"	m	struct:mkc_process_t
+fallback	src/config.h	/^    char *fallback;$/;"	m	struct:server_conf_t
 firstByteMark	src/cJSON.c	/^static const unsigned char firstByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };$/;"	v	file:
-free	src/hash.h	/^    int free;$/;"	m	struct:__anon10	access:public
-free	src/hash.h	/^    int free;$/;"	m	struct:__anon4	access:public
-free	src/list.h	/^    void (*free)(void *ptr);$/;"	m	struct:list	access:public
-free	src/sds.h	/^    unsigned int free;$/;"	m	struct:sdshdr	access:public
-free	src/zmalloc.c	/^#define free(/;"	d	file:
-free_fn	src/cJSON.h	/^      void (*free_fn)(void *ptr);$/;"	m	struct:cJSON_Hooks	access:public
+free	src/hash.h	/^    int free;$/;"	m	struct:__anon2
+free	src/hash.h	/^    int free;$/;"	m	struct:__anon8
+free	src/list.h	/^    void (*free)(void *ptr);$/;"	m	struct:list
+free	src/sds.h	/^    unsigned int free;$/;"	m	struct:sdshdr
+free	src/zmalloc.c	62;"	d	file:
+free	src/zmalloc.c	67;"	d	file:
+free_fn	src/cJSON.h	/^      void (*free_fn)(void *ptr);$/;"	m	struct:cJSON_Hooks
 global_ep	src/cJSON.c	/^static const char *global_ep;$/;"	v	file:
-groupid	src/config.h	/^    char *groupid;$/;"	m	struct:server_conf_t	access:public
-hash_add	src/hash.c	/^hash_table *hash_add(hash_table *table,char *key, void *data,void (*list_handler)(void *ptr)){$/;"	f	signature:(hash_table *table,char *key, void *data,void (*list_handler)(void *ptr))
-hash_dump	src/hash.c	/^void hash_dump(hash_table *table){$/;"	f	signature:(hash_table *table)
-hash_find	src/hash.c	/^list *hash_find(hash_table *table,char *key,int key_len){$/;"	f	signature:(hash_table *table,char *key,int key_len)
-hash_free	src/hash.c	/^void hash_free(hash_table *table){$/;"	f	signature:(hash_table *table)
-hash_index	src/hash.c	/^int hash_index(const char *key){$/;"	f	signature:(const char *key)
-hash_init	src/hash.c	/^hash_table *hash_init(size_t size){$/;"	f	signature:(size_t size)
-hash_table	src/hash.h	/^}hash_table;$/;"	t	typeref:struct:__anon10
-hash_table	src/hash.h	/^}hash_table;$/;"	t	typeref:struct:__anon4
-hashpjw	src/hash.c	/^unsigned long hashpjw(char *key, unsigned int key_len)$/;"	f	signature:(char *key, unsigned int key_len)
-head	src/list.h	/^    list_node *head;$/;"	m	struct:list	access:public
-hex_digit_to_int	src/sds.c	/^int hex_digit_to_int(char c) {$/;"	f	signature:(char c)
-host	src/config.h	/^    char *host;$/;"	m	struct:mkc_mysql_t	access:public
-http_client_closed	src/http.c	/^void http_client_closed(int socket_fd){$/;"	f	signature:(int socket_fd)
-http_client_create	src/http.c	/^int http_client_create(const char *host,int port){$/;"	f	signature:(const char *host,int port)
-http_client_parse_file	src/http.c	/^static int http_client_parse_file(const char *url,char *file,char *host){$/;"	f	file:	signature:(const char *url,char *file,char *host)
-http_client_parse_result	src/http.c	/^static http_response_t *http_client_parse_result(const char *result){$/;"	f	file:	signature:(const char *result)
-http_client_post	src/http.c	/^http_response_t *http_client_post(char *url,const char *header,char *post_data, int post_len){$/;"	f	signature:(char *url,const char *header,char *post_data, int post_len)
-http_client_recv	src/http.c	/^static int http_client_recv(int socket_fd, char *buff){$/;"	f	file:	signature:(int socket_fd, char *buff)
-http_client_send	src/http.c	/^static int http_client_send(int socket_fd, char *data, int size){$/;"	f	file:	signature:(int socket_fd, char *data, int size)
-http_code	src/http.h	/^    int http_code;$/;"	m	struct:http_response_t	access:public
+groupid	src/config.h	/^    char *groupid;$/;"	m	struct:server_conf_t
+hash_add	src/hash.c	/^hash_table *hash_add(hash_table *table,char *key, void *data,void (*list_handler)(void *ptr)){$/;"	f
+hash_dump	src/hash.c	/^void hash_dump(hash_table *table){$/;"	f
+hash_find	src/hash.c	/^list *hash_find(hash_table *table,char *key,int key_len){$/;"	f
+hash_free	src/hash.c	/^void hash_free(hash_table *table){$/;"	f
+hash_index	src/hash.c	/^int hash_index(const char *key){$/;"	f
+hash_init	src/hash.c	/^hash_table *hash_init(size_t size){$/;"	f
+hash_table	src/hash.h	/^}hash_table;$/;"	t	typeref:struct:__anon2
+hash_table	src/hash.h	/^}hash_table;$/;"	t	typeref:struct:__anon8
+hashpjw	src/hash.c	/^unsigned long hashpjw(char *key, unsigned int key_len)$/;"	f
+head	src/list.h	/^    list_node *head;$/;"	m	struct:list
+hex_digit_to_int	src/sds.c	/^int hex_digit_to_int(char c) {$/;"	f
+host	src/config.h	/^    char *host;$/;"	m	struct:mkc_mysql_t
+http_client_closed	src/http.c	/^void http_client_closed(int socket_fd){$/;"	f
+http_client_create	src/http.c	/^int http_client_create(const char *host,int port){$/;"	f
+http_client_parse_file	src/http.c	/^static int http_client_parse_file(const char *url,char *file,char *host){$/;"	f	file:
+http_client_parse_result	src/http.c	/^static http_response_t *http_client_parse_result(const char *result){$/;"	f	file:
+http_client_post	src/http.c	/^http_response_t *http_client_post(char *url,const char *header,char *post_data, int post_len){$/;"	f
+http_client_recv	src/http.c	/^static int http_client_recv(int socket_fd, char *buff){$/;"	f	file:
+http_client_send	src/http.c	/^static int http_client_send(int socket_fd, char *data, int size){$/;"	f	file:
+http_code	src/http.h	/^    int http_code;$/;"	m	struct:http_response_t
 http_response_t	src/http.h	/^typedef struct http_response_t {$/;"	s
 http_response_t	src/http.h	/^}http_response_t;$/;"	t	typeref:struct:http_response_t
-http_response_t::http_code	src/http.h	/^    int http_code;$/;"	m	struct:http_response_t	access:public
 init_server_conf	src/main.c	/^static void init_server_conf(){$/;"	f	file:
-insert_mkc_queue_log	src/mysql.c	/^int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num){$/;"	f	signature:(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num)
-is_hex_digit	src/sds.c	/^int is_hex_digit(char c) {$/;"	f	signature:(char c)
-kafka_consume	src/kafka.c	/^void kafka_consume(mkc_topic *topic){$/;"	f	signature:(mkc_topic *topic)
+insert_mkc_queue_log	src/mysql.c	/^int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num){$/;"	f
+is_hex_digit	src/sds.c	/^int is_hex_digit(char c) {$/;"	f
+kafka_consume	src/kafka.c	/^void kafka_consume(mkc_topic *topic){$/;"	f
 kafka_consume_close	src/kafka.c	/^void kafka_consume_close(){$/;"	f
-kafka_init_server	src/kafka.c	/^int kafka_init_server(mkc_topic *topic){$/;"	f	signature:(mkc_topic *topic)
-kafka_print_partition_list	src/kafka.c	/^static void kafka_print_partition_list (FILE *fp,$/;"	f	file:	signature:(FILE *fp, const rd_kafka_topic_partition_list_t *partitions)
+kafka_init_server	src/kafka.c	/^int kafka_init_server(mkc_topic *topic){$/;"	f
+kafka_print_partition_list	src/kafka.c	/^static void kafka_print_partition_list (FILE *fp,$/;"	f	file:
 kafka_run	src/kafka.h	/^static int kafka_run = 1;$/;"	v
-kafkadebug	src/config.h	/^    char *kafkadebug;$/;"	m	struct:server_conf_t	access:public
-key	src/list.h	/^    char *key;$/;"	m	struct:list_node	access:public
-key	src/test.c	/^    int key;$/;"	m	struct:list	file:	access:public
-len	src/list.h	/^    size_t len;$/;"	m	struct:list	access:public
-len	src/sds.h	/^    unsigned int len;$/;"	m	struct:sdshdr	access:public
-length	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon1	file:	access:public
-length	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon7	file:	access:public
+kafkadebug	src/config.h	/^    char *kafkadebug;$/;"	m	struct:server_conf_t
+key	src/list.h	/^    char *key;$/;"	m	struct:list_node
+key	src/test.c	/^    int key;$/;"	m	struct:list	file:
+len	src/list.h	/^    size_t len;$/;"	m	struct:list
+len	src/sds.h	/^    unsigned int len;$/;"	m	struct:sdshdr
+length	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon3	file:
+length	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon9	file:
 list	src/list.h	/^typedef struct list{$/;"	s
 list	src/list.h	/^}list;$/;"	t	typeref:struct:list
 list	src/test.c	/^typedef struct list{$/;"	s	file:
 list	src/test.c	/^}list;$/;"	t	typeref:struct:list	file:
-list::free	src/list.h	/^    void (*free)(void *ptr);$/;"	m	struct:list	access:public
-list::head	src/list.h	/^    list_node *head;$/;"	m	struct:list	access:public
-list::key	src/test.c	/^    int key;$/;"	m	struct:list	file:	access:public
-list::len	src/list.h	/^    size_t len;$/;"	m	struct:list	access:public
-list::tail	src/list.h	/^    list_node *tail;$/;"	m	struct:list	access:public
-list_add_node_head	src/list.c	/^list *list_add_node_head(list *list,char *key,void *value){$/;"	f	signature:(list *list,char *key,void *value)
-list_add_node_tail	src/list.c	/^list *list_add_node_tail(list *list,char *key,void *value){$/;"	f	signature:(list *list,char *key,void *value)
+list_add_node_head	src/list.c	/^list *list_add_node_head(list *list,char *key,void *value){$/;"	f
+list_add_node_tail	src/list.c	/^list *list_add_node_tail(list *list,char *key,void *value){$/;"	f
 list_create	src/list.c	/^list *list_create(){$/;"	f
-list_deep	src/list.c	/^void list_deep(list *list,list_deep_callback deep_call){$/;"	f	signature:(list *list,list_deep_callback deep_call)
+list_deep	src/list.c	/^void list_deep(list *list,list_deep_callback deep_call){$/;"	f
 list_deep_callback	src/list.h	/^typedef void (*list_deep_callback) (void *node);$/;"	t
-list_dump	src/list.c	/^void list_dump(list *list){$/;"	f	signature:(list *list)
-list_find_node	src/list.c	/^list_node *list_find_node(list *list,char *key){$/;"	f	signature:(list *list,char *key)
+list_dump	src/list.c	/^void list_dump(list *list){$/;"	f
+list_find_node	src/list.c	/^list_node *list_find_node(list *list,char *key){$/;"	f
 list_free_handler	src/list.h	/^typedef void (*list_free_handler) (void *ptr);$/;"	t
 list_node	src/list.h	/^typedef struct list_node{$/;"	s
 list_node	src/list.h	/^}list_node;$/;"	t	typeref:struct:list_node
-list_node::key	src/list.h	/^    char *key;$/;"	m	struct:list_node	access:public
-list_node::next	src/list.h	/^    struct list_node *next;$/;"	m	struct:list_node	typeref:struct:list_node::list_node	access:public
-list_node::prev	src/list.h	/^    struct list_node *prev;$/;"	m	struct:list_node	typeref:struct:list_node::list_node	access:public
-list_node::value	src/list.h	/^    void *value;$/;"	m	struct:list_node	access:public
-list_release	src/list.c	/^void list_release(list *list){$/;"	f	signature:(list *list)
-log_path	src/config.h	/^    char *log_path;$/;"	m	struct:server_conf_t	access:public
-logfile	src/config.h	/^    char *logfile;$/;"	m	struct:server_conf_t	access:public
-logfp	src/config.h	/^    FILE *logfp;$/;"	m	struct:server_conf_t	access:public
-logger	src/kafka.c	/^static void logger (const rd_kafka_t *rk, int level,$/;"	f	file:	signature:(const rd_kafka_t *rk, int level, const char *fac, const char *buf)
-logger	src/main.c	/^static void logger(const rd_kafka_t *rk,int level, const char *fac, const char *buf){$/;"	f	file:	signature:(const rd_kafka_t *rk,int level, const char *fac, const char *buf)
-loglevel	src/config.h	/^    int loglevel;$/;"	m	struct:server_conf_t	access:public
-main	src/main.c	/^int main(int argc, char **argv){$/;"	f	signature:(int argc, char **argv)
-main	src/sds.c	/^int main(void) {$/;"	f	signature:(void)
-main	src/test.c	/^int main(int argc, char **argv){$/;"	f	signature:(int argc, char **argv)
-malloc	src/zmalloc.c	/^#define malloc(/;"	d	file:
-malloc_fn	src/cJSON.h	/^      void *(*malloc_fn)(size_t sz);$/;"	m	struct:cJSON_Hooks	access:public
-max_thread_num	src/tpoll.h	/^    int max_thread_num;$/;"	m	struct:tpoll	access:public
-method	src/config.h	/^    char *method;$/;"	m	struct:__anon2	access:public
-method	src/config.h	/^    char *method;$/;"	m	struct:__anon8	access:public
+list_release	src/list.c	/^void list_release(list *list){$/;"	f
+log_path	src/config.h	/^    char *log_path;$/;"	m	struct:server_conf_t
+logfile	src/config.h	/^    char *logfile;$/;"	m	struct:server_conf_t
+logfp	src/config.h	/^    FILE *logfp;$/;"	m	struct:server_conf_t
+logger	src/kafka.c	/^static void logger (const rd_kafka_t *rk, int level,$/;"	f	file:
+logger	src/main.c	/^static void logger(const rd_kafka_t *rk,int level, const char *fac, const char *buf){$/;"	f	file:
+loglevel	src/config.h	/^    int loglevel;$/;"	m	struct:server_conf_t
+main	src/main.c	/^int main(int argc, char **argv){$/;"	f
+main	src/sds.c	/^int main(void) {$/;"	f
+main	src/test.c	/^int main(int argc, char **argv){$/;"	f
+malloc	src/zmalloc.c	59;"	d	file:
+malloc	src/zmalloc.c	64;"	d	file:
+malloc_fn	src/cJSON.h	/^      void *(*malloc_fn)(size_t sz);$/;"	m	struct:cJSON_Hooks
+max_thread_num	src/tpoll.h	/^    int max_thread_num;$/;"	m	struct:tpoll
+method	src/config.h	/^    char *method;$/;"	m	struct:__anon10
+method	src/config.h	/^    char *method;$/;"	m	struct:__anon4
 mkc_argc	src/mkc.h	/^static int mkc_argc;$/;"	v
 mkc_argv	src/mkc.h	/^char **mkc_argv;$/;"	v
-mkc_commitid_is_skiped	src/mysql.c	/^int mkc_commitid_is_skiped(MYSQL *conn,int commit_id, int command_id){$/;"	f	signature:(MYSQL *conn,int commit_id, int command_id)
-mkc_cpystrn	src/process.c	/^char *mkc_cpystrn(char *dst,const char *src, size_t n)$/;"	f	signature:(char *dst,const char *src, size_t n)
+mkc_commitid_is_skiped	src/mysql.c	/^int mkc_commitid_is_skiped(MYSQL *conn,int commit_id, int command_id){$/;"	f
+mkc_cpystrn	src/process.c	/^char *mkc_cpystrn(char *dst,const char *src, size_t n)$/;"	f
 mkc_create_pid	src/main.c	/^static int mkc_create_pid(){$/;"	f	file:
 mkc_daemon	src/main.c	/^static int mkc_daemon(){$/;"	f	file:
 mkc_environ	src/mkc.h	/^char **mkc_environ;$/;"	v
@@ -322,260 +260,217 @@ mkc_init_signal	src/process.c	/^void mkc_init_signal(){$/;"	f
 mkc_master_process	src/process.c	/^void mkc_master_process(){$/;"	f
 mkc_master_process_bury	src/process.c	/^void mkc_master_process_bury(){$/;"	f
 mkc_master_process_exit	src/process.c	/^void mkc_master_process_exit(){$/;"	f
-mkc_mysql_close	src/mysql.c	/^void mkc_mysql_close(MYSQL *conn){$/;"	f	signature:(MYSQL *conn)
-mkc_mysql_exec	src/mysql.c	/^int mkc_mysql_exec(MYSQL *conn,const char *sql) {$/;"	f	signature:(MYSQL *conn,const char *sql)
-mkc_mysql_init	src/mysql.c	/^MYSQL* mkc_mysql_init(MYSQL *conn){$/;"	f	signature:(MYSQL *conn)
-mkc_mysql_pconnect	src/config.h	/^    MYSQL mkc_mysql_pconnect;$/;"	m	struct:server_conf_t	access:public
-mkc_mysql_ping	src/mysql.c	/^void mkc_mysql_ping(MYSQL *conn){$/;"	f	signature:(MYSQL *conn)
+mkc_mysql_close	src/mysql.c	/^void mkc_mysql_close(MYSQL *conn){$/;"	f
+mkc_mysql_exec	src/mysql.c	/^int mkc_mysql_exec(MYSQL *conn,const char *sql) {$/;"	f
+mkc_mysql_init	src/mysql.c	/^MYSQL* mkc_mysql_init(MYSQL *conn){$/;"	f
+mkc_mysql_pconnect	src/config.h	/^    MYSQL mkc_mysql_pconnect;$/;"	m	struct:server_conf_t
+mkc_mysql_ping	src/mysql.c	/^void mkc_mysql_ping(MYSQL *conn){$/;"	f
 mkc_mysql_t	src/config.h	/^typedef struct mkc_mysql_t{$/;"	s
 mkc_mysql_t	src/config.h	/^}mkc_mysql_t;$/;"	t	typeref:struct:mkc_mysql_t
-mkc_mysql_t::db_name	src/config.h	/^    char *db_name;$/;"	m	struct:mkc_mysql_t	access:public
-mkc_mysql_t::host	src/config.h	/^    char *host;$/;"	m	struct:mkc_mysql_t	access:public
-mkc_mysql_t::password	src/config.h	/^    char *password;$/;"	m	struct:mkc_mysql_t	access:public
-mkc_mysql_t::port	src/config.h	/^    int port;$/;"	m	struct:mkc_mysql_t	access:public
-mkc_mysql_t::user_name	src/config.h	/^    char *user_name;$/;"	m	struct:mkc_mysql_t	access:public
 mkc_os_argv	src/mkc.h	/^char **mkc_os_argv;$/;"	v
 mkc_os_argv_last	src/mkc.h	/^char *mkc_os_argv_last;$/;"	v
 mkc_pctl_execv	src/process.c	/^void mkc_pctl_execv(){$/;"	f
 mkc_process	src/main.c	/^int mkc_process;$/;"	v
 mkc_process_t	src/process.h	/^typedef struct mkc_process_t{$/;"	s
 mkc_process_t	src/process.h	/^} mkc_process_t;$/;"	t	typeref:struct:mkc_process_t
-mkc_process_t::exited	src/process.h	/^    int exited;$/;"	m	struct:mkc_process_t	access:public
-mkc_process_t::exiting	src/process.h	/^    int exiting;$/;"	m	struct:mkc_process_t	access:public
-mkc_process_t::pid	src/process.h	/^    pid_t pid;$/;"	m	struct:mkc_process_t	access:public
 mkc_reap_children	src/process.c	/^int mkc_reap_children(){$/;"	f
-mkc_run	src/config.h	/^    int mkc_run;$/;"	m	struct:server_conf_t	access:public
+mkc_run	src/config.h	/^    int mkc_run;$/;"	m	struct:server_conf_t
 mkc_set_worker_process_handler	src/process.c	/^void mkc_set_worker_process_handler(){$/;"	f
 mkc_sigalrm	src/process.h	/^int mkc_sigalrm;$/;"	v
 mkc_sigchld	src/process.h	/^int mkc_sigchld;$/;"	v
 mkc_sigint	src/process.h	/^int mkc_sigint;$/;"	v
 mkc_signal	src/main.c	/^char *mkc_signal ;$/;"	v
-mkc_signal_handler	src/process.c	/^void mkc_signal_handler(int sig){$/;"	f	signature:(int sig)
-mkc_signal_process	src/process.c	/^int mkc_signal_process(char *sig){$/;"	f	signature:(char *sig)
-mkc_signal_worker_process	src/process.c	/^void mkc_signal_worker_process(int sig){$/;"	f	signature:(int sig)
+mkc_signal_handler	src/process.c	/^void mkc_signal_handler(int sig){$/;"	f
+mkc_signal_process	src/process.c	/^int mkc_signal_process(char *sig){$/;"	f
+mkc_signal_worker_process	src/process.c	/^void mkc_signal_worker_process(int sig){$/;"	f
 mkc_sigquit	src/process.h	/^int mkc_sigquit;$/;"	v
 mkc_sigreload	src/process.h	/^int mkc_sigreload;$/;"	v
 mkc_sigterm	src/process.h	/^int mkc_sigterm;$/;"	v
 mkc_spawn_worker_process	src/process.c	/^int mkc_spawn_worker_process(){$/;"	f
 mkc_topic	src/config.h	/^typedef struct mkc_topic {$/;"	s
 mkc_topic	src/config.h	/^}mkc_topic;$/;"	t	typeref:struct:mkc_topic
-mkc_topic::name	src/config.h	/^    sds name;$/;"	m	struct:mkc_topic	access:public
-mkc_topic::offset	src/config.h	/^    int64_t offset;$/;"	m	struct:mkc_topic	access:public
-mkc_topic::partition	src/config.h	/^    int partition;$/;"	m	struct:mkc_topic	access:public
-mkc_worker_process_handler	src/process.c	/^void mkc_worker_process_handler(int signo){$/;"	f	signature:(int signo)
-mkc_write_log	src/logger.c	/^int mkc_write_log(int log_level, const char *format,...){$/;"	f	signature:(int log_level, const char *format,...)
-mmqLog	src/consumer.c	/^void mmqLog(int level,const char *fmt,...){$/;"	f	signature:(int level,const char *fmt,...)
-mmqLogRaw	src/consumer.c	/^void mmqLogRaw(int level,const char *msg){$/;"	f	signature:(int level,const char *msg)
-module_cmd_t	src/config.h	/^}module_cmd_t ;$/;"	t	typeref:struct:__anon3
-module_cmd_t	src/config.h	/^}module_cmd_t ;$/;"	t	typeref:struct:__anon9
-module_conf	src/config.h	/^    module_conf_t **module_conf;$/;"	m	struct:__anon3	access:public
-module_conf	src/config.h	/^    module_conf_t **module_conf;$/;"	m	struct:__anon9	access:public
-module_conf_free	src/config.c	/^void module_conf_free(void *module_conf){$/;"	f	signature:(void *module_conf)
-module_conf_t	src/config.h	/^}module_conf_t ;$/;"	t	typeref:struct:__anon2
-module_conf_t	src/config.h	/^}module_conf_t ;$/;"	t	typeref:struct:__anon8
-modules	src/config.h	/^    hash_table *modules;$/;"	m	struct:server_conf_t	access:public
-msg_consume	src/kafka.c	/^static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){$/;"	f	file:	signature:(rd_kafka_message_t *rkmessage ,void *opaque)
-mysql	src/config.h	/^    mkc_mysql_t *mysql;$/;"	m	struct:server_conf_t	access:public
-name	src/config.h	/^    char *name;$/;"	m	struct:__anon2	access:public
-name	src/config.h	/^    char *name;$/;"	m	struct:__anon8	access:public
-name	src/config.h	/^    sds name;$/;"	m	struct:mkc_topic	access:public
-next	src/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON	access:public
-next	src/list.h	/^    struct list_node *next;$/;"	m	struct:list_node	typeref:struct:list_node::list_node	access:public
-next	src/tpoll.h	/^    struct tpoll_work *next;$/;"	m	struct:__anon12	typeref:struct:__anon12::tpoll_work	access:public
-next	src/tpoll.h	/^    struct tpoll_work *next;$/;"	m	struct:__anon6	typeref:struct:__anon6::tpoll_work	access:public
-nul	src/setproctitle.c	/^	char *nul;$/;"	m	struct:__anon11	file:	access:public
-nul	src/setproctitle.c	/^	char *nul;$/;"	m	struct:__anon5	file:	access:public
-offset	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon1	file:	access:public
-offset	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon7	file:	access:public
-offset	src/config.h	/^    int64_t offset;$/;"	m	struct:mkc_topic	access:public
+mkc_worker_process_handler	src/process.c	/^void mkc_worker_process_handler(int signo){$/;"	f
+mkc_write_log	src/logger.c	/^int mkc_write_log(int log_level, const char *format,...){$/;"	f
+mmqLog	src/consumer.c	/^void mmqLog(int level,const char *fmt,...){$/;"	f
+mmqLogRaw	src/consumer.c	/^void mmqLogRaw(int level,const char *msg){$/;"	f
+module_cmd_t	src/config.h	/^}module_cmd_t ;$/;"	t	typeref:struct:__anon11
+module_cmd_t	src/config.h	/^}module_cmd_t ;$/;"	t	typeref:struct:__anon5
+module_conf	src/config.h	/^    module_conf_t **module_conf;$/;"	m	struct:__anon11
+module_conf	src/config.h	/^    module_conf_t **module_conf;$/;"	m	struct:__anon5
+module_conf_free	src/config.c	/^void module_conf_free(void *module_conf){$/;"	f
+module_conf_t	src/config.h	/^}module_conf_t ;$/;"	t	typeref:struct:__anon10
+module_conf_t	src/config.h	/^}module_conf_t ;$/;"	t	typeref:struct:__anon4
+modules	src/config.h	/^    hash_table *modules;$/;"	m	struct:server_conf_t
+msg_consume	src/kafka.c	/^static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){$/;"	f	file:
+mysql	src/config.h	/^    mkc_mysql_t *mysql;$/;"	m	struct:server_conf_t
+name	src/config.h	/^    char *name;$/;"	m	struct:__anon10
+name	src/config.h	/^    char *name;$/;"	m	struct:__anon4
+name	src/config.h	/^    sds name;$/;"	m	struct:mkc_topic
+next	src/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON
+next	src/list.h	/^    struct list_node *next;$/;"	m	struct:list_node	typeref:struct:list_node::list_node
+next	src/tpoll.h	/^    struct tpoll_work *next;$/;"	m	struct:__anon12	typeref:struct:__anon12::tpoll_work
+next	src/tpoll.h	/^    struct tpoll_work *next;$/;"	m	struct:__anon6	typeref:struct:__anon6::tpoll_work
+nul	src/setproctitle.c	/^	char *nul;$/;"	m	struct:__anon1	file:
+nul	src/setproctitle.c	/^	char *nul;$/;"	m	struct:__anon7	file:
+offset	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon3	file:
+offset	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	m	struct:__anon9	file:
+offset	src/config.h	/^    int64_t offset;$/;"	m	struct:mkc_topic
 os_argv	src/process.h	/^static char **os_argv;$/;"	v
 os_last_argv	src/process.h	/^static char *os_last_argv;$/;"	v
-parse_array	src/cJSON.c	/^static const char *parse_array(cJSON *item,const char *value,const char **ep)$/;"	f	file:	signature:(cJSON *item,const char *value,const char **ep)
-parse_hex4	src/cJSON.c	/^static unsigned parse_hex4(const char *str)$/;"	f	file:	signature:(const char *str)
-parse_module_conf	src/config.c	/^module_conf_t *parse_module_conf(const char *filename){$/;"	f	signature:(const char *filename)
-parse_number	src/cJSON.c	/^static const char *parse_number(cJSON *item,const char *num)$/;"	f	file:	signature:(cJSON *item,const char *num)
-parse_object	src/cJSON.c	/^static const char *parse_object(cJSON *item,const char *value,const char **ep)$/;"	f	file:	signature:(cJSON *item,const char *value,const char **ep)
-parse_server_conf	src/config.c	/^int parse_server_conf(char *file_name){$/;"	f	signature:(char *file_name)
-parse_string	src/cJSON.c	/^static const char *parse_string(cJSON *item,const char *str,const char **ep)$/;"	f	file:	signature:(cJSON *item,const char *str,const char **ep)
-parse_value	src/cJSON.c	/^static const char *parse_value(cJSON *item,const char *value,const char **ep)$/;"	f	file:	signature:(cJSON *item,const char *value,const char **ep)
-partition	src/config.h	/^    int partition;$/;"	m	struct:mkc_topic	access:public
-password	src/config.h	/^    char *password;$/;"	m	struct:mkc_mysql_t	access:public
-pid	src/process.h	/^    pid_t pid;$/;"	m	struct:mkc_process_t	access:public
-pidfile	src/config.h	/^    char *pidfile;$/;"	m	struct:server_conf_t	access:public
-pidpath	src/config.h	/^    sds pidpath;$/;"	m	struct:server_conf_t	access:public
-pipe_fd	src/config.h	/^    int pipe_fd[2];$/;"	m	struct:server_conf_t	access:public
-port	src/config.h	/^    char *port;$/;"	m	struct:server_conf_t	access:public
-port	src/config.h	/^    int port;$/;"	m	struct:mkc_mysql_t	access:public
-pow2gt	src/cJSON.c	/^static int pow2gt (int x)	{	--x;	x|=x>>1;	x|=x>>2;	x|=x>>4;	x|=x>>8;	x|=x>>16;	return x+1;	}$/;"	f	file:	signature:(int x)
-prev	src/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::	access:public
-prev	src/list.h	/^    struct list_node *prev;$/;"	m	struct:list_node	typeref:struct:list_node::list_node	access:public
-print_array	src/cJSON.c	/^static char *print_array(cJSON *item,int depth,int fmt,printbuffer *p)$/;"	f	file:	signature:(cJSON *item,int depth,int fmt,printbuffer *p)
-print_number	src/cJSON.c	/^static char *print_number(cJSON *item,printbuffer *p)$/;"	f	file:	signature:(cJSON *item,printbuffer *p)
-print_object	src/cJSON.c	/^static char *print_object(cJSON *item,int depth,int fmt,printbuffer *p)$/;"	f	file:	signature:(cJSON *item,int depth,int fmt,printbuffer *p)
-print_string	src/cJSON.c	/^static char *print_string(cJSON *item,printbuffer *p)	{return print_string_ptr(item->valuestring,p);}$/;"	f	file:	signature:(cJSON *item,printbuffer *p)
-print_string_ptr	src/cJSON.c	/^static char *print_string_ptr(const char *str,printbuffer *p)$/;"	f	file:	signature:(const char *str,printbuffer *p)
-print_value	src/cJSON.c	/^static char *print_value(cJSON *item,int depth,int fmt,printbuffer *p)$/;"	f	file:	signature:(cJSON *item,int depth,int fmt,printbuffer *p)
-printbuffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	t	typeref:struct:__anon1	file:
-printbuffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	t	typeref:struct:__anon7	file:
-process_num	src/config.h	/^    int process_num;$/;"	m	struct:server_conf_t	access:public
-procs	src/config.h	/^    mkc_process_t **procs;$/;"	m	struct:server_conf_t	access:public
-properties	src/config.h	/^    list *properties;$/;"	m	struct:server_conf_t	access:public
-queue_head	src/tpoll.h	/^    tpoll_work_t *queue_head;$/;"	m	struct:tpoll	access:public
-queue_lock	src/tpoll.h	/^    pthread_mutex_t queue_lock;$/;"	m	struct:tpoll	access:public
-queue_ready	src/tpoll.h	/^    pthread_cond_t queue_ready;$/;"	m	struct:tpoll	access:public
-realloc	src/zmalloc.c	/^#define realloc(/;"	d	file:
-rebalance_cb	src/kafka.c	/^static void rebalance_cb(rd_kafka_t *rk,rd_kafka_resp_err_t err,rd_kafka_topic_partition_list_t *partitions,void *opaque){$/;"	f	file:	signature:(rd_kafka_t *rk,rd_kafka_resp_err_t err,rd_kafka_topic_partition_list_t *partitions,void *opaque)
-reset	src/setproctitle.c	/^	_Bool reset;$/;"	m	struct:__anon11	file:	access:public
-reset	src/setproctitle.c	/^	_Bool reset;$/;"	m	struct:__anon5	file:	access:public
-retry_delay	src/config.h	/^    int retry_delay;$/;"	m	struct:__anon2	access:public
-retry_delay	src/config.h	/^    int retry_delay;$/;"	m	struct:__anon8	access:public
-retrynum	src/config.h	/^    int retrynum; \/\/ 0 失败一直重试，值到uri的code为200.$/;"	m	struct:__anon2	access:public
-retrynum	src/config.h	/^    int retrynum; \/\/ 0 失败一直重试，值到uri的code为200.$/;"	m	struct:__anon8	access:public
+parse_array	src/cJSON.c	/^static const char *parse_array(cJSON *item,const char *value,const char **ep)$/;"	f	file:
+parse_hex4	src/cJSON.c	/^static unsigned parse_hex4(const char *str)$/;"	f	file:
+parse_module_conf	src/config.c	/^module_conf_t *parse_module_conf(const char *filename){$/;"	f
+parse_number	src/cJSON.c	/^static const char *parse_number(cJSON *item,const char *num)$/;"	f	file:
+parse_object	src/cJSON.c	/^static const char *parse_object(cJSON *item,const char *value,const char **ep)$/;"	f	file:
+parse_server_conf	src/config.c	/^int parse_server_conf(char *file_name){$/;"	f
+parse_string	src/cJSON.c	/^static const char *parse_string(cJSON *item,const char *str,const char **ep)$/;"	f	file:
+parse_value	src/cJSON.c	/^static const char *parse_value(cJSON *item,const char *value,const char **ep)$/;"	f	file:
+partition	src/config.h	/^    int partition;$/;"	m	struct:mkc_topic
+password	src/config.h	/^    char *password;$/;"	m	struct:mkc_mysql_t
+pid	src/process.h	/^    pid_t pid;$/;"	m	struct:mkc_process_t
+pidfile	src/config.h	/^    char *pidfile;$/;"	m	struct:server_conf_t
+pidpath	src/config.h	/^    sds pidpath;$/;"	m	struct:server_conf_t
+pipe_fd	src/config.h	/^    int pipe_fd[2];$/;"	m	struct:server_conf_t
+port	src/config.h	/^    char *port;$/;"	m	struct:server_conf_t
+port	src/config.h	/^    int port;$/;"	m	struct:mkc_mysql_t
+pow2gt	src/cJSON.c	/^static int pow2gt (int x)	{	--x;	x|=x>>1;	x|=x>>2;	x|=x>>4;	x|=x>>8;	x|=x>>16;	return x+1;	}$/;"	f	file:
+prev	src/cJSON.h	/^	struct cJSON *next,*prev;	\/* next\/prev allow you to walk array\/object chains. Alternatively, use GetArraySize\/GetArrayItem\/GetObjectItem *\/$/;"	m	struct:cJSON	typeref:struct:cJSON::
+prev	src/list.h	/^    struct list_node *prev;$/;"	m	struct:list_node	typeref:struct:list_node::list_node
+print_array	src/cJSON.c	/^static char *print_array(cJSON *item,int depth,int fmt,printbuffer *p)$/;"	f	file:
+print_number	src/cJSON.c	/^static char *print_number(cJSON *item,printbuffer *p)$/;"	f	file:
+print_object	src/cJSON.c	/^static char *print_object(cJSON *item,int depth,int fmt,printbuffer *p)$/;"	f	file:
+print_string	src/cJSON.c	/^static char *print_string(cJSON *item,printbuffer *p)	{return print_string_ptr(item->valuestring,p);}$/;"	f	file:
+print_string_ptr	src/cJSON.c	/^static char *print_string_ptr(const char *str,printbuffer *p)$/;"	f	file:
+print_value	src/cJSON.c	/^static char *print_value(cJSON *item,int depth,int fmt,printbuffer *p)$/;"	f	file:
+printbuffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	t	typeref:struct:__anon3	file:
+printbuffer	src/cJSON.c	/^typedef struct {char *buffer; int length; int offset; } printbuffer;$/;"	t	typeref:struct:__anon9	file:
+process_num	src/config.h	/^    int process_num;$/;"	m	struct:server_conf_t
+procs	src/config.h	/^    mkc_process_t **procs;$/;"	m	struct:server_conf_t
+properties	src/config.h	/^    list *properties;$/;"	m	struct:server_conf_t
+queue_head	src/tpoll.h	/^    tpoll_work_t *queue_head;$/;"	m	struct:tpoll
+queue_lock	src/tpoll.h	/^    pthread_mutex_t queue_lock;$/;"	m	struct:tpoll
+queue_ready	src/tpoll.h	/^    pthread_cond_t queue_ready;$/;"	m	struct:tpoll
+realloc	src/zmalloc.c	61;"	d	file:
+realloc	src/zmalloc.c	66;"	d	file:
+rebalance_cb	src/kafka.c	/^static void rebalance_cb(rd_kafka_t *rk,rd_kafka_resp_err_t err,rd_kafka_topic_partition_list_t *partitions,void *opaque){$/;"	f	file:
+reset	src/setproctitle.c	/^	_Bool reset;$/;"	m	struct:__anon1	file:
+reset	src/setproctitle.c	/^	_Bool reset;$/;"	m	struct:__anon7	file:
+retry_delay	src/config.h	/^    int retry_delay;$/;"	m	struct:__anon10
+retry_delay	src/config.h	/^    int retry_delay;$/;"	m	struct:__anon4
+retrynum	src/config.h	/^    int retrynum; \/\/ 0 失败一直重试，值到uri的code为200.$/;"	m	struct:__anon10
+retrynum	src/config.h	/^    int retrynum; \/\/ 0 失败一直重试，值到uri的code为200.$/;"	m	struct:__anon4
 rk	src/kafka.h	/^static rd_kafka_t * rk;$/;"	v
-routine	src/tpoll.h	/^    void (*routine)(void *);$/;"	m	struct:__anon12	access:public
-routine	src/tpoll.h	/^    void (*routine)(void *);$/;"	m	struct:__anon6	access:public
+routine	src/tpoll.h	/^    void (*routine)(void *);$/;"	m	struct:__anon12
+routine	src/tpoll.h	/^    void (*routine)(void *);$/;"	m	struct:__anon6
 run	src/process.h	/^static int run = 0;$/;"	v
-save_mkc_queue_log	src/mysql.c	/^int save_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num){$/;"	f	signature:(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num)
+save_mkc_queue_log	src/mysql.c	/^int save_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num){$/;"	f
 sds	src/sds.h	/^typedef char *sds;$/;"	t
-sdsAllocSize	src/sds.c	/^size_t sdsAllocSize(sds s) {$/;"	f	signature:(sds s)
-sdsIncrLen	src/sds.c	/^void sdsIncrLen(sds s, int incr) {$/;"	f	signature:(sds s, int incr)
-sdsMakeRoomFor	src/sds.c	/^sds sdsMakeRoomFor(sds s, size_t addlen) {$/;"	f	signature:(sds s, size_t addlen)
-sdsRemoveFreeSpace	src/sds.c	/^sds sdsRemoveFreeSpace(sds s) {$/;"	f	signature:(sds s)
-sdsavail	src/sds.h	/^static inline size_t sdsavail(const sds s) {$/;"	f	signature:(const sds s)
-sdscat	src/sds.c	/^sds sdscat(sds s, const char *t) {$/;"	f	signature:(sds s, const char *t)
-sdscatfmt	src/sds.c	/^sds sdscatfmt(sds s, char const *fmt, ...) {$/;"	f	signature:(sds s, char const *fmt, ...)
-sdscatlen	src/sds.c	/^sds sdscatlen(sds s, const void *t, size_t len) {$/;"	f	signature:(sds s, const void *t, size_t len)
-sdscatprintf	src/sds.c	/^sds sdscatprintf(sds s, const char *fmt, ...) {$/;"	f	signature:(sds s, const char *fmt, ...)
-sdscatrepr	src/sds.c	/^sds sdscatrepr(sds s, const char *p, size_t len) {$/;"	f	signature:(sds s, const char *p, size_t len)
-sdscatsds	src/sds.c	/^sds sdscatsds(sds s, const sds t) {$/;"	f	signature:(sds s, const sds t)
-sdscatvprintf	src/sds.c	/^sds sdscatvprintf(sds s, const char *fmt, va_list ap) {$/;"	f	signature:(sds s, const char *fmt, va_list ap)
-sdsclear	src/sds.c	/^void sdsclear(sds s) {$/;"	f	signature:(sds s)
-sdscmp	src/sds.c	/^int sdscmp(const sds s1, const sds s2) {$/;"	f	signature:(const sds s1, const sds s2)
-sdscpy	src/sds.c	/^sds sdscpy(sds s, const char *t) {$/;"	f	signature:(sds s, const char *t)
-sdscpylen	src/sds.c	/^sds sdscpylen(sds s, const char *t, size_t len) {$/;"	f	signature:(sds s, const char *t, size_t len)
-sdsdup	src/sds.c	/^sds sdsdup(const sds s) {$/;"	f	signature:(const sds s)
-sdsempty	src/sds.c	/^sds sdsempty(void) {$/;"	f	signature:(void)
-sdsfree	src/sds.c	/^void sdsfree(sds s) {$/;"	f	signature:(sds s)
-sdsfreesplitres	src/sds.c	/^void sdsfreesplitres(sds *tokens, int count) {$/;"	f	signature:(sds *tokens, int count)
-sdsfromlonglong	src/sds.c	/^sds sdsfromlonglong(long long value) {$/;"	f	signature:(long long value)
-sdsgrowzero	src/sds.c	/^sds sdsgrowzero(sds s, size_t len) {$/;"	f	signature:(sds s, size_t len)
+sdsAllocSize	src/sds.c	/^size_t sdsAllocSize(sds s) {$/;"	f
+sdsIncrLen	src/sds.c	/^void sdsIncrLen(sds s, int incr) {$/;"	f
+sdsMakeRoomFor	src/sds.c	/^sds sdsMakeRoomFor(sds s, size_t addlen) {$/;"	f
+sdsRemoveFreeSpace	src/sds.c	/^sds sdsRemoveFreeSpace(sds s) {$/;"	f
+sdsavail	src/sds.h	/^static inline size_t sdsavail(const sds s) {$/;"	f
+sdscat	src/sds.c	/^sds sdscat(sds s, const char *t) {$/;"	f
+sdscatfmt	src/sds.c	/^sds sdscatfmt(sds s, char const *fmt, ...) {$/;"	f
+sdscatlen	src/sds.c	/^sds sdscatlen(sds s, const void *t, size_t len) {$/;"	f
+sdscatprintf	src/sds.c	/^sds sdscatprintf(sds s, const char *fmt, ...) {$/;"	f
+sdscatrepr	src/sds.c	/^sds sdscatrepr(sds s, const char *p, size_t len) {$/;"	f
+sdscatsds	src/sds.c	/^sds sdscatsds(sds s, const sds t) {$/;"	f
+sdscatvprintf	src/sds.c	/^sds sdscatvprintf(sds s, const char *fmt, va_list ap) {$/;"	f
+sdsclear	src/sds.c	/^void sdsclear(sds s) {$/;"	f
+sdscmp	src/sds.c	/^int sdscmp(const sds s1, const sds s2) {$/;"	f
+sdscpy	src/sds.c	/^sds sdscpy(sds s, const char *t) {$/;"	f
+sdscpylen	src/sds.c	/^sds sdscpylen(sds s, const char *t, size_t len) {$/;"	f
+sdsdup	src/sds.c	/^sds sdsdup(const sds s) {$/;"	f
+sdsempty	src/sds.c	/^sds sdsempty(void) {$/;"	f
+sdsfree	src/sds.c	/^void sdsfree(sds s) {$/;"	f
+sdsfreesplitres	src/sds.c	/^void sdsfreesplitres(sds *tokens, int count) {$/;"	f
+sdsfromlonglong	src/sds.c	/^sds sdsfromlonglong(long long value) {$/;"	f
+sdsgrowzero	src/sds.c	/^sds sdsgrowzero(sds s, size_t len) {$/;"	f
 sdshdr	src/sds.h	/^struct sdshdr {$/;"	s
-sdshdr::buf	src/sds.h	/^    char buf[];$/;"	m	struct:sdshdr	access:public
-sdshdr::free	src/sds.h	/^    unsigned int free;$/;"	m	struct:sdshdr	access:public
-sdshdr::len	src/sds.h	/^    unsigned int len;$/;"	m	struct:sdshdr	access:public
-sdsjoin	src/sds.c	/^sds sdsjoin(char **argv, int argc, char *sep) {$/;"	f	signature:(char **argv, int argc, char *sep)
-sdslen	src/sds.h	/^static inline size_t sdslen(const sds s) {$/;"	f	signature:(const sds s)
-sdsll2str	src/sds.c	/^int sdsll2str(char *s, long long value) {$/;"	f	signature:(char *s, long long value)
-sdsmapchars	src/sds.c	/^sds sdsmapchars(sds s, const char *from, const char *to, size_t setlen) {$/;"	f	signature:(sds s, const char *from, const char *to, size_t setlen)
-sdsnew	src/sds.c	/^sds sdsnew(const char *init) {$/;"	f	signature:(const char *init)
-sdsnewlen	src/sds.c	/^sds sdsnewlen(const void *init, size_t initlen) {$/;"	f	signature:(const void *init, size_t initlen)
-sdsrange	src/sds.c	/^void sdsrange(sds s, int start, int end) {$/;"	f	signature:(sds s, int start, int end)
-sdssplitargs	src/sds.c	/^sds *sdssplitargs(const char *line, int *argc) {$/;"	f	signature:(const char *line, int *argc)
-sdssplitlen	src/sds.c	/^sds *sdssplitlen(const char *s, int len, const char *sep, int seplen, int *count) {$/;"	f	signature:(const char *s, int len, const char *sep, int seplen, int *count)
-sdstolower	src/sds.c	/^void sdstolower(sds s) {$/;"	f	signature:(sds s)
-sdstoupper	src/sds.c	/^void sdstoupper(sds s) {$/;"	f	signature:(sds s)
-sdstrim	src/sds.c	/^sds sdstrim(sds s, const char *cset) {$/;"	f	signature:(sds s, const char *cset)
-sdsull2str	src/sds.c	/^int sdsull2str(char *s, unsigned long long v) {$/;"	f	signature:(char *s, unsigned long long v)
-sdsupdatelen	src/sds.c	/^void sdsupdatelen(sds s) {$/;"	f	signature:(sds s)
-select_mkc_queue_log	src/mysql.c	/^int select_mkc_queue_log(MYSQL *conn, int commit_id, int command_id){$/;"	f	signature:(MYSQL *conn, int commit_id, int command_id)
+sdsjoin	src/sds.c	/^sds sdsjoin(char **argv, int argc, char *sep) {$/;"	f
+sdslen	src/sds.h	/^static inline size_t sdslen(const sds s) {$/;"	f
+sdsll2str	src/sds.c	/^int sdsll2str(char *s, long long value) {$/;"	f
+sdsmapchars	src/sds.c	/^sds sdsmapchars(sds s, const char *from, const char *to, size_t setlen) {$/;"	f
+sdsnew	src/sds.c	/^sds sdsnew(const char *init) {$/;"	f
+sdsnewlen	src/sds.c	/^sds sdsnewlen(const void *init, size_t initlen) {$/;"	f
+sdsrange	src/sds.c	/^void sdsrange(sds s, int start, int end) {$/;"	f
+sdssplitargs	src/sds.c	/^sds *sdssplitargs(const char *line, int *argc) {$/;"	f
+sdssplitlen	src/sds.c	/^sds *sdssplitlen(const char *s, int len, const char *sep, int seplen, int *count) {$/;"	f
+sdstolower	src/sds.c	/^void sdstolower(sds s) {$/;"	f
+sdstoupper	src/sds.c	/^void sdstoupper(sds s) {$/;"	f
+sdstrim	src/sds.c	/^sds sdstrim(sds s, const char *cset) {$/;"	f
+sdsull2str	src/sds.c	/^int sdsull2str(char *s, unsigned long long v) {$/;"	f
+sdsupdatelen	src/sds.c	/^void sdsupdatelen(sds s) {$/;"	f
+select_mkc_queue_log	src/mysql.c	/^int select_mkc_queue_log(MYSQL *conn, int commit_id, int command_id){$/;"	f
 server_conf	src/main.c	/^server_conf_t *server_conf;$/;"	v
 server_conf_t	src/config.h	/^typedef struct server_conf_t {$/;"	s
 server_conf_t	src/config.h	/^}server_conf_t ;$/;"	t	typeref:struct:server_conf_t
-server_conf_t::argc	src/config.h	/^    int argc;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::brokers	src/config.h	/^    sds brokers;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::commands	src/config.h	/^    list *commands;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::conffile	src/config.h	/^    char *conffile;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::confpath	src/config.h	/^    sds confpath;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::daemon	src/config.h	/^    int daemon;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::daemonize	src/config.h	/^    int daemonize;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::domain	src/config.h	/^    char *domain;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::fallback	src/config.h	/^    char *fallback;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::groupid	src/config.h	/^    char *groupid;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::kafkadebug	src/config.h	/^    char *kafkadebug;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::log_path	src/config.h	/^    char *log_path;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::logfile	src/config.h	/^    char *logfile;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::logfp	src/config.h	/^    FILE *logfp;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::loglevel	src/config.h	/^    int loglevel;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::mkc_mysql_pconnect	src/config.h	/^    MYSQL mkc_mysql_pconnect;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::mkc_run	src/config.h	/^    int mkc_run;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::modules	src/config.h	/^    hash_table *modules;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::mysql	src/config.h	/^    mkc_mysql_t *mysql;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::pidfile	src/config.h	/^    char *pidfile;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::pidpath	src/config.h	/^    sds pidpath;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::pipe_fd	src/config.h	/^    int pipe_fd[2];$/;"	m	struct:server_conf_t	access:public
-server_conf_t::port	src/config.h	/^    char *port;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::process_num	src/config.h	/^    int process_num;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::procs	src/config.h	/^    mkc_process_t **procs;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::properties	src/config.h	/^    list *properties;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::sockfd	src/config.h	/^    int sockfd;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::timeout	src/config.h	/^    int timeout;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::topics	src/config.h	/^    list *topics;$/;"	m	struct:server_conf_t	access:public
-server_conf_t::verbose	src/config.h	/^    int verbose;$/;"	m	struct:server_conf_t	access:public
-setproctitle	src/setproctitle.c	/^void setproctitle(const char *fmt, ...) {$/;"	f	signature:(const char *fmt, ...)
-shutdown	src/tpoll.h	/^    int shutdown;$/;"	m	struct:tpoll	access:public
-size	src/hash.h	/^    int size;$/;"	m	struct:__anon10	access:public
-size	src/hash.h	/^    int size;$/;"	m	struct:__anon4	access:public
-skip	src/cJSON.c	/^static const char *skip(const char *in) {while (in && *in && (unsigned char)*in<=32) in++; return in;}$/;"	f	file:	signature:(const char *in)
-sockfd	src/config.h	/^    int sockfd;$/;"	m	struct:server_conf_t	access:public
-spt_clearenv	src/setproctitle.c	/^static int spt_clearenv(void) {$/;"	f	file:	signature:(void)
-spt_copyargs	src/setproctitle.c	/^static int spt_copyargs(int argc, char *argv[]) {$/;"	f	file:	signature:(int argc, char *argv[])
-spt_copyenv	src/setproctitle.c	/^static int spt_copyenv(char *oldenv[]) {$/;"	f	file:	signature:(char *oldenv[])
-spt_init	src/setproctitle.c	/^void spt_init(int argc, char *argv[]) {$/;"	f	signature:(int argc, char *argv[])
-spt_min	src/setproctitle.c	/^static inline size_t spt_min(size_t a, size_t b) {$/;"	f	file:	signature:(size_t a, size_t b)
-stats_cb	src/kafka.c	/^static int stats_cb(rd_kafka_t *rk, char *json,size_t json_len ,void *opaque){$/;"	f	file:	signature:(rd_kafka_t *rk, char *json,size_t json_len ,void *opaque)
-string	src/cJSON.h	/^	char *string;				\/* The item's name string, if this item is the child of, or is in the list of subitems of an object. *\/$/;"	m	struct:cJSON	access:public
-suffix_object	src/cJSON.c	/^static void suffix_object(cJSON *prev,cJSON *item) {prev->next=item;item->prev=prev;}$/;"	f	file:	signature:(cJSON *prev,cJSON *item)
-tail	src/list.h	/^    list_node *tail;$/;"	m	struct:list	access:public
-thread_routine	src/tpoll.c	/^static void *thread_routine(void *arg){$/;"	f	file:	signature:(void *arg)
-tids	src/tpoll.h	/^    pthread_t *tids;$/;"	m	struct:tpoll	access:public
-timeout	src/config.h	/^    int timeout;$/;"	m	struct:server_conf_t	access:public
-topics	src/config.h	/^    list *topics;$/;"	m	struct:server_conf_t	access:public
+setproctitle	src/setproctitle.c	/^void setproctitle(const char *fmt, ...) {$/;"	f
+shutdown	src/tpoll.h	/^    int shutdown;$/;"	m	struct:tpoll
+size	src/hash.h	/^    int size;$/;"	m	struct:__anon2
+size	src/hash.h	/^    int size;$/;"	m	struct:__anon8
+skip	src/cJSON.c	/^static const char *skip(const char *in) {while (in && *in && (unsigned char)*in<=32) in++; return in;}$/;"	f	file:
+sockfd	src/config.h	/^    int sockfd;$/;"	m	struct:server_conf_t
+spt_clearenv	src/setproctitle.c	/^static int spt_clearenv(void) {$/;"	f	file:
+spt_copyargs	src/setproctitle.c	/^static int spt_copyargs(int argc, char *argv[]) {$/;"	f	file:
+spt_copyenv	src/setproctitle.c	/^static int spt_copyenv(char *oldenv[]) {$/;"	f	file:
+spt_init	src/setproctitle.c	/^void spt_init(int argc, char *argv[]) {$/;"	f
+spt_min	src/setproctitle.c	/^static inline size_t spt_min(size_t a, size_t b) {$/;"	f	file:
+stats_cb	src/kafka.c	/^static int stats_cb(rd_kafka_t *rk, char *json,size_t json_len ,void *opaque){$/;"	f	file:
+string	src/cJSON.h	/^	char *string;				\/* The item's name string, if this item is the child of, or is in the list of subitems of an object. *\/$/;"	m	struct:cJSON
+suffix_object	src/cJSON.c	/^static void suffix_object(cJSON *prev,cJSON *item) {prev->next=item;item->prev=prev;}$/;"	f	file:
+tail	src/list.h	/^    list_node *tail;$/;"	m	struct:list
+thread_routine	src/tpoll.c	/^static void *thread_routine(void *arg){$/;"	f	file:
+tids	src/tpoll.h	/^    pthread_t *tids;$/;"	m	struct:tpoll
+timeout	src/config.h	/^    int timeout;$/;"	m	struct:server_conf_t
+topics	src/config.h	/^    list *topics;$/;"	m	struct:server_conf_t
 topics	src/kafka.h	/^rd_kafka_topic_partition_list_t *topics;$/;"	v
 tpoll	src/tpoll.c	/^static tpoll_t *tpoll = NULL;$/;"	v	file:
 tpoll	src/tpoll.h	/^typedef struct tpoll {$/;"	s
-tpoll::max_thread_num	src/tpoll.h	/^    int max_thread_num;$/;"	m	struct:tpoll	access:public
-tpoll::queue_head	src/tpoll.h	/^    tpoll_work_t *queue_head;$/;"	m	struct:tpoll	access:public
-tpoll::queue_lock	src/tpoll.h	/^    pthread_mutex_t queue_lock;$/;"	m	struct:tpoll	access:public
-tpoll::queue_ready	src/tpoll.h	/^    pthread_cond_t queue_ready;$/;"	m	struct:tpoll	access:public
-tpoll::shutdown	src/tpoll.h	/^    int shutdown;$/;"	m	struct:tpoll	access:public
-tpoll::tids	src/tpoll.h	/^    pthread_t *tids;$/;"	m	struct:tpoll	access:public
 tpoll_t	src/tpoll.h	/^}tpoll_t;$/;"	t	typeref:struct:tpoll
 tpoll_work_t	src/tpoll.h	/^}tpoll_work_t;$/;"	t	typeref:struct:__anon12
 tpoll_work_t	src/tpoll.h	/^}tpoll_work_t;$/;"	t	typeref:struct:__anon6
-type	src/cJSON.h	/^	int type;					\/* The type of the item, as above. *\/$/;"	m	struct:cJSON	access:public
-update	src/cJSON.c	/^static int update(printbuffer *p)$/;"	f	file:	signature:(printbuffer *p)
-update_mkc_queue_log	src/mysql.c	/^int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status){$/;"	f	signature:(MYSQL *conn, int commit_id, int command_id, int status)
-update_zmalloc_stat_add	src/zmalloc.c	/^#define update_zmalloc_stat_add(/;"	d	file:
-update_zmalloc_stat_alloc	src/zmalloc.c	/^#define update_zmalloc_stat_alloc(/;"	d	file:
-update_zmalloc_stat_free	src/zmalloc.c	/^#define update_zmalloc_stat_free(/;"	d	file:
-update_zmalloc_stat_sub	src/zmalloc.c	/^#define update_zmalloc_stat_sub(/;"	d	file:
-uri	src/config.h	/^    char *uri;$/;"	m	struct:__anon2	access:public
-uri	src/config.h	/^    char *uri;$/;"	m	struct:__anon8	access:public
+type	src/cJSON.h	/^	int type;					\/* The type of the item, as above. *\/$/;"	m	struct:cJSON
+update	src/cJSON.c	/^static int update(printbuffer *p)$/;"	f	file:
+update_mkc_queue_log	src/mysql.c	/^int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status){$/;"	f
+update_zmalloc_stat_add	src/zmalloc.c	71;"	d	file:
+update_zmalloc_stat_add	src/zmalloc.c	74;"	d	file:
+update_zmalloc_stat_add	src/zmalloc.c	77;"	d	file:
+update_zmalloc_stat_alloc	src/zmalloc.c	91;"	d	file:
+update_zmalloc_stat_free	src/zmalloc.c	101;"	d	file:
+update_zmalloc_stat_sub	src/zmalloc.c	72;"	d	file:
+update_zmalloc_stat_sub	src/zmalloc.c	75;"	d	file:
+update_zmalloc_stat_sub	src/zmalloc.c	83;"	d	file:
+uri	src/config.h	/^    char *uri;$/;"	m	struct:__anon10
+uri	src/config.h	/^    char *uri;$/;"	m	struct:__anon4
 usage	src/main.c	/^static void usage(){$/;"	f	file:
 used_memory	src/zmalloc.c	/^static size_t used_memory = 0;$/;"	v	file:
 used_memory_mutex	src/zmalloc.c	/^pthread_mutex_t used_memory_mutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v
-user_name	src/config.h	/^    char *user_name;$/;"	m	struct:mkc_mysql_t	access:public
-value	src/list.h	/^    void *value;$/;"	m	struct:list_node	access:public
-valuedouble	src/cJSON.h	/^	double valuedouble;			\/* The item's number, if type==cJSON_Number *\/$/;"	m	struct:cJSON	access:public
-valueint	src/cJSON.h	/^	int valueint;				\/* The item's number, if type==cJSON_Number *\/$/;"	m	struct:cJSON	access:public
-valuestring	src/cJSON.h	/^	char *valuestring;			\/* The item's string, if type==cJSON_String *\/$/;"	m	struct:cJSON	access:public
-verbose	src/config.h	/^    int verbose;$/;"	m	struct:server_conf_t	access:public
+user_name	src/config.h	/^    char *user_name;$/;"	m	struct:mkc_mysql_t
+value	src/list.h	/^    void *value;$/;"	m	struct:list_node
+valuedouble	src/cJSON.h	/^	double valuedouble;			\/* The item's number, if type==cJSON_Number *\/$/;"	m	struct:cJSON
+valueint	src/cJSON.h	/^	int valueint;				\/* The item's number, if type==cJSON_Number *\/$/;"	m	struct:cJSON
+valuestring	src/cJSON.h	/^	char *valuestring;			\/* The item's string, if type==cJSON_String *\/$/;"	m	struct:cJSON
+verbose	src/config.h	/^    int verbose;$/;"	m	struct:server_conf_t
 wait_eof	src/kafka.h	/^static int wait_eof = 0;$/;"	v
-zcalloc	src/zmalloc.c	/^void *zcalloc(size_t size) {$/;"	f	signature:(size_t size)
-zfree	src/zmalloc.c	/^void zfree(void *ptr) {$/;"	f	signature:(void *ptr)
-zlibc_free	src/zmalloc.c	/^void zlibc_free(void *ptr) {$/;"	f	signature:(void *ptr)
-zmalloc	src/zmalloc.c	/^void *zmalloc(size_t size) {$/;"	f	signature:(size_t size)
-zmalloc_default_oom	src/zmalloc.c	/^static void zmalloc_default_oom(size_t size) {$/;"	f	file:	signature:(size_t size)
-zmalloc_enable_thread_safeness	src/zmalloc.c	/^void zmalloc_enable_thread_safeness(void) {$/;"	f	signature:(void)
-zmalloc_get_fragmentation_ratio	src/zmalloc.c	/^float zmalloc_get_fragmentation_ratio(size_t rss) {$/;"	f	signature:(size_t rss)
-zmalloc_get_private_dirty	src/zmalloc.c	/^size_t zmalloc_get_private_dirty(void) {$/;"	f	signature:(void)
-zmalloc_get_rss	src/zmalloc.c	/^size_t zmalloc_get_rss(void) {$/;"	f	signature:(void)
-zmalloc_get_smap_bytes_by_field	src/zmalloc.c	/^size_t zmalloc_get_smap_bytes_by_field(char *field) {$/;"	f	signature:(char *field)
+zcalloc	src/zmalloc.c	/^void *zcalloc(size_t size) {$/;"	f
+zfree	src/zmalloc.c	/^void zfree(void *ptr) {$/;"	f
+zlibc_free	src/zmalloc.c	/^void zlibc_free(void *ptr) {$/;"	f
+zmalloc	src/zmalloc.c	/^void *zmalloc(size_t size) {$/;"	f
+zmalloc_default_oom	src/zmalloc.c	/^static void zmalloc_default_oom(size_t size) {$/;"	f	file:
+zmalloc_enable_thread_safeness	src/zmalloc.c	/^void zmalloc_enable_thread_safeness(void) {$/;"	f
+zmalloc_get_fragmentation_ratio	src/zmalloc.c	/^float zmalloc_get_fragmentation_ratio(size_t rss) {$/;"	f
+zmalloc_get_private_dirty	src/zmalloc.c	/^size_t zmalloc_get_private_dirty(void) {$/;"	f
+zmalloc_get_rss	src/zmalloc.c	/^size_t zmalloc_get_rss(void) {$/;"	f
+zmalloc_get_smap_bytes_by_field	src/zmalloc.c	/^size_t zmalloc_get_smap_bytes_by_field(char *field) {$/;"	f
 zmalloc_oom_handler	src/zmalloc.c	/^static void (*zmalloc_oom_handler)(size_t) = zmalloc_default_oom;$/;"	v	file:
-zmalloc_set_oom_handler	src/zmalloc.c	/^void zmalloc_set_oom_handler(void (*oom_handler)(size_t)) {$/;"	f	signature:(void (*oom_handler)(size_t))
-zmalloc_size	src/zmalloc.c	/^size_t zmalloc_size(void *ptr) {$/;"	f	signature:(void *ptr)
-zmalloc_size	src/zmalloc.h	/^#define zmalloc_size(/;"	d
+zmalloc_set_oom_handler	src/zmalloc.c	/^void zmalloc_set_oom_handler(void (*oom_handler)(size_t)) {$/;"	f
+zmalloc_size	src/zmalloc.c	/^size_t zmalloc_size(void *ptr) {$/;"	f
+zmalloc_size	src/zmalloc.h	43;"	d
+zmalloc_size	src/zmalloc.h	53;"	d
+zmalloc_size	src/zmalloc.h	61;"	d
 zmalloc_thread_safe	src/zmalloc.c	/^static int zmalloc_thread_safe = 0;$/;"	v	file:
-zmalloc_used_memory	src/zmalloc.c	/^size_t zmalloc_used_memory(void) {$/;"	f	signature:(void)
-zrealloc	src/zmalloc.c	/^void *zrealloc(void *ptr, size_t size) {$/;"	f	signature:(void *ptr, size_t size)
-zstrdup	src/zmalloc.c	/^char *zstrdup(const char *s) {$/;"	f	signature:(const char *s)
+zmalloc_used_memory	src/zmalloc.c	/^size_t zmalloc_used_memory(void) {$/;"	f
+zrealloc	src/zmalloc.c	/^void *zrealloc(void *ptr, size_t size) {$/;"	f
+zstrdup	src/zmalloc.c	/^char *zstrdup(const char *s) {$/;"	f

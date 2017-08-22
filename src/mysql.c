@@ -82,7 +82,7 @@ void mkc_mysql_close(MYSQL *conn){
     mysql_close(conn);
 }
 
-int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num){
+int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num,char *topic_name){
     int last_insert_id = 0;
     time_t now;
     time(&now);
@@ -91,7 +91,7 @@ int insert_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *conte
     sds s_content = addslashes(content,strlen(content));
     char *sql = (char *)zmalloc(sdslen(s_content) + len); 
 
-    sprintf(sql,INSERT_COMMAND,commit_id,command_id,s_content,status,retry_num,now,now);
+    sprintf(sql,INSERT_COMMAND,commit_id,command_id,s_content,status,retry_num,now,now,topic_name);
     int end = strlen(sql);
     sql[end+1] = '\0';
 
@@ -124,7 +124,7 @@ int update_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, int status)
     return num_rows;
 }
 
-int save_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num){
+int save_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content, int status, int retry_num, char *topic_name){
     int ret;
     //mkc_write_log(MKC_LOG_NOTICE ,"mkc saved queue log.");
     if(select_mkc_queue_log(conn, commit_id, command_id) > 0){
@@ -132,7 +132,7 @@ int save_mkc_queue_log(MYSQL *conn, int commit_id, int command_id, char *content
         ret = update_mkc_queue_log(conn,commit_id,command_id,status);
     } else{
 
-        ret = insert_mkc_queue_log(conn,commit_id,command_id,content,status,retry_num);
+        ret = insert_mkc_queue_log(conn,commit_id,command_id,content,status,retry_num,topic_name);
     }
     return ret;
 }

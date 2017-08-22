@@ -99,6 +99,7 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
 
     mkc_write_log(MKC_LOG_NOTICE,"payload len[%ld]: %s ",rkmessage->len,rkmessage->payload);
     //}
+    char *topic_name = rd_kafka_topic_name(rkmessage->rkt);
 
     cjson *root = cjson_parse(rkmessage->payload);
 
@@ -175,13 +176,13 @@ http_client_post:{
                          //如果一直失败会阻塞
                          if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ < conf->retrynum)){
 
-                             save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,1,retry_num);
+                             save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,1,retry_num,topic_name);
                              usleep(conf->retry_delay * 1000);
                              goto http_client_post;
                          }
                      }
             
-                     save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,0,retry_num);
+                     save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,0,retry_num,topic_name);
                  }
                  current = current->next;
     }

@@ -95,19 +95,21 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
         return -1;
     }
 
+    char *payload = strdup(rkmessage->payload);
+    payload[rkmessage->len] = '\0';
     //if(rkmessage->key_len){
 
-    mkc_write_log(MKC_LOG_NOTICE,"payload len[%ld]: %s ",rkmessage->len,rkmessage->payload);
+    mkc_write_log(MKC_LOG_NOTICE,"payload len[%ld]: %s ",rkmessage->len,payload);
     //}
     char *topic_name = rd_kafka_topic_name(rkmessage->rkt);
 
-    cjson *root = cjson_parse(rkmessage->payload);
+    cjson *root = cjson_parse(payload);
 
     //判断是否为json格式.
 
     if(root == 0x0 || root->type == cJSON_False || root->type == cJSON_NULL){
 
-        mkc_write_log(MKC_LOG_WARNING,"invalid json data :[%s]",rkmessage->payload);
+        mkc_write_log(MKC_LOG_WARNING,"invalid json data :[%s]",payload);
         return -1;
     }	
 
@@ -155,11 +157,11 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
 
         int retry_num = 0;
 http_client_post:{
-                     response = http_client_post(url,header, rkmessage->payload,rkmessage->len);
+                     response = http_client_post(url,header, payload,rkmessage->len);
 
                      if(response == NULL  || response->http_code != 200){
 
-                         mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,rkmessage->payload,response != NULL ? response->http_code : -1);
+                         mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,payload,response != NULL ? response->http_code : -1);
 
                         if(!response){
 
@@ -176,16 +178,17 @@ http_client_post:{
                          //如果一直失败会阻塞
                          if(conf->retrynum == 0 || (conf->retrynum > 0 && retry_num ++ < conf->retrynum)){
 
-                             save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,1,retry_num,topic_name);
+                             save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,payload,1,retry_num,topic_name);
                              usleep(conf->retry_delay * 1000);
                              goto http_client_post;
                          }
                      }
             
-                     save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,rkmessage->payload,0,retry_num,topic_name);
+                     save_mkc_queue_log(&server_conf->mkc_mysql_pconnect,commitId,commandId,payload,0,retry_num,topic_name);
                  }
                  current = current->next;
     }
+    free(payload);
     return 0;
 }
 static int stats_cb(rd_kafka_t *rk, char *json,size_t json_len ,void *opaque){

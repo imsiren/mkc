@@ -212,7 +212,7 @@ uri  http://delivery.meitu.com/commit/commit
 
 20170703 完善reload机制
 
-20170901 支持topic多进程的consumer
+20170901 支持topic多进程的consumer,提升消费性能
 
 ...
 

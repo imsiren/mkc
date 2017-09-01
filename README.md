@@ -117,9 +117,9 @@ log-file /web/kafka-consumer/mkc/logs/mkc.log
 pid-path /web/kafka-consumer/mkc/
 
 
-#topicName partition offset [auto.offset.reset]
-topic test
-topic siren 
+#topicName [每个consumer的进程个数,不要大于partition]
+topic test  3
+topic siren  2
 
 filters 10303023
 filters 10209392
@@ -211,6 +211,8 @@ uri  http://delivery.meitu.com/commit/commit
 20170410 增加多进程，增加信号平滑控制机制
 
 20170703 完善reload机制
+
+20170901 支持topic多进程的consumer
 
 ...
 

@@ -117,7 +117,7 @@ log-file /web/kafka-consumer/mkc/logs/mkc.log
 pid-path /web/kafka-consumer/mkc/
 
 
-#topicName [每个consumer的进程个数,不要大于partition]
+#topicName [每个topic所属consumer的进程个数,不要大于partition]
 topic test  3
 topic siren  2
 

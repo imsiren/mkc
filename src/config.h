@@ -55,6 +55,7 @@ typedef struct {
 typedef struct mkc_topic {
 
     sds name;
+    int consumer_num; // 处理consumer的个数
     int partition;
     int64_t offset;
 }mkc_topic;

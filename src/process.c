@@ -167,42 +167,48 @@ void mkc_signal_handler(int sig){
 
 //创建子进程处理kafka数据
 int mkc_spawn_worker_process(){
-    int i;
+
+    int i, j;
+
     list_node *node;
 
     node = server_conf->topics->head;
     
     for(i = 0; i < server_conf->topics->len ; i++){
-        int exited = 0;
-        pid_t pid = 0;
-        pid = fork();
 
         mkc_topic *topic = 0;
         topic = (mkc_topic*)node->value;
-        switch(pid){
-            case 0:
-                if(kafka_init_server() < 0){
-                    exited = 1;
-                }
-                if(exited != 1){
 
-                    mkc_do_worker_process(topic);
-                }
+        for(j = 0; j < topic->consumer_num ;j++){
+            int exited = 0;
+            pid_t pid = 0;
+            pid = fork();
 
-                break;
-            case -1:
+            switch(pid){
+                case 0:
+                    if(kafka_init_server() < 0){
+                        exited = 1;
+                    }
+                    if(exited != 1){
 
-                mkc_write_log(MKC_LOG_ERROR,"fork child process error.");
-                break;
-            default:
+                        mkc_do_worker_process(topic);
+                    }
 
-                break;
+                    break;
+                case -1:
+
+                    mkc_write_log(MKC_LOG_ERROR,"fork child process error.");
+                    break;
+                default:
+
+                    break;
+            }
+            server_conf->procs[i]->pid = pid;
+            server_conf->procs[i]->exited = exited;
+            server_conf->procs[i]->exiting = 0;
+            //保存topic信息
+            server_conf->procs[i]->topic = topic;
         }
-        server_conf->procs[i]->pid = pid;
-        server_conf->procs[i]->exited = exited;
-        server_conf->procs[i]->exiting = 0;
-        //保存topic信息
-        server_conf->procs[i]->topic = topic;
         node = node->next;
     }
     return 0;
@@ -244,10 +250,10 @@ void mkc_restart_worker_process(int exited_pid){
             write(pip[1],buffer, strlen(buffer));
             topic = server_conf->procs[i]->topic;
             mkc_do_worker_process(topic); 
-        break;
+            break;
         case -1:
 
-        break;
+            break;
     }
 
     //等待子进程 

@@ -131,6 +131,13 @@ int parse_server_conf(char *file_name){
 
             topic->name = sdsnew(vector[1]);
 
+            topic->consumer_num = 1;
+
+            if(argc == 3){
+                topic->consumer_num = atoi(vector[2]);
+            }
+
+            /*  
             if(argc == 3){
 
                 topic->partition = atoi(vector[2]);
@@ -138,6 +145,7 @@ int parse_server_conf(char *file_name){
             if(argc == 4){
                 topic->offset = atoll(vector[3]);
             }
+            */
 
             list_add_node_tail(server_conf->topics,vector[1],topic);
 

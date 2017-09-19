@@ -1,4 +1,4 @@
-version 0.1
+version 1.3.1
 
 # MDP队列kafka消费队列服务MKC。
 

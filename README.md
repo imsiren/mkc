@@ -42,11 +42,7 @@ make
 make install
 make && make install
 
-<<<<<<< HEAD
-### 安装 zookeeper --多线程版本已经弃用
-=======
 ### 安装 zookeeper --多进程版本已经弃用
->>>>>>> master
 
 wget http://apache.org/dist/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
 
@@ -60,7 +56,7 @@ cd ./zookeeper-3.4.9/src/c
 
 安装路径固定为 /usr/local/mkc/bin/mkc
 
-git clone https://gitlab.meitu.com/mdp/mkc
+git clone https://github.com/imsiren/mkc
 
 cd mkc/
 
@@ -86,8 +82,7 @@ daemonize on
 #全局配置[TODO]
 #...
 
-#brokers 172.18.6.10:9094,172.18.6.10:9093,172.18.6.10:9097
-brokers 172.18.6.10:9094,172.18.6.10:9093,172.18.6.10:9097
+brokers 127.0.0.1:9094
 
 #只有高版本才支持group 0.9+，如果kafka server 版本更低，请不要配置此项
 groupid  rdkafka_default
@@ -138,10 +133,10 @@ module moduleC.conf
 
 
 #数据库监控配置
-mysql host 172.18.5.187
+mysql host 127.0.0.1
 mysql port 3306
-mysql user_name meitu
-mysql password meitu
+mysql user_name root
+mysql password root
 mysql db_name testdb
 
 ```
@@ -169,7 +164,7 @@ filters 10209392
 filters 10102939
 
 #接收命令号发起的请求接口
-uri  http://delivery.meitu.com/commit/commit
+uri  http://test.imsiren.com/commit/commit
 
 ```
 

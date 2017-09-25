@@ -263,6 +263,12 @@ module_conf_t *parse_module_conf(const char *filename){
     //默认重试延迟时间
     module_conf->retry_delay = 1000;
 
+    //send超时时间
+    module_conf->snd_timeout = 3; //2 s
+
+    //recv接受超时时间
+    module_conf->rcv_timeout = 1; // 1s
+
     if(!module_conf){
 
         return NULL;
@@ -288,6 +294,12 @@ module_conf_t *parse_module_conf(const char *filename){
 
             module_conf->name   =   zstrdup(vector[1]);
 
+        }else if(!strcasecmp(vector[0],"snd_timeout")){
+
+            module_conf->snd_timeout =   atoi(vector[1]);
+        }else if(!strcasecmp(vector[0],"rcv_timeout")){
+
+            module_conf->rcv_timeout =   atoi(vector[1]);
         }else if(!strcasecmp(vector[0],"uri")){
 
             module_conf->uri    =   zstrdup(vector[1]);

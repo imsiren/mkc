@@ -4,6 +4,7 @@
 #include "logger.h"
 
 extern server_conf_t *server_conf;
+
 void mkc_mysql_ping(MYSQL *conn){
     if(!mysql_ping(conn)){
         mkc_mysql_close(conn);
@@ -11,6 +12,23 @@ void mkc_mysql_ping(MYSQL *conn){
     }
 }
 
+/*
+MYSQL mkc_mysql_init(MYSQL conn){
+    if (!mysql_init(&conn)) {
+        printf("Error %u: %s\n", mysql_errno(&conn), mysql_error(&conn));
+        exit(1);
+    }
+    if (mysql_real_connect(&conn, "172.18.5.187", "meitu",
+          "meitu", "testdb", 0, NULL, 0) == NULL) {
+        printf("Error %u: %s\n", mysql_errno(&conn), mysql_error(&conn));
+        exit(1);
+    } else {
+        char value = 1; 
+        mysql_options(&conn, MYSQL_OPT_RECONNECT, (char*)&value);
+    }
+    return conn;
+}
+*/
 
 MYSQL* mkc_mysql_init(MYSQL *conn){
     if (!mysql_init(conn)) {

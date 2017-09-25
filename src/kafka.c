@@ -154,10 +154,10 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
 
             return 0;
         }
-
+        int timeout = conf->rcv_timeout;
         int retry_num = 0;
 http_client_post:{
-                     response = http_client_post(url,header, payload,rkmessage->len);
+                     response = http_client_post(url,header, payload,rkmessage->len, timeout);
 
                      if(response == NULL  || response->http_code != 200){
 

@@ -27,7 +27,7 @@
 #include "zmalloc.h"
 #include "logger.h"
 
-int http_client_create(const char *host,int port){
+int http_client_create(const char *host,int port, int timeout){
 
     struct hostent *he;
     struct sockaddr_in server_addr;
@@ -47,6 +47,12 @@ int http_client_create(const char *host,int port){
         mkc_write_log(MKC_LOG_WARNING, "create socket error:%d %s\n",errno,strerror(errno));
         return -1;
     }
+
+    struct timeval netTimeout = {3, 0}; //1s
+    
+    setsockopt(socket_fd, SOL_SOCKET, SO_SNDTIMEO, (char*)&netTimeout, sizeof(int));
+
+    setsockopt(socket_fd, SOL_SOCKET, SO_RCVTIMEO, (char*)&netTimeout, sizeof(int));
 
     if(connect(socket_fd,(struct sockaddr*)&server_addr,sizeof(struct sockaddr)) == -1){
 
@@ -83,28 +89,37 @@ static int http_client_send(int socket_fd, char *data, int size){
     return send_num;
 }
 
-static int http_client_recv(int socket_fd, char *buff){
+static int http_client_recv(int socket_fd, char *buff, int tvout){
+
+    fd_set fds;
+    struct timeval timeout = {tvout,0};
+
+    FD_ZERO(&fds);
+    FD_SET(socket_fd, &fds);
+
+    int err = select(socket_fd + 1, &fds, NULL, NULL ,&timeout);
 
     int recv_num = 0;
+    switch(err){
+        case -1:
+            mkc_write_log(MKC_LOG_WARNING, "select error %d [%s]", errno, strerror(errno));
+            break;
+        case 0:
 
-    //mkc_write_log(MKC_LOG_NOTICE,"recving...\n");
-recv:{
-         //这里只接收一个BUFFER_SIZE长度的数据，因为只需要解析header信息
-         recv_num = recv(socket_fd,buff, BUFFER_SIZE ,0);
-         /* 
-         if(ret_num > 0){
-             memcpy(dist_buffer + recv_num, temp_buffer, strlen(temp_buffer));
-             recv_num += ret_num;
-             goto recv;
-         }
-         */
-     }
-     if(recv_num < 0){
+            mkc_write_log(MKC_LOG_WARNING, "select timeout ");
+            break;
+        default:
+            if(FD_ISSET(socket_fd, &fds)){
+                //这里只接收一个BUFFER_SIZE长度的数据，因为只需要解析header信息
+                recv_num = recv(socket_fd, buff, BUFFER_SIZE, 0);
+            }
+    }
+    if(recv_num <= 0){
 
-        mkc_write_log(MKC_LOG_ERROR,"recv %d %d %s.",recv_num,errno,strerror(errno));
+        //mkc_write_log(MKC_LOG_ERROR,"recv %d %d %s.",recv_num,errno,strerror(errno));
         return -1;
-     }
-     return recv_num;
+    }
+    return recv_num;
 }
 
 static http_response_t *http_client_parse_result(const char *result){
@@ -162,7 +177,7 @@ void http_client_closed(int socket_fd){
     close(socket_fd);
 }
 
-http_response_t *http_client_post(char *url,const char *header,char *post_data, int post_len){
+http_response_t *http_client_post(char *url,const char *header,char *post_data, int post_len, int timeout){
 
     char file[256] = {0};
     char host[256] = {0};
@@ -171,8 +186,8 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
     http_response_t *response = NULL;
     int _port = 80;
 
-    int socket_fd = http_client_create(host, _port);
-    if(socket_fd < 0){
+    int socket_fd = http_client_create(host, _port, timeout);
+    if(socket_fd <= 0){
 
         mkc_write_log(MKC_LOG_ERROR,"client create error %d %s",errno,strerror(errno));
         return NULL;
@@ -194,13 +209,14 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
     if((http_client_send(socket_fd, post_buf,strlen(post_buf)) <= 0)){
 
         mkc_write_log(MKC_LOG_ERROR,"http_client_send error");
+        zfree(post_buf);
+        return NULL;
     }
-    zfree(post_buf);
     post_buf = 0;
 
     char recv_buffer[1024] = {0};
 
-    if(http_client_recv(socket_fd,recv_buffer) < 0){
+    if(http_client_recv(socket_fd,recv_buffer, timeout) < 0){
 
         mkc_write_log(MKC_LOG_NOTICE,"recv failed:url[%s]",url);
         goto done;
@@ -211,7 +227,10 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
     mkc_write_log(MKC_LOG_NOTICE,"recv success:url[%s] code[%d]",url,response->http_code);
 
 done:
-    http_client_closed(socket_fd);
+    if(socket_fd){
+        http_client_closed(socket_fd);
+    }
+    zfree(post_buf);
     //printf("done\n");
     return response;
 }

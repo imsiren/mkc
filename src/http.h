@@ -31,6 +31,6 @@ typedef struct http_response_t {
     int http_code;
 }http_response_t;
 
-http_response_t *http_client_post(char *url, const char *header,char *post_data,int len);
+http_response_t *http_client_post(char *url, const char *header,char *post_data,int len, int timeout);
 
 #endif

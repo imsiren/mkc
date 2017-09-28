@@ -105,22 +105,10 @@ void mkc_worker_process_handler(int signo){
     mkc_mysql_close(&server_conf->mkc_mysql_pconnect);
     
     kafka_consume_close();
-
-    if(!run){
-        //restart
-        /*if(signo == SIGHUP){
-
-            mkc_write_log(MKC_LOG_NOTICE ,"reloading :execvp(%s,{\"%s\",\"%s\",\"%s\"})",mkc_os_argv[0], mkc_os_argv[0],mkc_os_argv[1],mkc_os_argv[2]);
-            execvp(mkc_os_argv[0], mkc_os_argv);
-        }
-*/
-
-        exit(0);
-    }
-
-    run = 0;
-
+    mkc_write_log(MKC_LOG_NOTICE," ========== %d Exit .==========" , getpid());
+    sleep(3);
     fclose(stdin);
+    exit(0);
 }
 
 void mkc_signal_handler(int sig){
@@ -280,34 +268,43 @@ void mkc_do_worker_process(mkc_topic * topic){
  * */
 void mkc_signal_worker_process(int sig){
 
-    int i, ret;
+    int i, j, ret;
     pid_t pid = 0;
-    for(i = 0; i < server_conf->topics->len ; i++){
+    list_node *node;
 
-        if(server_conf->procs[i]->exited == 0){
+    node = server_conf->topics->head;
 
-            pid = server_conf->procs[i]->pid;
-            server_conf->procs[i]->exited = 0;
-            server_conf->procs[i]->exiting = 1;
-            mkc_write_log(MKC_LOG_NOTICE,"mkc will close pid [%d] ." ,pid);
-            if(kill(pid,sig) == 0){
+    for(j = 0; j < server_conf->topics->len ; i++){
 
-                server_conf->procs[i]->exited = 1;
-                server_conf->procs[i]->exiting = 0;
-                continue;
-            }
-            mkc_write_log(MKC_LOG_NOTICE, "mkc stoped worker process [%d] error, errno[%d],error [%s]", pid, errno,strerror(errno));
-        }
+	    mkc_topic *topic = (mkc_topic*) node->value;
+
+	    for(i = 0; i < topic->consumer_num ;i ++){
+		    if(server_conf->procs[i]->exited == 0){
+
+			    pid = server_conf->procs[i]->pid;
+			    server_conf->procs[i]->exited = 0;
+			    server_conf->procs[i]->exiting = 1;
+			    mkc_write_log(MKC_LOG_NOTICE,"mkc will close pid [%d] ." ,pid);
+			    if(kill(pid,sig) == 0){
+
+				    server_conf->procs[i]->exited = 1;
+				    server_conf->procs[i]->exiting = 0;
+				    continue;
+			    }
+			    mkc_write_log(MKC_LOG_NOTICE, "mkc stoped worker process [%d] error, errno[%d],error [%s]", pid, errno,strerror(errno));
+		    }
+	    }
+	    node = node->next;
     }
 }
 void mkc_master_process_exit(){
 
-    //waitpid(-1,NULL,0);
-    exit(0);
+	//waitpid(-1,NULL,0);
+	exit(0);
 }
 
 void mkc_init_signal(){
-    struct sigaction sa;
+	struct sigaction sa;
 
     sigemptyset(&sa.sa_mask);
 

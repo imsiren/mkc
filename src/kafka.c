@@ -110,6 +110,9 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
     if(root == 0x0 || root->type == cJSON_False || root->type == cJSON_NULL){
 
         mkc_write_log(MKC_LOG_WARNING,"invalid json data :[%s]",payload);
+	if(root){
+       	 	cjson_delete(root);
+	}
         return -1;
     }	
 
@@ -140,6 +143,7 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
         http_response_t *response  = NULL;
 
         char *header = HTTP_POST;
+	int http_code = 0;
 
         module_conf_t * conf = (module_conf_t*)current->value;
 
@@ -157,16 +161,16 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
         int timeout = conf->rcv_timeout;
         int retry_num = 0;
 http_client_post:{
+			http_code = 0;
                      response = http_client_post(url,header, payload,rkmessage->len, timeout);
+		     if(response){
+			     http_code = response->http_code;
+			     zfree(response);
+		     } 
+                     if(http_code != 200){
 
-                     if(response == NULL  || response->http_code != 200){
+                         mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,payload,http_code);
 
-                         mkc_write_log(MKC_LOG_ERROR,"post error url[%s] data[%s] httpcode[%d]",url,payload,response != NULL ? response->http_code : -1);
-
-                        if(!response){
-
-                            zfree(response);
-                        }
                          //mkc_write_log(MKC_LOG_ERROR,"::::::::::%d\t%d\n",conf->retrynum,retry_num);
                          //如果标记为跳过，则当前commitId直接忽略,处理吓一条数据
                          if(mkc_commitid_is_skiped(&server_conf->mkc_mysql_pconnect,commitId,commandId)){
@@ -189,6 +193,7 @@ http_client_post:{
                  current = current->next;
     }
     free(payload);
+    cjson_delete(root);
     return 0;
 }
 static int stats_cb(rd_kafka_t *rk, char *json,size_t json_len ,void *opaque){

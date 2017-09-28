@@ -179,8 +179,8 @@ void http_client_closed(int socket_fd){
 
 http_response_t *http_client_post(char *url,const char *header,char *post_data, int post_len, int timeout){
 
-    char file[256] = {0};
-    char host[256] = {0};
+    char file[512] = {0};
+    char host[512] = {0};
 
     http_client_parse_file(url ,file,host);
     http_response_t *response = NULL;

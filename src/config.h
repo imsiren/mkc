@@ -43,6 +43,8 @@ typedef struct {
     int delay;  //延迟时间
     int retrynum; // 0 失败一直重试，值到uri的code为200.
     int retry_delay;
+    int snd_timeout;
+    int rcv_timeout;
     sds *commands;
     int command_len;
 }module_conf_t ;

@@ -6,6 +6,9 @@
 
 extern server_conf_t server_config;
 
+
+
+
 #define REPLACE_COMMAND "REPLACE INTO mkc_queue_log SET commit_id = %d, command_id = %d, content = '%s', status = %d, retry_num = %d, gmt_create = %d,gmt_update = %d, topic_name='%s'"
 #define INSERT_COMMAND "INSERT INTO mkc_queue_log (commit_id,command_id,content,status,retry_num,gmt_create,gmt_update,topic_name) VALUES (%d,%d,'%s',%d, %d, %d, %d, '%s')"
 #define UPDATE_COMMAND "UPDATE mkc_queue_log SET retry_num = retry_num + 1,gmt_update = %d  WHERE commit_id = %d AND  command_id = %d AND status = %d"

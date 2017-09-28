@@ -46,6 +46,8 @@
 
 #define SERVER_COMMAND_NUM 200
 
+#define MKC_MAX_WORKER 1024
+
 #define BROKER_PATH "/brokers/ids"
 
 
@@ -238,7 +240,9 @@ int main(int argc, char **argv){
     fprintf(stderr,"logfile :%s\n",server_conf->logfile);
 
     spt_init(argc,argv);
-    server_conf->procs = zmalloc(sizeof(mkc_process_t) * server_conf->topics->len);
+
+    server_conf->procs = zmalloc(sizeof(mkc_process_t) * MKC_MAX_WORKER);
+
     int i ;
     for(i = 0;i < server_conf->topics->len; i ++){
 

@@ -244,7 +244,7 @@ int main(int argc, char **argv){
     server_conf->procs = zmalloc(sizeof(mkc_process_t) * MKC_MAX_WORKER);
 
     int i ;
-    for(i = 0;i < server_conf->topics->len; i ++){
+    for(i = 0;i < MKC_MAX_WORKER; i ++){
 
         server_conf->procs[i] =  zmalloc(sizeof(mkc_process_t));
         memset(server_conf->procs[i],0,sizeof(mkc_process_t));

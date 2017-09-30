@@ -46,7 +46,6 @@
 
 #define SERVER_COMMAND_NUM 200
 
-#define MKC_MAX_WORKER 1024
 
 #define BROKER_PATH "/brokers/ids"
 

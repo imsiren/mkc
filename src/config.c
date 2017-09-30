@@ -74,7 +74,7 @@ int parse_server_conf(char *file_name){
         }else if(!strcasecmp(vector[0],"log-file")){
 
             server_conf->logfp = 0;
-            server_conf->logfile = strdup(vector[1]);
+            server_conf->logfile = zstrdup(vector[1]);
             FILE *fp = fopen(server_conf->logfile,"a+"); 
 
             if(!fp){
@@ -328,7 +328,7 @@ module_conf_t *parse_module_conf(const char *filename){
                 }
                 */
 
-                hash_add(server_conf->modules,vector[1],(void*)module_conf, NULL);
+                hash_add(server_conf->modules,vector[1],(void*)module_conf, module_conf_free);
             }
 
         }else if(!strcasecmp(vector[0],"retry_delay")){

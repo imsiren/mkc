@@ -95,8 +95,14 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
         return -1;
     }
 
-    char *payload = strdup(rkmessage->payload);
+    if(!rkmessage->payload){
+
+        return -1;
+    }
+
+    char *payload = rkmessage->payload;
     payload[rkmessage->len] = '\0';
+
     //if(rkmessage->key_len){
 
     mkc_write_log(MKC_LOG_NOTICE,"payload len[%ld]: %s ",rkmessage->len,payload);
@@ -143,7 +149,7 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
         http_response_t *response  = NULL;
 
         char *header = HTTP_POST;
-	int http_code = 0;
+	    int http_code = 0;
 
         module_conf_t * conf = (module_conf_t*)current->value;
 
@@ -162,7 +168,7 @@ static int msg_consume(rd_kafka_message_t *rkmessage ,void *opaque){
         int retry_num = 0;
 http_client_post:{
 			http_code = 0;
-                     response = http_client_post(url,header, payload,rkmessage->len, timeout);
+             response = http_client_post(url,header, payload,rkmessage->len, timeout);
 		     if(response){
 			     http_code = response->http_code;
 			     zfree(response);
@@ -192,7 +198,7 @@ http_client_post:{
                  }
                  current = current->next;
     }
-    free(payload);
+    //zfree(payload);
     cjson_delete(root);
     return 0;
 }
@@ -321,10 +327,11 @@ int kafka_init_server(mkc_topic *topic){
             */
     }
 
-    rd_kafka_poll_set_consumer(rk);
-
     //绑定信号
     mkc_set_worker_process_handler();
+
+    rd_kafka_poll_set_consumer(rk);
+
     return 0;
 }
 

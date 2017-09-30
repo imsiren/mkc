@@ -179,8 +179,8 @@ void http_client_closed(int socket_fd){
 
 http_response_t *http_client_post(char *url,const char *header,char *post_data, int post_len, int timeout){
 
-    char file[512] = {0};
-    char host[512] = {0};
+    char *file= zmalloc(sizeof(char) * 512);
+    char *host = zmalloc(sizeof(char) * 512);
 
     http_client_parse_file(url ,file,host);
     http_response_t *response = NULL;
@@ -193,7 +193,7 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
         return NULL;
     }
 
-    int size = post_len * 1024;
+    int size = post_len + 1024;
     char *post_buf = zmalloc(size);
     if(!post_buf){
 
@@ -210,11 +210,12 @@ http_response_t *http_client_post(char *url,const char *header,char *post_data, 
 
         mkc_write_log(MKC_LOG_ERROR,"http_client_send error");
         zfree(post_buf);
+        zfree(host);
+        zfree(file);
         return NULL;
     }
-    post_buf = 0;
 
-    char recv_buffer[1024] = {0};
+    char *recv_buffer = zmalloc(sizeof(char) * 1024);
 
     if(http_client_recv(socket_fd,recv_buffer, timeout) < 0){
 
@@ -230,7 +231,10 @@ done:
     if(socket_fd){
         http_client_closed(socket_fd);
     }
+    zfree(recv_buffer);
     zfree(post_buf);
+    zfree(host);
+    zfree(file);
     //printf("done\n");
     return response;
 }

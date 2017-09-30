@@ -95,16 +95,27 @@ int mkc_signal_process(char *sig){
 }
 void mkc_set_worker_process_handler(){
 
-    signal(SIGQUIT, mkc_worker_process_handler);
-    signal(SIGHUP,  mkc_worker_process_handler);
+    mkc_write_log(MKC_LOG_NOTICE, "set worker process sig-handler");
+    //signal(SIGINT, mkc_worker_process_handler);
+//    signal(SIGQUIT, mkc_worker_process_handler);
+ //   signal(SIGHUP,  mkc_worker_process_handler);
+	struct sigaction sa;
+
+    sigemptyset(&sa.sa_mask);
+
+    sa.sa_flags = 0;
+    sa.sa_handler = mkc_worker_process_handler;
+
+    sigaction(SIGINT,&sa,NULL);
+    sigaction(SIGQUIT,&sa,NULL);
+    sigaction(SIGHUP,&sa,NULL);
 }
 
 //子进程信号处理程序
 void mkc_worker_process_handler(int signo){
 
-    mkc_mysql_close(&server_conf->mkc_mysql_pconnect);
-    
     kafka_consume_close();
+
     mkc_write_log(MKC_LOG_NOTICE," ========== %d Exit .==========" , getpid());
     sleep(3);
     fclose(stdin);
@@ -276,6 +287,9 @@ void mkc_signal_worker_process(int sig){
 
     for(j = 0; j < server_conf->topics->len ; i++){
 
+        if(node == NULL){
+            return;
+        }
 	    mkc_topic *topic = (mkc_topic*) node->value;
 
 	    for(i = 0; i < topic->consumer_num ;i ++){
@@ -391,6 +405,24 @@ void mkc_master_process_bury(){
             mkc_write_log(MKC_LOG_ERROR,"call execl errno[%d] error [%s]",errno,strerror(errno));
         }
     }
+    sdsfree(server_conf->brokers);
+    list_release(server_conf->topics);
+    list_release(server_conf->commands);
+    list_release(server_conf->properties);
+    //zfree(server_conf->modules->data);
+    //hash_free(server_conf->modules);
+    int i ;
+    for(i = 0;i < MKC_MAX_WORKER; i ++){
+        if(server_conf->procs[i]){
+            zfree(server_conf->procs[i]);
+        }
+    }
+    if(server_conf->procs){
+        zfree(server_conf->procs);
+    }
+    mkc_mysql_close(&server_conf->mkc_mysql_pconnect);
+    //zfree(server_conf->mysql);
+    
     mkc_write_log(MKC_LOG_NOTICE, "bye bye ...");
 
 }
@@ -402,7 +434,7 @@ void mkc_master_process(){
 
     sigset_t set;
     sigemptyset(&set);
-    //sigaddset(&set,SIGINT);
+    sigaddset(&set,SIGINT);
     sigaddset(&set,SIGCHLD);
     sigaddset(&set,SIGALRM);
 
